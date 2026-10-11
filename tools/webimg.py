@@ -1,44 +1,66 @@
 #!/usr/bin/env python3
-"""jrfank.cc 照片網頁檔產生器（只用標準庫 + ImageMagick 7 的 magick 指令）。
+"""jrfank.cc 照片網頁檔產生器（只用標準庫 + ImageMagick 7 的 magick 指令；要在 macOS 跑，用系統的 sRGB 描述檔）。
 
-原圖放在 ~/Code/jrfank-site-assets/photo-originals/<系列>/<照片 id>.<副檔名>（不進任何網站倉庫），
-這個工具把每張原圖做成三檔 WebP，放到本倉庫 <系列>/<照片 id>-<600|1200|2400>.webp：
+原圖不進這個倉庫：本機在 ~/Code/jrfank-site-assets/photo-originals/<系列>/<照片 id>.<副檔名>（R2 私有 bucket 的快取），
+GitHub Actions 從 R2 下載到暫存目錄（用環境變數 JRFANK_ORIGINALS 指過去）。每張原圖做成：
 
-  - 長邊 600 / 1200 / 2400 px；原圖不夠大就停在原圖尺寸，不放大
-  - 有內嵌色彩描述檔（Display P3 等）就轉成 sRGB；沒有的當作 sRGB
-  - 去掉全部 metadata（EXIF、GPS、XMP、ICC），網頁檔一律 sRGB
+  - 長邊 600 / 1200 / 1800 / 2400 / 4000 五檔 WebP（quality 88、sharp YUV、method 6）
+  - Lanczos 縮小後輕微銳化（-unsharp 0x0.6+0.5+0.008）；原圖不夠大就停在原圖尺寸，不放大，多出來的檔不做
+  - 有內嵌色彩描述檔（Display P3 等）就轉成 sRGB；沒有的當作 sRGB；去掉全部 metadata（EXIF、GPS、XMP、ICC）
   - 按 EXIF 方向轉正
+  - 檔名帶版本：<系列>/<照片 id>-<檔>.<版本>.webp，版本 = sha256(原圖 SHA-256 + 出圖配方) 前 10 碼。
+    換原圖或改配方，網址就變，網站可以放心設長期快取
+  - 占位主色（整張平均色）和極小模糊預覽（長邊 16px 的 WebP data URI，網站負責放大模糊）
+
+技術資料全部寫進 manifest.json（各檔實際寬高、位元組、SHA-256、占位、EXIF、原圖尺寸），這是唯一來源；
+網站倉庫用 `pnpm sync:photos` 把它原樣複製成 content/photos.json。EXIF 讀錯的欄位在 exif-overrides.json 改。
 
 用法：
-  python3 tools/webimg.py build            # 全部（已是最新的跳過）
-  python3 tools/webimg.py build hk/hk-8    # 只做一張；--force 重做
-  python3 tools/webimg.py exif hk/hk-8     # 印出 content/series/*.json 用的照片欄位（EXIF 讀得到才填）
-
-build 之後會更新 manifest.json（每張的實際尺寸、位元組數、原圖 SHA-256）。
-原圖目錄可用環境變數 JRFANK_ORIGINALS 改。
+  python3 tools/webimg.py build                    # 全部（原圖和配方都沒變的跳過）
+  python3 tools/webimg.py build hk/hk-8 --force    # 指定幾張；--force 重做
+  python3 tools/webimg.py check                    # 核對 manifest 和檔案（存在、大小、SHA-256、沒有多餘的檔）
+  python3 tools/webimg.py prune                    # 刪掉 manifest 沒引用的舊版本檔（網站換到新版本、部署完再跑）
 """
 from __future__ import annotations
 
+import base64
 import hashlib
 import json
 import os
 import re
 import subprocess
 import sys
+import tempfile
 from concurrent.futures import ThreadPoolExecutor
 from fractions import Fraction
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 ORIGINALS = Path(os.environ.get("JRFANK_ORIGINALS", Path.home() / "Code/jrfank-site-assets/photo-originals"))
+MANIFEST = ROOT / "manifest.json"
+OVERRIDES = ROOT / "exif-overrides.json"
 SRGB = "/System/Library/ColorSync/Profiles/sRGB Profile.icc"
-SIZES = (600, 1200, 2400)
-QUALITY = {600: 78, 1200: 80, 2400: 82}
-EXTS = {".jpg", ".jpeg", ".png", ".tif", ".tiff", ".heic", ".webp"}
+EXTS = {".jpg", ".jpeg", ".png", ".tif", ".tiff", ".heic", ".heif", ".webp"}
+
+SIZES = (600, 1200, 1800, 2400, 4000)
+QUALITY = 88  # 品質比對見 README「品質」
+UNSHARP = "0x0.6+0.5+0.008"
+LQIP = 16
+# 改了上面任何一項（或 build_one 的指令）就改這個字串：所有照片的版本跟著變，網址也變
+RECIPE = f"v2 sizes={','.join(map(str, SIZES))} lanczos unsharp={UNSHARP} webp q={QUALITY} m6 sharpyuv strip srgb"
+LOW_RES = 2400  # 長邊不到這個數，後台標「清晰度不足」
 
 
 def magick(*args: str) -> str:
     return subprocess.run(["magick", *args], check=True, capture_output=True, text=True).stdout
+
+
+def sha256(p: Path) -> str:
+    h = hashlib.sha256()
+    with p.open("rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
 
 
 def originals(only: list[str]) -> list[tuple[str, Path]]:
@@ -49,62 +71,171 @@ def originals(only: list[str]) -> list[tuple[str, Path]]:
         key = f"{p.parent.name}/{p.stem}"
         if not only or key in only:
             out.append((key, p))
-    missing = set(only) - {k for k, _ in out}
+    keys = [k for k, _ in out]
+    dup = {k for k in keys if keys.count(k) > 1}
+    if dup:
+        sys.exit(f"同一個照片 id 有兩個原圖：{', '.join(sorted(dup))}")
+    missing = set(only) - set(keys)
     if missing:
         sys.exit(f"找不到原圖：{', '.join(sorted(missing))}（在 {ORIGINALS}）")
     return out
 
 
-def has_icc(src: Path) -> bool:
-    return bool(magick("identify", "-format", "%[profile:icc]", f"{src}[0]").strip())
+def load_manifest() -> dict:
+    if MANIFEST.exists():
+        m = json.loads(MANIFEST.read_text())
+        if m.get("version") == 2:
+            return m
+    return {"version": 2, "recipe": RECIPE, "photos": {}}
 
 
-def build_one(key: str, src: Path, force: bool) -> dict:
-    icc = has_icc(src)
-    outs = {}
-    for size in SIZES:
-        dst = ROOT / f"{key}-{size}.webp"
-        dst.parent.mkdir(parents=True, exist_ok=True)
-        if force or not dst.exists() or dst.stat().st_mtime < src.stat().st_mtime:
-            args = [f"{src}[0]", "-auto-orient"]
-            if icc:
-                args += ["-profile", SRGB]
+def save_manifest(m: dict) -> None:
+    m["recipe"] = RECIPE
+    m["photos"] = dict(sorted(m["photos"].items()))
+    MANIFEST.write_text(json.dumps(m, ensure_ascii=False, indent=1) + "\n")
+
+
+def tiers_for(long_edge: int) -> list[int]:
+    """要做的檔：比原圖小的全做，再加一個「停在原圖尺寸」的（原圖剛好是某檔大小就是那一檔）"""
+    out = []
+    for s in SIZES:
+        out.append(s)
+        if s >= long_edge:
+            break
+    return out
+
+
+def build_one(key: str, src: Path, src_sha: str) -> dict:
+    version = hashlib.sha256(f"{src_sha}\n{RECIPE}".encode()).hexdigest()[:10]
+    w0, h0 = map(int, magick("identify", "-format", "%w %h", f"{src}[0]").split())
+    orient = magick("identify", "-format", "%[EXIF:Orientation]", f"{src}[0]").strip()
+    if orient in {"5", "6", "7", "8"}:
+        w0, h0 = h0, w0
+    icc = bool(magick("identify", "-format", "%[profile:icc]", f"{src}[0]").strip())
+
+    series_dir = ROOT / key.split("/")[0]
+    series_dir.mkdir(parents=True, exist_ok=True)
+    name = key.split("/")[1]
+    tiers = tiers_for(max(w0, h0))
+    with tempfile.TemporaryDirectory() as tmp:
+        args = [f"{src}[0]", "-auto-orient"]
+        if icc:
+            args += ["-profile", SRGB]
+        args += ["-colorspace", "sRGB", "-write", "mpr:o", "+delete"]
+        for s in tiers:
             args += [
-                "-resize", f"{size}x{size}>",
-                "-strip",
-                "-quality", str(QUALITY[size]),
-                "-define", "webp:method=6",
-                str(dst),
+                "(", "mpr:o", "-filter", "Lanczos", "-resize", f"{s}x{s}>", "-unsharp", UNSHARP, "-strip",
+                "-quality", str(QUALITY), "-define", "webp:method=6", "-define", "webp:use-sharp-yuv=true",
+                "-write", f"{tmp}/{s}.webp", "+delete", ")",
             ]
-            magick(*args)
-        w, h = map(int, magick("identify", "-format", "%w %h", str(dst)).split())
-        outs[str(size)] = [w, h, dst.stat().st_size]
-    big = outs[str(SIZES[-1])]
+        # 占位：平均色、16px 預覽（從最小一檔縮，已是 sRGB）
+        args += ["null:"]
+        magick(*args)
+        small = f"{tmp}/{tiers[0]}.webp"
+        color = magick(small, "-scale", "1x1!", "-format", "#%[hex:p{0,0}]", "info:").strip().lower()[:7]
+        magick(small, "-resize", f"{LQIP}x{LQIP}>", "-strip", "-quality", "50", "-define", "webp:method=6", f"{tmp}/lqip.webp")
+        blur = "data:image/webp;base64," + base64.b64encode(Path(f"{tmp}/lqip.webp").read_bytes()).decode()
+
+        sizes = {}
+        for s in tiers:
+            t = Path(f"{tmp}/{s}.webp")
+            w, h = map(int, magick("identify", "-format", "%w %h", str(t)).split())
+            file = f"{key}-{s}.{version}.webp"
+            dst = ROOT / file
+            dst.write_bytes(t.read_bytes())
+            sizes[str(s)] = {"file": file, "width": w, "height": h, "bytes": dst.stat().st_size, "sha256": sha256(dst)}
+    big = sizes[str(tiers[-1])]
     return {
-        "width": big[0],
-        "height": big[1],
-        "sizes": outs,
+        "version": version,
+        "width": big["width"],
+        "height": big["height"],
+        "sizes": sizes,
+        "color": color,
+        "blur": blur,
+        "original": {"width": w0, "height": h0},
+        "lowRes": max(w0, h0) < LOW_RES,
+        "exif": exif_fields(src, key),
         "colorConverted": icc,
         "source": src.name,
-        "sourceSha256": hashlib.sha256(src.read_bytes()).hexdigest(),
+        "sourceSha256": src_sha,
     }
+
+
+def up_to_date(info: dict | None, src_sha: str) -> bool:
+    if not info or info.get("sourceSha256") != src_sha:
+        return False
+    version = hashlib.sha256(f"{src_sha}\n{RECIPE}".encode()).hexdigest()[:10]
+    return info.get("version") == version and all((ROOT / t["file"]).exists() for t in info["sizes"].values())
 
 
 def build(args: list[str]) -> None:
     force = "--force" in args
     only = [a for a in args if not a.startswith("--")]
     items = originals(only)
-    manifest_path = ROOT / "manifest.json"
-    manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
-    with ThreadPoolExecutor(max_workers=os.cpu_count() or 4) as pool:
-        results = list(pool.map(lambda kv: (kv[0], build_one(kv[0], kv[1], force)), items))
-    for key, info in results:
-        manifest[key] = info
-        print(f"{key}: {info['width']}×{info['height']}" + ("（已轉 sRGB）" if info["colorConverted"] else ""))
-    manifest_path.write_text(json.dumps(dict(sorted(manifest.items())), ensure_ascii=False, indent=1) + "\n")
+    manifest = load_manifest()
+    photos = manifest["photos"]
+
+    def run(kv: tuple[str, Path]) -> tuple[str, dict | None]:
+        key, src = kv
+        src_sha = sha256(src)
+        if not force and up_to_date(photos.get(key), src_sha):
+            # EXIF 修正（exif-overrides.json）不影響圖檔，照樣更新
+            return key, {**photos[key], "exif": exif_fields(src, key)}
+        return key, build_one(key, src, src_sha)
+
+    workers = max(1, (os.cpu_count() or 4) // 2)  # 每個 magick 自己也開多執行緒
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        for key, info in pool.map(run, items):
+            old = photos.get(key, {}).get("version")
+            photos[key] = info
+            flag = "（已轉 sRGB）" if info["colorConverted"] else ""
+            low = "（清晰度不足）" if info["lowRes"] else ""
+            state = "沒變" if old == info["version"] else f"新版本 {info['version']}"
+            print(f"{key}: {info['width']}×{info['height']} {len(info['sizes'])} 檔 {state}{flag}{low}")
+    save_manifest(manifest)
 
 
-# ---------- EXIF → content/series/*.json 的欄位 ----------
+def referenced(manifest: dict) -> set[str]:
+    return {t["file"] for p in manifest["photos"].values() for t in p["sizes"].values()}
+
+
+def stray_files(manifest: dict) -> list[Path]:
+    refs = referenced(manifest)
+    out = []
+    for p in sorted(ROOT.glob("*/*.webp")):
+        if p.relative_to(ROOT).as_posix() not in refs:
+            out.append(p)
+    return out
+
+
+def check(_: list[str]) -> None:
+    manifest = load_manifest()
+    bad = []
+    for key, info in manifest["photos"].items():
+        for s, t in info["sizes"].items():
+            f = ROOT / t["file"]
+            if not f.exists():
+                bad.append(f"{key} {s}：沒有 {t['file']}")
+            elif f.stat().st_size != t["bytes"] or sha256(f) != t["sha256"]:
+                bad.append(f"{key} {s}：{t['file']} 和 manifest 不符")
+    stray = stray_files(manifest)
+    n = sum(len(p["sizes"]) for p in manifest["photos"].values())
+    print(f"manifest {len(manifest['photos'])} 張、{n} 檔；不符 {len(bad)}；沒引用的舊檔 {len(stray)}")
+    for b in bad:
+        print("  ✗", b)
+    for p in stray:
+        print("  · 沒引用：", p.relative_to(ROOT))
+    if bad:
+        sys.exit(1)
+
+
+def prune(_: list[str]) -> None:
+    for p in stray_files(load_manifest()):
+        p.unlink()
+        print("刪除", p.relative_to(ROOT))
+
+
+# ---------- EXIF → manifest 的 exif 欄位（網站照這個顯示） ----------
 
 FIELDS = "Make|Model|LensMake|LensModel|FocalLength|FNumber|ExposureTime|PhotographicSensitivity|DateTimeOriginal"
 
@@ -153,7 +284,8 @@ def lens_name(e: dict[str, str]) -> str | None:
     return re.sub(r"(\d+)(?:\.0)?-(\d+)(?:\.0)? ?mm", r"\1–\2mm", lens)
 
 
-def exif_fields(src: Path) -> dict:
+def exif_fields(src: Path, key: str) -> dict:
+    """讀得到才填，不猜。exif-overrides.json 可以改或刪（值寫 null）某張的欄位，例如相機時鐘沒設的日期"""
     e = read_exif(src)
     out: dict = {}
     if cam := camera_name(e):
@@ -172,25 +304,17 @@ def exif_fields(src: Path) -> dict:
         out["iso"] = int(e["PhotographicSensitivity"].split(",")[0])
     if "DateTimeOriginal" in e:
         out["date"] = e["DateTimeOriginal"][:10].replace(":", "-")
+    overrides = json.loads(OVERRIDES.read_text()).get(key, {}) if OVERRIDES.exists() else {}
+    for k, v in overrides.items():
+        if k.startswith("_"):
+            continue
+        if v is None:
+            out.pop(k, None)
+        else:
+            out[k] = v
     return out
-
-
-def exif(args: list[str]) -> None:
-    manifest = json.loads((ROOT / "manifest.json").read_text())
-    res = {}
-    for key, src in originals(args):
-        info = manifest.get(key, {})
-        w, h = map(int, magick("identify", "-format", "%w %h", f"{src}[0]").split())
-        res[key] = {
-            "file": key,
-            "width": info.get("width"),
-            "height": info.get("height"),
-            "original": f"{w} × {h}",
-            **exif_fields(src),
-        }
-    print(json.dumps(res, ensure_ascii=False, indent=1))
 
 
 if __name__ == "__main__":
     cmd, *rest = sys.argv[1:] or ["help"]
-    {"build": build, "exif": exif}.get(cmd, lambda _: print(__doc__))(rest)
+    {"build": build, "check": check, "prune": prune}.get(cmd, lambda _: print(__doc__))(rest)

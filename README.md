@@ -1,22 +1,107 @@
 # jrfank-img
 
-jrfank.cc 的照片網頁檔。第 6 步部署成 `img.jrfank.cc`（要回 `Access-Control-Allow-Origin`，抽卡卡包的 canvas 網點圖要讀像素）。
+jrfank.cc 的照片網頁檔。EdgeOne Pages 國際站（獨立專案）連這個倉庫自動部署成 **`https://pic.jrfank.cc`**。網站倉庫是 `JR-Fank/jrfank-site`。
 
-- `<系列>/<照片 id>-<600|1200|2400>.webp`：長邊 600 / 1200 / 2400 px 三檔；原圖不夠大就停在原圖尺寸（不放大），這時大的幾檔尺寸相同。
-- 一律 sRGB、去掉全部 metadata（EXIF、GPS、XMP、ICC）。拍攝參數另外寫在網站倉庫的 `content/series/*.json`。
-- `manifest.json`：每張的實際尺寸、位元組數、原圖 SHA-256。
-- 原圖**不在這裡**：`~/Code/jrfank-site-assets/photo-originals/<系列>/<照片 id>.<副檔名>`（來源紀錄在那裡的 `SOURCES.md`）。
+## 內容
 
-## 加照片
+- `<系列>/<照片 id>-<檔>.<版本>.webp`：長邊 600 / 1200 / 1800 / 2400 / 4000 五檔。原圖不夠大就停在原圖尺寸（不放大），更大的檔不做。
+  - **版本** = `sha256(原圖 SHA-256 + 出圖配方)` 前 10 碼。換原圖或改配方，網址就變，所以 `.webp` 可以設一年的 `immutable` 快取。同一張原圖、同一個配方重出，網址不變。
+- 一律 sRGB（有內嵌描述檔的，例如 Display P3，轉成 sRGB），去掉全部 metadata（EXIF、GPS、XMP、ICC）。
+- `manifest.json`：照片**技術資料的唯一來源**（`webimg.py` 產生，不要手改）。每張：
+  - `sizes`：各檔的檔名、實際寬高、位元組數、SHA-256
+  - `color`（整張平均色）、`blur`（長邊 16px 的 WebP data URI，網站放大模糊當占位）
+  - `exif`（相機、鏡頭、焦距、光圈、快門、ISO、日期；讀不到的沒有）、`original`（原圖寬高）、`lowRes`（原圖長邊不到 2400）
+  - `source`、`sourceSha256`（原圖檔名與雜湊）
+- `exif-overrides.json`：EXIF 讀錯時改這裡（值寫 `null` = 刪掉那個欄位），改完 `build`（圖檔不會重做）。
+- `edgeone.json`：全部回 `Access-Control-Allow-Origin: *`（抽卡的 canvas 網點圖要讀像素）；`.webp` 快取一年 `immutable`，其他（manifest 等）5 分鐘。
+
+**編輯資料**（系列、章節、說明、精選、隱藏、相框、底片欄位）不在這裡，在網站倉庫的 `content/series/*.json`。網站用 `pnpm sync:photos` 把這裡的 `manifest.json` 原樣複製成 `content/photos.json`（釘住網站用的版本）。
+
+**原圖不在這裡**：
+- 正本：Cloudflare R2 私有 bucket `jrfank-originals`，鍵是 `<系列>/<照片 id>.<副檔名>`，另有來源紀錄 `SOURCES.md`。
+- 本機快取：`~/Code/jrfank-site-assets/photo-originals/`（同樣的結構，不進任何倉庫）。
+
+## 出圖配方
+
+| 項目 | 設定 |
+| --- | --- |
+| 縮放 | ImageMagick 7 `-filter Lanczos -resize NxN>`（`>` = 不放大） |
+| 銳化 | 縮小後 `-unsharp 0x0.6+0.5+0.008`（輕微，200% 下看沒有光暈） |
+| 色彩 | 有 ICC 的 `-profile "/System/Library/ColorSync/Profiles/sRGB Profile.icc"`，再 `-colorspace sRGB`；沒有的當作 sRGB |
+| 編碼 | WebP `quality 88`、`method 6`、`use-sharp-yuv`（紅色霓虹、的士紅邊緣的色度比較乾淨） |
+| 占位 | 最小一檔 `-scale 1x1!` 取平均色；`-resize 16x16>` quality 50 做預覽 |
+
+改了任何一項，要改 `tools/webimg.py` 的 `RECIPE` 字串，全部照片的版本跟著變。
+
+## 品質
+
+2026-10-11 抽 5 張比對，挑最難壓的類型：
+
+| 照片 | 類型 |
+| --- | --- |
+| `objects/objects-3` | Display P3、大片散景＋細顆粒、機身磨砂質感 |
+| `shantou/shantou-4` | Display P3、天空漸層、海面 |
+| `hk/hk-7` | 直幅（4160 × 6240） |
+| `hk/hk-3` | 夜景、暗部多、ISO 3200 雜訊（Apple Wide Color） |
+| `gba/gba-12` | 細節最多（舊三檔裡位元組最大的之一） |
+
+方法：同一個配方縮好、銳化好的無損 PNG 當參考，各品質編成 WebP 再解回來，用 SSIMULACRA2（libjxl）打分；再把參考和各品質在 100% 下並排裁切，用眼睛看。SSIMULACRA2 的參考線：70 高品質、80 並排 1:1 很難分辨、90 閃爍比對也看不出。
+
+SSIMULACRA2（括號內是位元組）：
+
+| 照片 · 檔 | q82 | q85 | q88 | q90 | q92 |
+| --- | --- | --- | --- | --- | --- |
+| objects-3 · 1200 | 75.4 (39 KB) | 77.8 (45 KB) | 80.1 (54 KB) | 82.1 (63 KB) | 84.0 (73 KB) |
+| objects-3 · 2400 | 71.3 (120 KB) | 73.6 (155 KB) | 76.3 (214 KB) | 78.1 (274 KB) | 81.1 (355 KB) |
+| shantou-4 · 2400 | 75.7 (413 KB) | 78.1 (469 KB) | 79.7 (541 KB) | 82.8 (611 KB) | 84.3 (702 KB) |
+| hk-7 · 2400 | 76.0 (444 KB) | 78.4 (502 KB) | 81.2 (582 KB) | 83.1 (652 KB) | 84.8 (748 KB) |
+| hk-3 · 2400 | 79.1 (1001 KB) | 81.6 (1113 KB) | 84.1 (1255 KB) | 86.2 (1403 KB) | 87.4 (1544 KB) |
+| gba-12 · 1200 | 78.5 (244 KB) | 80.9 (273 KB) | 83.8 (312 KB) | 85.5 (348 KB) | 86.6 (372 KB) |
+| gba-12 · 2400 | 75.4 (693 KB) | 79.0 (781 KB) | 83.0 (928 KB) | 84.7 (1003 KB) | 86.2 (1140 KB) |
+| gba-12 · 4000 | 75.9 (1322 KB) | 79.0 (1499 KB) | 82.4 (1810 KB) | 84.0 (2042 KB) | 86.1 (2371 KB) |
+
+100% 並排看：
+- 夜景（hk-3）、天空與海（shantou-4）、直幅（hk-7）、細節（gba-12）：q82 起就看不出差別。
+- **散景顆粒和磨砂表面（objects-3）最先露餡**：q82、q85 把背景的細顆粒抹平、機身磨砂質感變塑膠，皮膚紋理也變平滑，並排看得出來；**q88** 顆粒和質感都在，看不出差別；q90 以上沒有再多的可見改善。
+
+→ 選 **q88**（五檔同一個品質）。代價：比舊版（q78／80／82、沒有銳化）大約多 65–75%，例如 1200 檔平均 94 KB → 164 KB。比對的腳本和裁切圖沒有進倉庫。
+
+現況（67 張）：600 平均 51 KB、1200 164 KB、1800 344 KB、2400 582 KB、4000 1.29 MB；全部 318 檔約 148 MB。
+
+## 加照片、換原圖
+
+平常走後台（7b）：上傳原圖到 R2 → 觸發 Actions。手動做：
 
 ```bash
-# 1. 原圖放進 ~/Code/jrfank-site-assets/photo-originals/<系列>/<照片 id>.jpg，SOURCES.md 記一筆
-python3 tools/webimg.py build <系列>/<照片 id>   # 2. 出三檔 webp，更新 manifest.json
-python3 tools/webimg.py exif  <系列>/<照片 id>   # 3. 印出 EXIF 欄位，貼進網站的 content/series/<系列>.json
+# 1. 原圖傳到 R2（鍵 = <系列>/<照片 id>.<副檔名>），本機快取也放一份
+npx wrangler r2 object put jrfank-originals/hk/hk-10.jpeg --file ~/Code/jrfank-site-assets/photo-originals/hk/hk-10.jpeg --remote
+# 2. 觸發出圖（或在 GitHub 的 Actions → build photos → Run workflow 填 hk/hk-10.jpeg）
+gh workflow run build-photos.yml -R JR-Fank/jrfank-img -f photos="hk/hk-10.jpeg"
+# 3. 網站倉庫：content/series/hk.json 加照片（file: "hk/hk-10"），再
+pnpm sync:photos
 ```
 
-需要 ImageMagick 7（`brew install imagemagick`，要有 WebP）。sRGB 描述檔用 macOS 內建的 `/System/Library/ColorSync/Profiles/sRGB Profile.icc`。
+本機直接出圖也可以（要 macOS + `brew install imagemagick`）：
+
+```bash
+python3 tools/webimg.py build                    # 全部（原圖和配方都沒變的跳過）
+python3 tools/webimg.py build hk/hk-8 --force    # 指定幾張；--force 重做
+python3 tools/webimg.py check                    # 核對 manifest 和檔案
+python3 tools/webimg.py prune                    # 刪掉 manifest 沒引用的舊版本檔
+```
+
+換原圖會產生新版本的檔，**舊版本的檔留著**（網站還沒 `sync:photos`、重新部署前還在用）。網站部署好以後再 `prune`、提交。
+
+原圖目錄用環境變數 `JRFANK_ORIGINALS` 改（Actions 指到下載的暫存目錄）。
+
+## GitHub Actions（`build photos`）
+
+`.github/workflows/build-photos.yml`：手動（`workflow_dispatch`，參數 `photos`、`force`）或 `repository_dispatch`（`event_type: build-photos`，`client_payload.photos` 陣列）→ 從 R2 下載原圖 → `webimg.py build` → `check` → 提交、推送 → EdgeOne 自動部署。跑在 macOS（和本機同一套 ImageMagick 與 sRGB 描述檔）。
+
+需要的設定（只寫位置，值不進倉庫）：
+- Secrets：`R2_ACCESS_KEY_ID`、`R2_SECRET_ACCESS_KEY`（R2 API 權杖，對 `jrfank-originals` 唯讀）
+- Variables：`R2_ACCOUNT_ID`（Cloudflare 帳號 ID，不是秘密）
 
 ## 本機預覽
 
-網站倉庫跑 `pnpm img`（在 http://localhost:4300 提供這個資料夾，帶 CORS），`pnpm dev` 會從那裡讀圖。
+網站倉庫跑 `pnpm img`（在 http://localhost:4310 提供這個資料夾，帶 CORS），`pnpm dev` 會從那裡讀圖。

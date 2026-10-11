@@ -1,0 +1,5 @@
+{
+ "_note": "EXIF 讀錯時在這裡改：值寫 null = 刪掉那個欄位，寫字串／數字 = 換掉。改完跑 python3 tools/webimg.py build（圖檔不會重做）",
+ "portrait/portrait-1": { "_why": "α7 時鐘沒設，EXIF 是 2013-01-01", "date": null },
+ "portrait/portrait-5": { "_why": "α7 時鐘沒設，EXIF 是 2013-01-01", "date": null }
+}

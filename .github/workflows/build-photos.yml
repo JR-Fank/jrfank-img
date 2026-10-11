@@ -1,0 +1,92 @@
+# 從 R2 私有 bucket 下載原圖 → webimg.py 出圖 → 提交、推送 → EdgeOne Pages 自動部署 pic.jrfank.cc
+# 觸發：Actions 頁面手動（workflow_dispatch），或後台 / API 送 repository_dispatch：
+#   gh api repos/JR-Fank/jrfank-img/dispatches -f event_type=build-photos -F 'client_payload[photos][]=hk/hk-1.jpeg'
+# 參數是 R2 上的原圖鍵（<系列>/<照片 id>.<副檔名>），空白或換行分隔；all = bucket 裡全部
+name: build photos
+
+on:
+  workflow_dispatch:
+    inputs:
+      photos:
+        description: "R2 上的原圖（<系列>/<照片 id>.<副檔名>，空白分隔）；all = 全部"
+        required: true
+        default: all
+      force:
+        description: "原圖和出圖配方都沒變也重做"
+        type: boolean
+        default: false
+  repository_dispatch:
+    types: [build-photos]
+
+# 一次只跑一個，免得兩次提交互相蓋掉 manifest
+concurrency:
+  group: build-photos
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    # macOS：和本機同一套 ImageMagick（brew）與系統 sRGB 描述檔，出圖結果一致
+    runs-on: macos-15
+    timeout-minutes: 90
+    env:
+      BUCKET: jrfank-originals
+      R2_ENDPOINT: https://${{ vars.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com
+      AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: auto
+      # aws-cli 2.23+ 預設送的檢查碼 R2 不全支援
+      AWS_REQUEST_CHECKSUM_CALCULATION: when_required
+      AWS_RESPONSE_CHECKSUM_VALIDATION: when_required
+      PHOTOS: ${{ github.event.inputs.photos || join(github.event.client_payload.photos, ' ') }}
+      FORCE: ${{ github.event.inputs.force == 'true' || github.event.client_payload.force == true }}
+      JRFANK_ORIGINALS: ${{ runner.temp }}/originals
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 安裝 ImageMagick
+        run: |
+          brew install imagemagick
+          magick -version | head -1
+          magick -list format | grep -E "^ +(WEBP|HEIC|JPEG|TIFF)" || true
+
+      - name: 下載原圖
+        run: |
+          set -euo pipefail
+          mkdir -p "$JRFANK_ORIGINALS"
+          if [ -z "$PHOTOS" ]; then echo "沒有指定照片"; exit 1; fi
+          if [ "$PHOTOS" = all ]; then
+            aws s3 cp "s3://$BUCKET/" "$JRFANK_ORIGINALS/" --recursive --exclude "*" --include "*/*" --endpoint-url "$R2_ENDPOINT" --only-show-errors
+          else
+            for k in $PHOTOS; do
+              if ! [[ "$k" =~ ^[a-z0-9-]+/[a-z0-9-]+\.(jpg|jpeg|png|tif|tiff|heic|heif|webp|JPG|JPEG|PNG|TIF|TIFF|HEIC|HEIF)$ ]]; then
+                echo "原圖鍵格式不對：$k"; exit 1
+              fi
+              aws s3 cp "s3://$BUCKET/$k" "$JRFANK_ORIGINALS/$k" --endpoint-url "$R2_ENDPOINT" --only-show-errors
+            done
+          fi
+          find "$JRFANK_ORIGINALS" -type f | wc -l
+
+      - name: 出圖
+        run: |
+          set -euo pipefail
+          keys=()
+          if [ "$PHOTOS" != all ]; then for k in $PHOTOS; do keys+=("${k%.*}"); done; fi
+          flags=()
+          if [ "$FORCE" = true ]; then flags+=(--force); fi
+          # ${a[@]+"${a[@]}"}：空陣列在 bash 3.2 + set -u 也不報錯
+          python3 tools/webimg.py build ${keys[@]+"${keys[@]}"} ${flags[@]+"${flags[@]}"}
+          python3 tools/webimg.py check
+
+      - name: 提交、推送
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then echo "沒有變化"; exit 0; fi
+          git commit -q -m "photos: build ${PHOTOS:0:200} (run ${{ github.run_id }})"
+          git pull --rebase -q
+          git push
