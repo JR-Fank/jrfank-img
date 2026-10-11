@@ -42,9 +42,11 @@ jobs:
       AWS_RESPONSE_CHECKSUM_VALIDATION: when_required
       PHOTOS: ${{ github.event.inputs.photos || join(github.event.client_payload.photos, ' ') }}
       FORCE: ${{ github.event.inputs.force == 'true' || github.event.client_payload.force == true }}
-      JRFANK_ORIGINALS: ${{ runner.temp }}/originals
     steps:
       - uses: actions/checkout@v4
+
+      - name: 原圖暫存目錄
+        run: echo "JRFANK_ORIGINALS=$RUNNER_TEMP/originals" >> "$GITHUB_ENV"
 
       - name: 安裝 ImageMagick
         run: |
