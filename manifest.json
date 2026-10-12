@@ -4113,6 +4113,101 @@
    "colorConverted": true,
    "source": "xi-ni-3.jpeg",
    "sourceSha256": "91a0abb6906a2a898f00cd52af2ab3595c22a1f8154e1d685a6c20b63a051801"
+  },
+  "yan-shou-ce-shi/yan-shou-ce-shi-1": {
+   "version": "58507df731",
+   "width": 3645,
+   "height": 2048,
+   "sizes": {
+    "600": {
+     "file": "yan-shou-ce-shi/yan-shou-ce-shi-1-600.58507df731.webp",
+     "width": 600,
+     "height": 337,
+     "bytes": 29584,
+     "sha256": "bcea696d8a950110f23316591ffc09c4174e258fa97b48255f7cb0e2910d798a"
+    },
+    "1200": {
+     "file": "yan-shou-ce-shi/yan-shou-ce-shi-1-1200.58507df731.webp",
+     "width": 1200,
+     "height": 674,
+     "bytes": 71888,
+     "sha256": "9f24eb3040a7f1267256af6ed154f6dd71894b566933af15901c9f0852f69d8e"
+    },
+    "1800": {
+     "file": "yan-shou-ce-shi/yan-shou-ce-shi-1-1800.58507df731.webp",
+     "width": 1800,
+     "height": 1011,
+     "bytes": 114096,
+     "sha256": "66cf2f9eb026ef659ce7477356d2e644da871a4e16e72835a86cd8451c656c84"
+    },
+    "2400": {
+     "file": "yan-shou-ce-shi/yan-shou-ce-shi-1-2400.58507df731.webp",
+     "width": 2400,
+     "height": 1348,
+     "bytes": 161586,
+     "sha256": "37cb44c2f496e418d406560e6f301f435c5405237ed7de6ff1f90347dbada70b"
+    },
+    "4000": {
+     "file": "yan-shou-ce-shi/yan-shou-ce-shi-1-4000.58507df731.webp",
+     "width": 3645,
+     "height": 2048,
+     "bytes": 281956,
+     "sha256": "0abcf253243581fa26424d6c3556604eaf90cd6cf2f0851f07709f86e9139425"
+    }
+   },
+   "color": "#635b54",
+   "blur": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAABQAgCdASoQAAkAAsBMJZQCdAYs3y6XHZ12rgAA/vbzNxTj3VpOU2mEVmjrfo4//sccP1u8Fv8yXDFjNNvyZmYOubCQkSFLldXF4VpffqaoexUGuDaUpBKN1urzVBIUHHCcAA==",
+   "original": {
+    "width": 3645,
+    "height": 2048
+   },
+   "lowRes": false,
+   "exif": {
+    "date": "2021-08-18"
+   },
+   "colorConverted": false,
+   "source": "yan-shou-ce-shi-1.jpg",
+   "sourceSha256": "6952e4f99768079adb04721f61de8c747524cef0eecedaa814744db4e9674871"
+  },
+  "yan-shou-ce-shi/yan-shou-ce-shi-2": {
+   "version": "ed84fdf3c1",
+   "width": 880,
+   "height": 587,
+   "sizes": {
+    "600": {
+     "file": "yan-shou-ce-shi/yan-shou-ce-shi-2-600.ed84fdf3c1.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 17084,
+     "sha256": "3e8fa8a6e768f916d63e08a125b69cc02c8ab8049e32433e23f4879c448a0fb1"
+    },
+    "1200": {
+     "file": "yan-shou-ce-shi/yan-shou-ce-shi-2-1200.ed84fdf3c1.webp",
+     "width": 880,
+     "height": 587,
+     "bytes": 35474,
+     "sha256": "24c96790e09c017150a14245c1812e9fdedc85f41a36253bfd29c8c5c32daf61"
+    }
+   },
+   "color": "#252224",
+   "blur": "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAADwAQCdASoQAAsAAsBMJaQAAu0KFg1A4igA/vvgrZztTqaw1/IN0EfIFY8Ah44++RkdtCXDyNnQp47NE6ZuyykzpgAAAA==",
+   "original": {
+    "width": 880,
+    "height": 587
+   },
+   "lowRes": true,
+   "exif": {
+    "camera": "Fujifilm X-T3",
+    "lens": "XC 50–230mm",
+    "focal": "230mm",
+    "aperture": "f/6.7",
+    "shutter": "1/250s",
+    "iso": 160,
+    "date": "2023-05-30"
+   },
+   "colorConverted": true,
+   "source": "yan-shou-ce-shi-2.jpg",
+   "sourceSha256": "ba00946493e5efd2835f78c7711274ffc4e723394ab24952d0714035c8fa39c8"
   }
  }
 }
