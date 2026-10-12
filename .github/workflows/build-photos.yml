@@ -1,14 +1,15 @@
 # 從 R2 私有 bucket 下載原圖 → webimg.py 出圖 → 提交、推送 → EdgeOne Pages 自動部署 pic.jrfank.cc
 # 觸發：Actions 頁面手動（workflow_dispatch），或後台 / API 送 repository_dispatch：
 #   gh api repos/JR-Fank/jrfank-img/dispatches -f event_type=build-photos -F 'client_payload[photos][]=hk/hk-1.jpeg'
-# 參數是 R2 上的原圖鍵（<系列>/<照片 id>.<副檔名>），空白或換行分隔；all = bucket 裡全部
+# 參數是 R2 上的原圖鍵（<系列>/<照片 id>.<副檔名>；評測文章圖 reviews/<文章 slug>/<照片 id>.<副檔名>），空白或換行分隔；
+# all = bucket 裡全部；以 / 結尾的是資料夾（例如 reviews/ = 全部文章圖、reviews/orico-test-mac/ = 一篇）
 name: build photos
 
 on:
   workflow_dispatch:
     inputs:
       photos:
-        description: "R2 上的原圖（<系列>/<照片 id>.<副檔名>，空白分隔）；all = 全部"
+        description: "R2 上的原圖（<系列>/<照片 id>.<副檔名> 或 reviews/<文章>/<照片 id>.<副檔名>，空白分隔；資料夾以 / 結尾，例如 reviews/）；all = 全部"
         required: true
         default: all
       force:
@@ -61,9 +62,16 @@ jobs:
           if [ -z "$PHOTOS" ]; then echo "沒有指定照片"; exit 1; fi
           if [ "$PHOTOS" = all ]; then
             aws s3 cp "s3://$BUCKET/" "$JRFANK_ORIGINALS/" --recursive --exclude "*" --include "*/*" --endpoint-url "$R2_ENDPOINT" --only-show-errors
+            echo "BUILD_ALL=1" >> "$GITHUB_ENV"
           else
             for k in $PHOTOS; do
-              if ! [[ "$k" =~ ^[a-z0-9-]+/[a-z0-9-]+\.(jpg|jpeg|png|tif|tiff|heic|heif|webp|JPG|JPEG|PNG|TIF|TIFF|HEIC|HEIF)$ ]]; then
+              if [[ "$k" =~ ^[a-z0-9-]+/([a-z0-9-]+/)?$ ]]; then
+                # 資料夾：整個抓下來，出圖時不指定照片（= 抓下來的全部）
+                aws s3 cp "s3://$BUCKET/$k" "$JRFANK_ORIGINALS/$k" --recursive --endpoint-url "$R2_ENDPOINT" --only-show-errors
+                echo "BUILD_ALL=1" >> "$GITHUB_ENV"
+                continue
+              fi
+              if ! [[ "$k" =~ ^(reviews/[a-z0-9-]+|[a-z0-9-]+)/[a-z0-9-]+\.(jpg|jpeg|png|tif|tiff|heic|heif|webp|JPG|JPEG|PNG|TIF|TIFF|HEIC|HEIF)$ ]]; then
                 echo "原圖鍵格式不對：$k"; exit 1
               fi
               aws s3 cp "s3://$BUCKET/$k" "$JRFANK_ORIGINALS/$k" --endpoint-url "$R2_ENDPOINT" --only-show-errors
@@ -75,7 +83,7 @@ jobs:
         run: |
           set -euo pipefail
           keys=()
-          if [ "$PHOTOS" != all ]; then for k in $PHOTOS; do keys+=("${k%.*}"); done; fi
+          if [ -z "${BUILD_ALL:-}" ]; then for k in $PHOTOS; do keys+=("${k%.*}"); done; fi
           flags=()
           if [ "$FORCE" = true ]; then flags+=(--force); fi
           # ${a[@]+"${a[@]}"}：空陣列在 bash 3.2 + set -u 也不報錯

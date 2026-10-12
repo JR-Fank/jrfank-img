@@ -2,12 +2,16 @@
 """jrfank.cc 照片網頁檔產生器（只用標準庫 + ImageMagick 7 的 magick 指令；要在 macOS 跑，用系統的 sRGB 描述檔）。
 
 原圖不進這個倉庫：本機在 ~/Code/jrfank-site-assets/photo-originals/<系列>/<照片 id>.<副檔名>（R2 私有 bucket 的快取），
-GitHub Actions 從 R2 下載到暫存目錄（用環境變數 JRFANK_ORIGINALS 指過去）。每張原圖做成：
+GitHub Actions 從 R2 下載到暫存目錄（用環境變數 JRFANK_ORIGINALS 指過去）。
+評測文章的圖片在 reviews/<文章 slug>/<照片 id>.<副檔名>，manifest 裡另放一區 reviews（後台只看 photos，文章圖不會跑進「未分配」）。
+每張原圖做成：
 
   - 長邊 600 / 1200 / 1800 / 2400 / 4000 五檔 WebP（quality 88、sharp YUV、method 6）
   - Lanczos 縮小後輕微銳化（-unsharp 0x0.6+0.5+0.008）；原圖不夠大就停在原圖尺寸，不放大，多出來的檔不做
   - 有內嵌色彩描述檔（Display P3 等）就轉成 sRGB；沒有的當作 sRGB；去掉全部 metadata（EXIF、GPS、XMP、ICC）
   - 按 EXIF 方向轉正
+  - 透明背景（PNG 等，有 alpha 而且不是全不透明）保留透明，manifest 記 transparent: true（網站不在它底下墊占位）；
+    有 alpha 但全不透明的拿掉 alpha。沒有 alpha 的原圖指令和以前完全一樣（所以配方字串沒變）
   - 檔名帶版本：<系列>/<照片 id>-<檔>.<版本>.webp，版本 = sha256(原圖 SHA-256 + 出圖配方) 前 10 碼。
     換原圖或改配方，網址就變，網站可以放心設長期快取
   - 占位主色（整張平均色）和極小模糊預覽（長邊 16px 的 WebP data URI，網站負責放大模糊）
@@ -18,6 +22,7 @@ GitHub Actions 從 R2 下載到暫存目錄（用環境變數 JRFANK_ORIGINALS �
 用法：
   python3 tools/webimg.py build                    # 全部（原圖和配方都沒變的跳過）
   python3 tools/webimg.py build hk/hk-8 --force    # 指定幾張；--force 重做
+  python3 tools/webimg.py build reviews/orico-test-mac/orico-test-mac-3
   python3 tools/webimg.py check                    # 核對 manifest 和檔案（存在、大小、SHA-256、沒有多餘的檔）
   python3 tools/webimg.py prune                    # 刪掉 manifest 沒引用的舊版本檔（網站換到新版本、部署完再跑）
 """
@@ -46,9 +51,17 @@ SIZES = (600, 1200, 1800, 2400, 4000)
 QUALITY = 88  # 品質比對見 README「品質」
 UNSHARP = "0x0.6+0.5+0.008"
 LQIP = 16
-# 改了上面任何一項（或 build_one 的指令）就改這個字串：所有照片的版本跟著變，網址也變
+# 改了上面任何一項（或 build_one 的指令）就改這個字串：所有照片的版本跟著變，網址也變。
+# （2026-10-13 加透明處理時沒改：只影響有 alpha 的原圖，當時出過圖的原圖都沒有 alpha，強制重出逐位元組相同）
 RECIPE = f"v2 sizes={','.join(map(str, SIZES))} lanczos unsharp={UNSHARP} webp q={QUALITY} m6 sharpyuv strip srgb"
 LOW_RES = 2400  # 長邊不到這個數，後台標「清晰度不足」
+# 照片鍵：<系列>/<id>；評測文章圖：reviews/<文章 slug>/<id>（manifest 的 reviews 區）
+REVIEWS = "reviews/"
+KEY_RE = re.compile(r"^(?:reviews/[a-z0-9-]+|[a-z0-9-]+)/[a-z0-9-]+$")
+
+
+def section(key: str) -> str:
+    return "reviews" if key.startswith(REVIEWS) else "photos"
 
 
 def magick(*args: str) -> str:
@@ -65,10 +78,12 @@ def sha256(p: Path) -> str:
 
 def originals(only: list[str]) -> list[tuple[str, Path]]:
     out = []
-    for p in sorted(ORIGINALS.glob("*/*")):
-        if p.suffix.lower() not in EXTS:
+    for p in sorted([*ORIGINALS.glob("*/*"), *ORIGINALS.glob(f"{REVIEWS}*/*")]):
+        if not p.is_file() or p.suffix.lower() not in EXTS:
             continue
-        key = f"{p.parent.name}/{p.stem}"
+        key = p.relative_to(ORIGINALS).with_suffix("").as_posix()
+        if not KEY_RE.match(key):
+            sys.exit(f"原圖路徑不對：{p.relative_to(ORIGINALS)}（要是 <系列>/<id>.<副檔名> 或 reviews/<文章>/<id>.<副檔名>，小寫英數和 -）")
         if not only or key in only:
             out.append((key, p))
     keys = [k for k, _ in out]
@@ -82,16 +97,24 @@ def originals(only: list[str]) -> list[tuple[str, Path]]:
 
 
 def load_manifest() -> dict:
+    m = {"version": 2, "recipe": RECIPE, "photos": {}}
     if MANIFEST.exists():
-        m = json.loads(MANIFEST.read_text())
-        if m.get("version") == 2:
-            return m
-    return {"version": 2, "recipe": RECIPE, "photos": {}}
+        old = json.loads(MANIFEST.read_text())
+        if old.get("version") == 2:
+            m = old
+    m.setdefault("reviews", {})
+    return m
+
+
+def entries(m: dict) -> dict[str, dict]:
+    """photos 和 reviews 兩區合在一起（鍵不會重複：reviews 的鍵都以 reviews/ 開頭）"""
+    return {**m["photos"], **m["reviews"]}
 
 
 def save_manifest(m: dict) -> None:
     m["recipe"] = RECIPE
-    m["photos"] = dict(sorted(m["photos"].items()))
+    for s in ("photos", "reviews"):
+        m[s] = dict(sorted(m[s].items()))
     MANIFEST.write_text(json.dumps(m, ensure_ascii=False, indent=1) + "\n")
 
 
@@ -112,28 +135,33 @@ def build_one(key: str, src: Path, src_sha: str) -> dict:
     if orient in {"5", "6", "7", "8"}:
         w0, h0 = h0, w0
     icc = bool(magick("identify", "-format", "%[profile:icc]", f"{src}[0]").strip())
+    # 透明：有 alpha 而且不是全不透明（PNG 截圖、去背產品圖）。有 alpha 但全不透明的，alpha 拿掉
+    alpha = magick("identify", "-format", "%A", f"{src}[0]").strip() not in ("Undefined", "")
+    transparent = alpha and magick("identify", "-format", "%[opaque]", f"{src}[0]").strip() != "True"
 
-    series_dir = ROOT / key.split("/")[0]
-    series_dir.mkdir(parents=True, exist_ok=True)
-    name = key.split("/")[1]
     tiers = tiers_for(max(w0, h0))
     with tempfile.TemporaryDirectory() as tmp:
         args = [f"{src}[0]", "-auto-orient"]
+        if alpha and not transparent:
+            args += ["-alpha", "off"]
         if icc:
             args += ["-profile", SRGB]
         args += ["-colorspace", "sRGB", "-write", "mpr:o", "+delete"]
+        # 透明的只銳化顏色，不銳化 alpha（邊緣不出光暈）；沒有 alpha 的指令和以前一樣
+        sharpen = ["-channel", "RGB", "-unsharp", UNSHARP, "+channel"] if transparent else ["-unsharp", UNSHARP]
         for s in tiers:
             args += [
-                "(", "mpr:o", "-filter", "Lanczos", "-resize", f"{s}x{s}>", "-unsharp", UNSHARP, "-strip",
+                "(", "mpr:o", "-filter", "Lanczos", "-resize", f"{s}x{s}>", *sharpen, "-strip",
                 "-quality", str(QUALITY), "-define", "webp:method=6", "-define", "webp:use-sharp-yuv=true",
                 "-write", f"{tmp}/{s}.webp", "+delete", ")",
             ]
-        # 占位：平均色、16px 預覽（從最小一檔縮，已是 sRGB）
+        # 占位：平均色、16px 預覽（從最小一檔縮，已是 sRGB；透明的先鋪白底）
         args += ["null:"]
         magick(*args)
         small = f"{tmp}/{tiers[0]}.webp"
-        color = magick(small, "-scale", "1x1!", "-format", "#%[hex:p{0,0}]", "info:").strip().lower()[:7]
-        magick(small, "-resize", f"{LQIP}x{LQIP}>", "-strip", "-quality", "50", "-define", "webp:method=6", f"{tmp}/lqip.webp")
+        flat = ["-background", "white", "-flatten"] if transparent else []
+        color = magick(small, *flat, "-scale", "1x1!", "-format", "#%[hex:p{0,0}]", "info:").strip().lower()[:7]
+        magick(small, *flat, "-resize", f"{LQIP}x{LQIP}>", "-strip", "-quality", "50", "-define", "webp:method=6", f"{tmp}/lqip.webp")
         blur = "data:image/webp;base64," + base64.b64encode(Path(f"{tmp}/lqip.webp").read_bytes()).decode()
 
         sizes = {}
@@ -142,6 +170,7 @@ def build_one(key: str, src: Path, src_sha: str) -> dict:
             w, h = map(int, magick("identify", "-format", "%w %h", str(t)).split())
             file = f"{key}-{s}.{version}.webp"
             dst = ROOT / file
+            dst.parent.mkdir(parents=True, exist_ok=True)
             dst.write_bytes(t.read_bytes())
             sizes[str(s)] = {"file": file, "width": w, "height": h, "bytes": dst.stat().st_size, "sha256": sha256(dst)}
     big = sizes[str(tiers[-1])]
@@ -154,6 +183,7 @@ def build_one(key: str, src: Path, src_sha: str) -> dict:
         "blur": blur,
         "original": {"width": w0, "height": h0},
         "lowRes": max(w0, h0) < LOW_RES,
+        **({"transparent": True} if transparent else {}),
         "exif": exif_fields(src, key),
         "colorConverted": icc,
         "source": src.name,
@@ -173,36 +203,38 @@ def build(args: list[str]) -> None:
     only = [a for a in args if not a.startswith("--")]
     items = originals(only)
     manifest = load_manifest()
-    photos = manifest["photos"]
 
     def run(kv: tuple[str, Path]) -> tuple[str, dict | None]:
         key, src = kv
         src_sha = sha256(src)
-        if not force and up_to_date(photos.get(key), src_sha):
+        prev = manifest[section(key)].get(key)
+        if not force and up_to_date(prev, src_sha):
             # EXIF 修正（exif-overrides.json）不影響圖檔，照樣更新
-            return key, {**photos[key], "exif": exif_fields(src, key)}
+            return key, {**prev, "exif": exif_fields(src, key)}
         return key, build_one(key, src, src_sha)
 
     workers = max(1, (os.cpu_count() or 4) // 2)  # 每個 magick 自己也開多執行緒
     with ThreadPoolExecutor(max_workers=workers) as pool:
         for key, info in pool.map(run, items):
+            photos = manifest[section(key)]
             old = photos.get(key, {}).get("version")
             photos[key] = info
             flag = "（已轉 sRGB）" if info["colorConverted"] else ""
-            low = "（清晰度不足）" if info["lowRes"] else ""
+            low = "（清晰度不足）" if info["lowRes"] and section(key) == "photos" else ""
+            alpha = "（透明）" if info.get("transparent") else ""
             state = "沒變" if old == info["version"] else f"新版本 {info['version']}"
-            print(f"{key}: {info['width']}×{info['height']} {len(info['sizes'])} 檔 {state}{flag}{low}")
+            print(f"{key}: {info['width']}×{info['height']} {len(info['sizes'])} 檔 {state}{flag}{low}{alpha}")
     save_manifest(manifest)
 
 
 def referenced(manifest: dict) -> set[str]:
-    return {t["file"] for p in manifest["photos"].values() for t in p["sizes"].values()}
+    return {t["file"] for p in entries(manifest).values() for t in p["sizes"].values()}
 
 
 def stray_files(manifest: dict) -> list[Path]:
     refs = referenced(manifest)
     out = []
-    for p in sorted(ROOT.glob("*/*.webp")):
+    for p in sorted([*ROOT.glob("*/*.webp"), *ROOT.glob(f"{REVIEWS}*/*.webp")]):
         if p.relative_to(ROOT).as_posix() not in refs:
             out.append(p)
     return out
@@ -211,7 +243,7 @@ def stray_files(manifest: dict) -> list[Path]:
 def check(_: list[str]) -> None:
     manifest = load_manifest()
     bad = []
-    for key, info in manifest["photos"].items():
+    for key, info in entries(manifest).items():
         for s, t in info["sizes"].items():
             f = ROOT / t["file"]
             if not f.exists():
@@ -219,8 +251,11 @@ def check(_: list[str]) -> None:
             elif f.stat().st_size != t["bytes"] or sha256(f) != t["sha256"]:
                 bad.append(f"{key} {s}：{t['file']} 和 manifest 不符")
     stray = stray_files(manifest)
-    n = sum(len(p["sizes"]) for p in manifest["photos"].values())
-    print(f"manifest {len(manifest['photos'])} 張、{n} 檔；不符 {len(bad)}；沒引用的舊檔 {len(stray)}")
+    count = {s: (len(manifest[s]), sum(len(p["sizes"]) for p in manifest[s].values())) for s in ("photos", "reviews")}
+    print(
+        f"manifest 照片 {count['photos'][0]} 張 {count['photos'][1]} 檔、文章圖 {count['reviews'][0]} 張 {count['reviews'][1]} 檔；"
+        f"不符 {len(bad)}；沒引用的舊檔 {len(stray)}"
+    )
     for b in bad:
         print("  ✗", b)
     for p in stray:

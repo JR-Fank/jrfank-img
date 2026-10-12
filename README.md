@@ -5,6 +5,7 @@ jrfank.cc 的照片網頁檔。EdgeOne Pages 國際站（獨立專案）連這�
 ## 內容
 
 - `<系列>/<照片 id>-<檔>.<版本>.webp`：長邊 600 / 1200 / 1800 / 2400 / 4000 五檔。原圖不夠大就停在原圖尺寸（不放大），更大的檔不做。
+- `reviews/<文章 slug>/<照片 id>-<檔>.<版本>.webp`：評測文章的圖片（照片 id ＝`<文章 slug>-<序號>`，序號 0 是封面），配方完全一樣。截圖、小圖同樣不放大（例如 700 px 寬的圖只有 600 和 700 兩檔）。
   - **版本** = `sha256(原圖 SHA-256 + 出圖配方)` 前 10 碼。換原圖或改配方，網址就變，所以 `.webp` 可以設一年的 `immutable` 快取。同一張原圖、同一個配方重出，網址不變。
 - 一律 sRGB（有內嵌描述檔的，例如 Display P3，轉成 sRGB），去掉全部 metadata（EXIF、GPS、XMP、ICC）。
 - `manifest.json`：照片**技術資料的唯一來源**（`webimg.py` 產生，不要手改）。每張：
@@ -12,14 +13,16 @@ jrfank.cc 的照片網頁檔。EdgeOne Pages 國際站（獨立專案）連這�
   - `color`（整張平均色）、`blur`（長邊 16px 的 WebP data URI，網站放大模糊當占位）
   - `exif`（相機、鏡頭、焦距、光圈、快門、ISO、日期；讀不到的沒有）、`original`（原圖寬高）、`lowRes`（原圖長邊不到 2400）
   - `source`、`sourceSha256`（原圖檔名與雜湊）
+  - `transparent: true`：原圖有透明背景（只有這種才有這個欄位），網頁檔保留透明，網站不在它底下墊占位色
+  - 文章圖放在另一區 **`reviews`**（鍵 `reviews/<文章>/<照片 id>`，欄位一樣）；`photos` 區只有作品照片。後台只讀 `photos`，所以文章圖不會出現在後台的「未分配」。
 - `exif-overrides.json`：EXIF 讀錯時改這裡（值寫 `null` = 刪掉那個欄位），改完 `build`（圖檔不會重做）。
 - `edgeone.json`：全部回 `Access-Control-Allow-Origin: *`（抽卡的 canvas 網點圖要讀像素）；`.webp` 快取一年 `immutable`，其他（manifest 等）5 分鐘。
 
 **編輯資料**（系列、章節、說明、精選、隱藏、相框、底片欄位）不在這裡，在網站倉庫的 `content/series/*.json`。網站用 `pnpm sync:photos` 把這裡的 `manifest.json` 原樣複製成 `content/photos.json`（釘住網站用的版本）。
 
 **原圖不在這裡**：
-- 正本：Cloudflare R2 私有 bucket `jrfank-originals`，鍵是 `<系列>/<照片 id>.<副檔名>`，另有來源紀錄 `SOURCES.md`。
-- 本機快取：`~/Code/jrfank-site-assets/photo-originals/`（同樣的結構，不進任何倉庫）。
+- 正本：Cloudflare R2 私有 bucket `jrfank-originals`，鍵是 `<系列>/<照片 id>.<副檔名>`（文章圖 `reviews/<文章>/<照片 id>.<副檔名>`），另有來源紀錄 `SOURCES.md`。
+- 本機快取：`~/Code/jrfank-site-assets/photo-originals/`（同樣的結構）、文章圖 `~/Code/jrfank-site-assets/review-originals/<文章>/`（少一層 `reviews/`，另有 `SOURCES.json` 下載紀錄）；都不進任何倉庫。本機要出文章圖，把 `review-originals` 放到原圖目錄的 `reviews/` 底下。
 
 ## 出圖配方
 
@@ -30,6 +33,7 @@ jrfank.cc 的照片網頁檔。EdgeOne Pages 國際站（獨立專案）連這�
 | 色彩 | 有 ICC 的 `-profile "/System/Library/ColorSync/Profiles/sRGB Profile.icc"`，再 `-colorspace sRGB`；沒有的當作 sRGB |
 | 編碼 | WebP `quality 88`、`method 6`、`use-sharp-yuv`（紅色霓虹、的士紅邊緣的色度比較乾淨） |
 | 占位 | 最小一檔 `-scale 1x1!` 取平均色；`-resize 16x16>` quality 50 做預覽 |
+| 透明 | 有 alpha 而且不是全不透明：保留透明（WebP alpha 無損），只銳化顏色（`-channel RGB`），占位先鋪白底再算；有 alpha 但全不透明：`-alpha off`。沒有 alpha 的原圖指令和加這條之前完全一樣（hk-1、hk-7 強制重出逐位元組相同），所以 `RECIPE` 沒改 |
 
 改了任何一項，要改 `tools/webimg.py` 的 `RECIPE` 字串，全部照片的版本跟著變。
 
@@ -97,6 +101,8 @@ python3 tools/webimg.py prune                    # 刪掉 manifest 沒引用的�
 ## GitHub Actions（`build photos`）
 
 `.github/workflows/build-photos.yml`：手動（`workflow_dispatch`，參數 `photos`、`force`）或 `repository_dispatch`（`event_type: build-photos`，`client_payload.photos` 陣列）→ 從 R2 下載原圖 → `webimg.py build` → `check` → 提交、推送 → EdgeOne 自動部署。跑在 macOS（和本機同一套 ImageMagick 與 sRGB 描述檔）。
+
+`photos` 可以寫資料夾（以 `/` 結尾）：`reviews/` = 全部文章圖、`reviews/orico-test-mac/` = 一篇，例如 `gh workflow run build-photos.yml -R JR-Fank/jrfank-img -f photos="reviews/"`。
 
 需要的設定（只寫位置，值不進倉庫）：
 - Secrets：`R2_ACCESS_KEY_ID`、`R2_SECRET_ACCESS_KEY`（R2 API 權杖，對 `jrfank-originals` 唯讀）
