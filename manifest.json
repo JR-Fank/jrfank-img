@@ -3991,6 +3991,128 @@
    "colorConverted": true,
    "source": "xi-ni-1.jpeg",
    "sourceSha256": "d93582f90f6d714633fa3af1c0e1ca31b74f2e7970af7b758f7b51c7661938a1"
+  },
+  "xi-ni/xi-ni-2": {
+   "version": "5c5bd367fa",
+   "width": 2998,
+   "height": 4000,
+   "sizes": {
+    "600": {
+     "file": "xi-ni/xi-ni-2-600.5c5bd367fa.webp",
+     "width": 450,
+     "height": 600,
+     "bytes": 26934,
+     "sha256": "1b001528d7360deb5f5385a8868c8e0b26bbe026700c04342b209b047bb9e043"
+    },
+    "1200": {
+     "file": "xi-ni/xi-ni-2-1200.5c5bd367fa.webp",
+     "width": 899,
+     "height": 1200,
+     "bytes": 68488,
+     "sha256": "45c17c4bbd258e8588b31b6acef72c83a00649cad617b3769aabf5a2f5a7579d"
+    },
+    "1800": {
+     "file": "xi-ni/xi-ni-2-1800.5c5bd367fa.webp",
+     "width": 1349,
+     "height": 1800,
+     "bytes": 112842,
+     "sha256": "ef2de3cd6e9445c307f16e2d4efd8d76e68ae782c0ccddb4a9434c541fb16002"
+    },
+    "2400": {
+     "file": "xi-ni/xi-ni-2-2400.5c5bd367fa.webp",
+     "width": 1799,
+     "height": 2400,
+     "bytes": 162112,
+     "sha256": "6d4e22c7c5c8f5675cc1911c4a8f37f9c2bc8e4f6eaf4546a4a710426af713e3"
+    },
+    "4000": {
+     "file": "xi-ni/xi-ni-2-4000.5c5bd367fa.webp",
+     "width": 2998,
+     "height": 4000,
+     "bytes": 294950,
+     "sha256": "c7f9562f86be4e3307a88c565fc3f92e6363869c790258c740f2227cba12d951"
+    }
+   },
+   "color": "#8d8988",
+   "blur": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAADwAQCdASoMABAAAsBMJYwC7ADz5r0hNIAA/o8RUgXaM89BaGxsNeSwB2eG9kgRue4eQbRZ/0lxWXkOd8uwS8qrNhQ6xs2ivDVoyReXZZ/iXRQAAAA=",
+   "original": {
+    "width": 3016,
+    "height": 4024
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone Air",
+    "lens": "Back camera 5.96mm f/1.6",
+    "focal": "5.96mm",
+    "aperture": "f/1.6",
+    "shutter": "1/30s",
+    "iso": 640,
+    "date": "2026-10-12"
+   },
+   "colorConverted": true,
+   "source": "xi-ni-2.jpeg",
+   "sourceSha256": "3d83ad9a83e2a8229ead63e7adf2b0b32ff5e56a2df8dd6bc753499dc9dcc9fb"
+  },
+  "xi-ni/xi-ni-3": {
+   "version": "23b67764d3",
+   "width": 2998,
+   "height": 4000,
+   "sizes": {
+    "600": {
+     "file": "xi-ni/xi-ni-3-600.23b67764d3.webp",
+     "width": 450,
+     "height": 600,
+     "bytes": 35542,
+     "sha256": "1f7bba9e7b19d9a5f7c19baf7825c5f412f64969a3946c509bf6a2c0deb56fff"
+    },
+    "1200": {
+     "file": "xi-ni/xi-ni-3-1200.23b67764d3.webp",
+     "width": 899,
+     "height": 1200,
+     "bytes": 104432,
+     "sha256": "058167f8929610009ef38ecae680733489e5079ab88bdb0a6b3d3e3eadd9be20"
+    },
+    "1800": {
+     "file": "xi-ni/xi-ni-3-1800.23b67764d3.webp",
+     "width": 1349,
+     "height": 1800,
+     "bytes": 180344,
+     "sha256": "c57c475e5b011a5838a354787a2731ae6fdd381b0f1f4a02f61b8ee87e654fde"
+    },
+    "2400": {
+     "file": "xi-ni/xi-ni-3-2400.23b67764d3.webp",
+     "width": 1799,
+     "height": 2400,
+     "bytes": 252192,
+     "sha256": "74b4a89e516fcc0b530fc5d9f985b735f5066ec34a9724ff7fb65f66943e24a7"
+    },
+    "4000": {
+     "file": "xi-ni/xi-ni-3-4000.23b67764d3.webp",
+     "width": 2998,
+     "height": 4000,
+     "bytes": 453460,
+     "sha256": "a1a77a37690f0707538f21a3c991ad63e40ac42985bc4ccc79b42212f1a39673"
+    }
+   },
+   "color": "#777578",
+   "blur": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAAAwAgCdASoMABAAAsBMJZQCdAYtVa3LzMuwAADOO7oavy4dVnOdU9Zp9lij0uhZKx9WGkHen11SeHkqBd0UCVtE+Acjb85ZFug7ct+YwM33iSPNQduzfZ2skWWwZwAA",
+   "original": {
+    "width": 3016,
+    "height": 4024
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone Air",
+    "lens": "Back camera 5.96mm f/1.6",
+    "focal": "5.96mm",
+    "aperture": "f/1.6",
+    "shutter": "1/30s",
+    "iso": 500,
+    "date": "2026-10-12"
+   },
+   "colorConverted": true,
+   "source": "xi-ni-3.jpeg",
+   "sourceSha256": "91a0abb6906a2a898f00cd52af2ab3595c22a1f8154e1d685a6c20b63a051801"
   }
  }
 }
