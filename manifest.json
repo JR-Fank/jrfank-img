@@ -3930,6 +3930,67 @@
    "colorConverted": true,
    "source": "stage-2.jpg",
    "sourceSha256": "0b8abb23831c3ae395aebd0c8e189aaf3af623a58f561d625563afce2278e09a"
+  },
+  "xi-ni/xi-ni-1": {
+   "version": "802320897e",
+   "width": 2998,
+   "height": 4000,
+   "sizes": {
+    "600": {
+     "file": "xi-ni/xi-ni-1-600.802320897e.webp",
+     "width": 450,
+     "height": 600,
+     "bytes": 31978,
+     "sha256": "15089b85beaae5c1cbf079c2993859c9d4643c44e64bc4d7bd470519c3dad686"
+    },
+    "1200": {
+     "file": "xi-ni/xi-ni-1-1200.802320897e.webp",
+     "width": 899,
+     "height": 1200,
+     "bytes": 103728,
+     "sha256": "b1a1933d13422f6733ff0169d50aaf5af60d54a5fecf6e209da64676debb9010"
+    },
+    "1800": {
+     "file": "xi-ni/xi-ni-1-1800.802320897e.webp",
+     "width": 1349,
+     "height": 1800,
+     "bytes": 179342,
+     "sha256": "71f759891a4d89908de8265256d1f69e5207b50a95dca5284b8ec2e8b6d9d4f5"
+    },
+    "2400": {
+     "file": "xi-ni/xi-ni-1-2400.802320897e.webp",
+     "width": 1799,
+     "height": 2400,
+     "bytes": 249858,
+     "sha256": "b41c9fbca02a55244ce24adccfbff05d4fea0156230475807dc3fe68bb7c2843"
+    },
+    "4000": {
+     "file": "xi-ni/xi-ni-1-4000.802320897e.webp",
+     "width": 2998,
+     "height": 4000,
+     "bytes": 446176,
+     "sha256": "b00739355c18004101636961178df3a4cd58da0a2044a6586375c060a78a1c4b"
+    }
+   },
+   "color": "#968e84",
+   "blur": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAADwAQCdASoMABAAAsBMJYwCsADQ5KCNQwAA/dF58Zd60GeTUXE0s2Xrhk7ulwqJt2dtRr8E8X6uZi9qdmMZlbNgqt7QBoBuuHcy0EIsR2puha1Rs8AAAA==",
+   "original": {
+    "width": 3016,
+    "height": 4024
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone Air",
+    "lens": "Back camera 5.96mm f/1.6",
+    "focal": "5.96mm",
+    "aperture": "f/1.6",
+    "shutter": "1/49s",
+    "iso": 200,
+    "date": "2026-10-12"
+   },
+   "colorConverted": true,
+   "source": "xi-ni-1.jpeg",
+   "sourceSha256": "d93582f90f6d714633fa3af1c0e1ca31b74f2e7970af7b758f7b51c7661938a1"
   }
  }
 }
