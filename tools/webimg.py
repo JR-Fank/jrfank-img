@@ -55,9 +55,9 @@ LQIP = 16
 # （2026-10-13 加透明處理時沒改：只影響有 alpha 的原圖，當時出過圖的原圖都沒有 alpha，強制重出逐位元組相同）
 RECIPE = f"v2 sizes={','.join(map(str, SIZES))} lanczos unsharp={UNSHARP} webp q={QUALITY} m6 sharpyuv strip srgb"
 LOW_RES = 2400  # 長邊不到這個數，後台標「清晰度不足」
-# 照片鍵：<系列>/<id>；評測文章圖：reviews/<文章 slug>/<id>（manifest 的 reviews 區）
+# 照片鍵：<系列>/<id>（系列不能叫 reviews）；評測文章圖只能是三段 reviews/<文章 slug>/<id>（manifest 的 reviews 區）
 REVIEWS = "reviews/"
-KEY_RE = re.compile(r"^(?:reviews/[a-z0-9-]+|[a-z0-9-]+)/[a-z0-9-]+$")
+KEY_RE = re.compile(r"^(?:reviews/[a-z0-9-]+/[a-z0-9-]+|(?!reviews/)[a-z0-9-]+/[a-z0-9-]+)$")
 
 
 def section(key: str) -> str:
@@ -83,9 +83,12 @@ def originals(only: list[str]) -> list[tuple[str, Path]]:
             continue
         key = p.relative_to(ORIGINALS).with_suffix("").as_posix()
         if not KEY_RE.match(key):
-            sys.exit(f"原圖路徑不對：{p.relative_to(ORIGINALS)}（要是 <系列>/<id>.<副檔名> 或 reviews/<文章>/<id>.<副檔名>，小寫英數和 -）")
+            sys.exit(f"原圖路徑不對：{p.relative_to(ORIGINALS)}（要是 <系列>/<id>.<副檔名>〔系列不能叫 reviews〕或 reviews/<文章>/<id>.<副檔名>，小寫英數和 -）")
         if not only or key in only:
             out.append((key, p))
+    bad = [k for k in only if not KEY_RE.match(k)]
+    if bad:
+        sys.exit(f"照片鍵不對：{', '.join(bad)}（<系列>/<id> 或 reviews/<文章>/<id>）")
     keys = [k for k, _ in out]
     dup = {k for k in keys if keys.count(k) > 1}
     if dup:
