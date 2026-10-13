@@ -1018,6 +1018,45 @@
    "source": "hk-1.jpeg",
    "sourceSha256": "174d92044863a077accf64424a69776f32696abc8ed09093738a840d826174fe"
   },
+  "hk/hk-10": {
+   "version": "d325a7c40a",
+   "width": 1600,
+   "height": 1067,
+   "sizes": {
+    "600": {
+     "file": "hk/hk-10-600.d325a7c40a.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 11850,
+     "sha256": "83fa54591c2abc57c74a0d8c7c049f95e98cf93208ebd3ce03105ecf6f77133b"
+    },
+    "1200": {
+     "file": "hk/hk-10-1200.d325a7c40a.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 26888,
+     "sha256": "0895ad13d93c098af4fb561cae3121778bdd9e9b5e897b0030142d0912c54e16"
+    },
+    "1800": {
+     "file": "hk/hk-10-1800.d325a7c40a.webp",
+     "width": 1600,
+     "height": 1067,
+     "bytes": 37756,
+     "sha256": "aac2b8b7ba32d04c0a14dcc70871d6ed481dad35ba29380902022e27af89f4eb"
+    }
+   },
+   "color": "#7a201c",
+   "blur": "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAAAQAgCdASoQAAsAAsBMJbACdAEf+8UyGl4AAP7k997doe67EId4dfSCNLx+HC1XL/yYgDyEm/xWytAA",
+   "original": {
+    "width": 1600,
+    "height": 1067
+   },
+   "lowRes": true,
+   "exif": {},
+   "colorConverted": true,
+   "source": "hk-10.jpg",
+   "sourceSha256": "02998c99f0cc34abfc33931743c830b64fffbcfd168847a8473cc0a8a8a023ae"
+  },
   "hk/hk-2": {
    "version": "d2927e7c2a",
    "width": 4000,
