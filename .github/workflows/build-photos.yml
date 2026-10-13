@@ -4,6 +4,8 @@
 # 參數是 R2 上的原圖鍵（<系列>/<照片 id>.<副檔名>；評測文章圖 reviews/<文章 slug>/<照片 id>.<副檔名>），空白或換行分隔；
 # all = bucket 裡全部；以 / 結尾的是資料夾（例如 reviews/ = 全部文章圖、reviews/orico-test-mac/ = 一篇）
 name: build photos
+# 後台觸發時帶批次 id（client_payload.batch），寫進 run 的標題，後台用它把觸發和 run 一對一配起來
+run-name: ${{ github.event.client_payload.batch && format('build photos · {0}', github.event.client_payload.batch) || 'build photos' }}
 
 on:
   workflow_dispatch:
