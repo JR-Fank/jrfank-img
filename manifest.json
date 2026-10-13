@@ -1506,45 +1506,6 @@
    "source": "hk-9.jpeg",
    "sourceSha256": "6dc3bf9f2124c5f8f4401352dc52c631d3773511e3843dc92fc7dcd9f2249a92"
   },
-  "inbox/inbox-1": {
-   "version": "fe01d762cf",
-   "width": 1600,
-   "height": 1067,
-   "sizes": {
-    "600": {
-     "file": "inbox/inbox-1-600.fe01d762cf.webp",
-     "width": 600,
-     "height": 400,
-     "bytes": 5446,
-     "sha256": "12ed919fc82d8735edc53438336e6f7d08b897b906828a380812d4c245fe6fca"
-    },
-    "1200": {
-     "file": "inbox/inbox-1-1200.fe01d762cf.webp",
-     "width": 1200,
-     "height": 800,
-     "bytes": 13934,
-     "sha256": "818d974bcbab4a9801a8b02fa0938f213fc3727bf022d6be940e804315096421"
-    },
-    "1800": {
-     "file": "inbox/inbox-1-1800.fe01d762cf.webp",
-     "width": 1600,
-     "height": 1067,
-     "bytes": 20330,
-     "sha256": "24416b24d0c423387b142dbe38618a20733a07968f231774c526d3d5dc624054"
-    }
-   },
-   "color": "#8a641d",
-   "blur": "data:image/webp;base64,UklGRkAAAABXRUJQVlA4IDQAAABwAQCdASoQAAsAAsBMJagCdAGIQAD+5k6ew5pPkKN3+dpNsCz/Fv2j+9soPzAyPVbhXmQA",
-   "original": {
-    "width": 1600,
-    "height": 1067
-   },
-   "lowRes": true,
-   "exif": {},
-   "colorConverted": true,
-   "source": "inbox-1.jpg",
-   "sourceSha256": "f8fc59e181b82fea550c148a512f73dba12aca69c483e539afabd689cf6ad356"
-  },
   "macau/macau-1": {
    "version": "e466351330",
    "width": 2667,
