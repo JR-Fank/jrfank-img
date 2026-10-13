@@ -1506,6 +1506,67 @@
    "source": "hk-9.jpeg",
    "sourceSha256": "6dc3bf9f2124c5f8f4401352dc52c631d3773511e3843dc92fc7dcd9f2249a92"
   },
+  "inbox/inbox-1": {
+   "version": "d839255118",
+   "width": 2667,
+   "height": 4000,
+   "sizes": {
+    "600": {
+     "file": "inbox/inbox-1-600.d839255118.webp",
+     "width": 400,
+     "height": 600,
+     "bytes": 54194,
+     "sha256": "02f74a00c4ce83e3b0f752dcea0f11af50dca01cab8ec087ee7aca96c7e5557a"
+    },
+    "1200": {
+     "file": "inbox/inbox-1-1200.d839255118.webp",
+     "width": 800,
+     "height": 1200,
+     "bytes": 182750,
+     "sha256": "728b653090be5ba53d52d391ddc27689772b75bbd581ed6f78e1008c7ee942aa"
+    },
+    "1800": {
+     "file": "inbox/inbox-1-1800.d839255118.webp",
+     "width": 1200,
+     "height": 1800,
+     "bytes": 363844,
+     "sha256": "5927977de04c5ebd41541f5d0e09d1be22efcc131ff5b8128a9276d5f0e31ff6"
+    },
+    "2400": {
+     "file": "inbox/inbox-1-2400.d839255118.webp",
+     "width": 1600,
+     "height": 2400,
+     "bytes": 566306,
+     "sha256": "486dc12f77ec15ee5401b56a65bcd3f138f5da1ff25228ae911a59160829abc1"
+    },
+    "4000": {
+     "file": "inbox/inbox-1-4000.d839255118.webp",
+     "width": 2667,
+     "height": 4000,
+     "bytes": 1150824,
+     "sha256": "887315e95c8dc3db1e325137554c4286c4ae5a28c0dd7cb794a8661de2d2b7c3"
+    }
+   },
+   "color": "#887f76",
+   "blur": "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAADQAQCdASoLABAAAsBMJZQCdAEO/ln5AAD+9T1dgNH+WESJJh1jsUnYT/j3vNqz5yVhq6Dlt7JL62IsMwlGepcp2m4tqW9h2nsAAA==",
+   "original": {
+    "width": 3707,
+    "height": 5560
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Fujifilm X-T3",
+    "lens": "XF 18–55mm",
+    "focal": "20mm",
+    "aperture": "f/5.6",
+    "shutter": "1/300s",
+    "iso": 320,
+    "date": "2023-03-18"
+   },
+   "colorConverted": false,
+   "source": "inbox-1.jpg",
+   "sourceSha256": "9904472b77ebfa8ac94b8039ce360320170b4ef339e754784bb3f43727787180"
+  },
   "macau/macau-1": {
    "version": "e466351330",
    "width": 2667,
