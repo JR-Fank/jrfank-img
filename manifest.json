@@ -1057,6 +1057,45 @@
    "source": "hk-10.jpg",
    "sourceSha256": "02998c99f0cc34abfc33931743c830b64fffbcfd168847a8473cc0a8a8a023ae"
   },
+  "hk/hk-11": {
+   "version": "2b0652ac09",
+   "width": 1600,
+   "height": 1067,
+   "sizes": {
+    "600": {
+     "file": "hk/hk-11-600.2b0652ac09.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 9168,
+     "sha256": "5e907e14cc5347dad8742f01294fa4ecd8edfc0fffcae76227641fd54f684034"
+    },
+    "1200": {
+     "file": "hk/hk-11-1200.2b0652ac09.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 19066,
+     "sha256": "a71f8b46e60cb3493f70995d066f24eb58c6baa3fad83b5f0b1f9486b2726ab0"
+    },
+    "1800": {
+     "file": "hk/hk-11-1800.2b0652ac09.webp",
+     "width": 1600,
+     "height": 1067,
+     "bytes": 26210,
+     "sha256": "8a7c9c5a4538ab9acf510f9999f7e60ad27b0fd089865a9abec6068d9c213ec4"
+    }
+   },
+   "color": "#100b0b",
+   "blur": "data:image/webp;base64,UklGRjgAAABXRUJQVlA4ICwAAAAwAQCdASoQAAsAAsBMJZwAA3AA/vbrJKA26WEs13zRnFsx5QjD7FdcQQAAAA==",
+   "original": {
+    "width": 1600,
+    "height": 1067
+   },
+   "lowRes": true,
+   "exif": {},
+   "colorConverted": true,
+   "source": "hk-11.jpg",
+   "sourceSha256": "74c252276a40f810cf5c2c346a6fec84cecdc25f6090f1d8ae3c296da3365116"
+  },
   "hk/hk-2": {
    "version": "d2927e7c2a",
    "width": 4000,
