@@ -75,8 +75,10 @@ jobs:
                 continue
               fi
               # 文章圖只能三段 reviews/<文章>/<id>；一般系列兩段 <系列>/<id>，系列不能叫 reviews
-              ext="(jpg|jpeg|png|tif|tiff|heic|heif|webp|JPG|JPEG|PNG|TIF|TIFF|HEIC|HEIF)"
-              if [[ "$k" == reviews/* ]]; then re="^reviews/[a-z0-9-]+/[a-z0-9-]+\.$ext\$"; else re="^[a-z0-9-]+/[a-z0-9-]+\.$ext\$"; fi
+              # 副檔名不分大小寫（和 webimg.py 的 suffix.lower() 一樣）：.jpg .JpG .webp .HEIF 都收
+              ext="$(printf '%s' "${k##*.}" | tr '[:upper:]' '[:lower:]')"
+              case "$ext" in jpg|jpeg|png|tif|tiff|heic|heif|webp) ;; *) echo "原圖副檔名不支援：$k"; exit 1 ;; esac
+              if [[ "$k" == reviews/* ]]; then re='^reviews/[a-z0-9-]+/[a-z0-9-]+\.[A-Za-z]+$'; else re='^[a-z0-9-]+/[a-z0-9-]+\.[A-Za-z]+$'; fi
               if ! [[ "$k" =~ $re ]]; then
                 echo "原圖鍵格式不對：$k"; exit 1
               fi
