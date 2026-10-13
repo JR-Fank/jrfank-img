@@ -2237,6 +2237,67 @@
    "source": "moon-2.jpg",
    "sourceSha256": "ba00946493e5efd2835f78c7711274ffc4e723394ab24952d0714035c8fa39c8"
   },
+  "moon/moon-9": {
+   "version": "c953eb9fbf",
+   "width": 3989,
+   "height": 2992,
+   "sizes": {
+    "600": {
+     "file": "moon/moon-9-600.c953eb9fbf.webp",
+     "width": 600,
+     "height": 450,
+     "bytes": 42862,
+     "sha256": "19c11453f7836974eb2c2858733c056382592a1f4fd38eeca87ea38edac6e7e9"
+    },
+    "1200": {
+     "file": "moon/moon-9-1200.c953eb9fbf.webp",
+     "width": 1200,
+     "height": 900,
+     "bytes": 109602,
+     "sha256": "3f921132ff70eeef53485dfb5ce82cad5eff833add610692b82ab9131cfcaf21"
+    },
+    "1800": {
+     "file": "moon/moon-9-1800.c953eb9fbf.webp",
+     "width": 1800,
+     "height": 1350,
+     "bytes": 199838,
+     "sha256": "3fb05a8a7fc39a33549a37c16f7cdfea260af015e092e0b950ee9aad60234b25"
+    },
+    "2400": {
+     "file": "moon/moon-9-2400.c953eb9fbf.webp",
+     "width": 2400,
+     "height": 1800,
+     "bytes": 300312,
+     "sha256": "20af55edacccdcc8bb33d089ca6d49d87c4cb24c5bf00baabd6830f7d606f347"
+    },
+    "4000": {
+     "file": "moon/moon-9-4000.c953eb9fbf.webp",
+     "width": 3989,
+     "height": 2992,
+     "bytes": 562002,
+     "sha256": "aa52878f70699484b1eb6b1de7236b111d527b53695be60856222aa6f827cc9f"
+    }
+   },
+   "color": "#615b64",
+   "blur": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAADwAQCdASoQAAwAAsBMJQBdgCKxrWb80AAA/tc8j46zZCv3L6ciAFuGd9Gv+M0zeKbPazSYTZdzeVoqjdJByzBrTK4OtkttZGhjLQlI+gAAAA==",
+   "original": {
+    "width": 3989,
+    "height": 2992
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone 13 Pro",
+    "lens": "Back triple camera 5.7mm f/1.5",
+    "focal": "5.7mm",
+    "aperture": "f/1.5",
+    "shutter": "1/90s",
+    "iso": 125,
+    "date": "2023-06-09"
+   },
+   "colorConverted": false,
+   "source": "moon-9.jpg",
+   "sourceSha256": "bb2c55d8da3bbf773d8e2007357939fe78f09e7528373cf21488681e06e708d8"
+  },
   "newyear/newyear-1": {
    "version": "d57db645c1",
    "width": 4000,
