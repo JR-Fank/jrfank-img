@@ -4036,6 +4036,54 @@
    "source": "shunde-13.jpeg",
    "sourceSha256": "01b60fb9a8dbfc56f45c9839be4eb509c776e16a56890e7dc4e92e003d045843"
   },
+  "shunde/shunde-14": {
+   "version": "cd471a71e5",
+   "width": 1684,
+   "height": 2088,
+   "sizes": {
+    "600": {
+     "file": "shunde/shunde-14-600.cd471a71e5.webp",
+     "width": 484,
+     "height": 600,
+     "bytes": 105572,
+     "sha256": "db72a6e35c117570fdf78a2f08ff8826173e90eef586554639d209b285144889"
+    },
+    "1200": {
+     "file": "shunde/shunde-14-1200.cd471a71e5.webp",
+     "width": 968,
+     "height": 1200,
+     "bytes": 343570,
+     "sha256": "889d612dd107ef87bf3c8b50723af2a5c29af0a3252ae92a683c6cf98851b880"
+    },
+    "1800": {
+     "file": "shunde/shunde-14-1800.cd471a71e5.webp",
+     "width": 1452,
+     "height": 1800,
+     "bytes": 700342,
+     "sha256": "2fe838e9e0f692c1d20521d2ace00f6a772c3207230753c8ae74cba30b59da63"
+    },
+    "2400": {
+     "file": "shunde/shunde-14-2400.cd471a71e5.webp",
+     "width": 1684,
+     "height": 2088,
+     "bytes": 909900,
+     "sha256": "a31c9991df54bf643e0175e6c90f58dcda9dc1cadddedaf59bef5ebb7c534ffd"
+    }
+   },
+   "color": "#a78b73",
+   "blur": "data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAADwAQCdASoNABAAAsBMJbACdAYvhvIFlgAA/l9qZbYV18oeiiXc5Yuq2kBAyOJF7mn5weeFHXy0HYAYeXVockf6N3VZRl7SpGn3TZr33euAPcosbM4xGMH1QsZB0ooguwS++2xvibQSTssmfzKECD+MNsu9PFQri/AAAA==",
+   "original": {
+    "width": 1684,
+    "height": 2088
+   },
+   "lowRes": true,
+   "exif": {
+    "date": "2024-05-25"
+   },
+   "colorConverted": true,
+   "source": "shunde-14.jpeg",
+   "sourceSha256": "7c63ad9e7a28a795f7b37535e2067d80a047231ba2328d81f75f9998cd41e4f6"
+  },
   "shunde/shunde-15": {
    "version": "cd471a71e5",
    "width": 1684,
