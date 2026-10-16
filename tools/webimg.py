@@ -28,6 +28,7 @@ GitHub Actions 從 R2 下載到暫存目錄（用環境變數 JRFANK_ORIGINALS �
 """
 from __future__ import annotations
 
+import argparse
 import base64
 import hashlib
 import json
@@ -202,16 +203,26 @@ def up_to_date(info: dict | None, src_sha: str) -> bool:
 
 
 def build(args: list[str]) -> None:
-    force = "--force" in args
-    only = [a for a in args if not a.startswith("--")]
-    items = originals(only)
+    parser = argparse.ArgumentParser(description="出圖並更新指定照片的 manifest")
+    parser.add_argument("keys", nargs="*")
+    parser.add_argument("--force", action="store_true")
+    parser.add_argument("--reuse-manifest", type=Path, help="重試時沿用這次已出好的圖與條目，不重新編碼")
+    opts = parser.parse_args(args)
+    items = originals(opts.keys)
     manifest = load_manifest()
+    cached = json.loads(opts.reuse_manifest.read_text()) if opts.reuse_manifest else None
+    if cached and cached.get("recipe") != RECIPE:
+        sys.exit("快取的出圖配方不同，不能沿用")
 
     def run(kv: tuple[str, Path]) -> tuple[str, dict | None]:
         key, src = kv
         src_sha = sha256(src)
         prev = manifest[section(key)].get(key)
-        if not force and up_to_date(prev, src_sha):
+        if cached is not None:
+            prev = cached.get(section(key), {}).get(key)
+            if not up_to_date(prev, src_sha):
+                sys.exit(f"{key}：快取或已出好的圖不完整，停止重試")
+        if cached is not None or (not opts.force and up_to_date(prev, src_sha)):
             # EXIF 修正（exif-overrides.json）不影響圖檔，照樣更新
             return key, {**prev, "exif": exif_fields(src, key)}
         return key, build_one(key, src, src_sha)
