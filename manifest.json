@@ -3931,6 +3931,839 @@
    "source": "stage-2.jpg",
    "sourceSha256": "0b8abb23831c3ae395aebd0c8e189aaf3af623a58f561d625563afce2278e09a"
   },
+  "tokyo/tokyo-13": {
+   "version": "bb1acf58ff",
+   "width": 3130,
+   "height": 2075,
+   "sizes": {
+    "600": {
+     "file": "tokyo/tokyo-13-600.bb1acf58ff.webp",
+     "width": 600,
+     "height": 398,
+     "bytes": 32664,
+     "sha256": "7662694a61bced68b1613d1162f5d64523076b058e5fa860c0463f1200850591"
+    },
+    "1200": {
+     "file": "tokyo/tokyo-13-1200.bb1acf58ff.webp",
+     "width": 1200,
+     "height": 796,
+     "bytes": 203180,
+     "sha256": "44d584c3dbfb3028e426c71b12c782320f55f248db973962126cf6e1f4674b45"
+    },
+    "1800": {
+     "file": "tokyo/tokyo-13-1800.bb1acf58ff.webp",
+     "width": 1800,
+     "height": 1193,
+     "bytes": 588594,
+     "sha256": "e1e7ba5a5690ca01931b0e81a1c81240a86ed3c737c864a276d8b0abea6f3c86"
+    },
+    "2400": {
+     "file": "tokyo/tokyo-13-2400.bb1acf58ff.webp",
+     "width": 2400,
+     "height": 1591,
+     "bytes": 1221366,
+     "sha256": "680160b6ec48fb412f16968b30473b33fc07678df87112f0e827c705dacad5a6"
+    },
+    "4000": {
+     "file": "tokyo/tokyo-13-4000.bb1acf58ff.webp",
+     "width": 3130,
+     "height": 2075,
+     "bytes": 2412622,
+     "sha256": "500b1534fdacac86dfa8b1c9e2b0dc5f39686aef7e27f20968b8cdb0b55a569b"
+    }
+   },
+   "color": "#999792",
+   "blur": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAAAQAgCdASoQAAsAAsBMJZAC7ADwGfUus+yAAPzuOe5VbT+o4VRtQ8sUIdIfBoyNdHHFgmnn2Wx/xKND/yOq7dnLgAA=",
+   "original": {
+    "width": 3130,
+    "height": 2075
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Noritsu Koki QSS-32_33"
+   },
+   "colorConverted": false,
+   "source": "tokyo-13.jpeg",
+   "sourceSha256": "51783dc71a7e880477520a8f71045335c1b68b6931e424a8acdc802ffdcd974d"
+  },
+  "tokyo/tokyo-14": {
+   "version": "436fb01a0f",
+   "width": 3130,
+   "height": 2075,
+   "sizes": {
+    "600": {
+     "file": "tokyo/tokyo-14-600.436fb01a0f.webp",
+     "width": 600,
+     "height": 398,
+     "bytes": 51616,
+     "sha256": "1bff9299fbce183d40f36c1b62bd324977048948749b75c0cc813c6615c833b8"
+    },
+    "1200": {
+     "file": "tokyo/tokyo-14-1200.436fb01a0f.webp",
+     "width": 1200,
+     "height": 796,
+     "bytes": 277168,
+     "sha256": "20443658d028a3f33cad53608157424fb7a3f99fc14c923c1ea63fdfdcec49aa"
+    },
+    "1800": {
+     "file": "tokyo/tokyo-14-1800.436fb01a0f.webp",
+     "width": 1800,
+     "height": 1193,
+     "bytes": 704396,
+     "sha256": "a9af52708e4a117cd788443aaf070a43bb7de92b0ee65cf7ef4f8b3615569eb7"
+    },
+    "2400": {
+     "file": "tokyo/tokyo-14-2400.436fb01a0f.webp",
+     "width": 2400,
+     "height": 1591,
+     "bytes": 1383224,
+     "sha256": "16a9f6cb623725abfa3b9ca1052a13c54fc207cea7a8f53d9a3ad2500405c1b2"
+    },
+    "4000": {
+     "file": "tokyo/tokyo-14-4000.436fb01a0f.webp",
+     "width": 3130,
+     "height": 2075,
+     "bytes": 2490218,
+     "sha256": "f818248d2d0901c9cd49a6553dcda218d1ee752fd52d85a027ce1dc6cb0a7ebd"
+    }
+   },
+   "color": "#7b807c",
+   "blur": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAAAQAgCdASoQAAsAAsBMJZQCdACzJzXOkpQAAM4n+cSbr2wfDPx/0qNJsYRcSQ2gVLb3STEfMTYb8e6hqk4vv0DXka85KcM2AAA=",
+   "original": {
+    "width": 3130,
+    "height": 2075
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Noritsu Koki QSS-32_33",
+    "date": "2024-12-01"
+   },
+   "colorConverted": false,
+   "source": "tokyo-14.jpeg",
+   "sourceSha256": "81c2b1463a35942e240dca8a5a172dc23cb6e252a565110830d940913f2ba68a"
+  },
+  "tokyo/tokyo-15": {
+   "version": "8611d96f61",
+   "width": 3130,
+   "height": 2075,
+   "sizes": {
+    "600": {
+     "file": "tokyo/tokyo-15-600.8611d96f61.webp",
+     "width": 600,
+     "height": 398,
+     "bytes": 38834,
+     "sha256": "7ef79f63bb1d84be32cd6af917482849b9627c90364ff4bac450205cfb48d333"
+    },
+    "1200": {
+     "file": "tokyo/tokyo-15-1200.8611d96f61.webp",
+     "width": 1200,
+     "height": 796,
+     "bytes": 250494,
+     "sha256": "ce72bdca697a098a58a78a9f60db0f1ea46d0fe8bb438cf4446b3b56facb5bb5"
+    },
+    "1800": {
+     "file": "tokyo/tokyo-15-1800.8611d96f61.webp",
+     "width": 1800,
+     "height": 1193,
+     "bytes": 705404,
+     "sha256": "8b0f6bc73ecb3c6571263ed2b6ee9bac77feb2824b799cdcab43979fc5a738a1"
+    },
+    "2400": {
+     "file": "tokyo/tokyo-15-2400.8611d96f61.webp",
+     "width": 2400,
+     "height": 1591,
+     "bytes": 1366032,
+     "sha256": "3b57c6ae0a7890e1419cea10c948b62cbad0f13e0e94ed792239dbe775ce8856"
+    },
+    "4000": {
+     "file": "tokyo/tokyo-15-4000.8611d96f61.webp",
+     "width": 3130,
+     "height": 2075,
+     "bytes": 2567754,
+     "sha256": "b54d7641b9e1eb529909cfffeb30786568fbf4397e123da41e496eede22e499c"
+    }
+   },
+   "color": "#6d7d7d",
+   "blur": "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAAAwAgCdASoQAAsAAsBMJQBOjXAAWa4aQ8g3gAD+TRI/UqeuGSXScdIdfeyf+p66ZvSLxGsJ+1DnIAIoSBA4AA==",
+   "original": {
+    "width": 3130,
+    "height": 2075
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Noritsu Koki QSS-32_33",
+    "date": "2024-11-30"
+   },
+   "colorConverted": true,
+   "source": "tokyo-15.jpeg",
+   "sourceSha256": "bf3df5ddc04eb379f1a8cf00220d643cf32ea2b6d548385a36241f823f67a903"
+  },
+  "tokyo/tokyo-16": {
+   "version": "a3db89fb2f",
+   "width": 3130,
+   "height": 2075,
+   "sizes": {
+    "600": {
+     "file": "tokyo/tokyo-16-600.a3db89fb2f.webp",
+     "width": 600,
+     "height": 398,
+     "bytes": 34506,
+     "sha256": "7bdcf5dd416ed3f60072dd392716f42d57a919c6604658e373092e820a237f15"
+    },
+    "1200": {
+     "file": "tokyo/tokyo-16-1200.a3db89fb2f.webp",
+     "width": 1200,
+     "height": 796,
+     "bytes": 165108,
+     "sha256": "5f39210ac781025a4e219deec1352a54143e0bb0fc41ac11b801bef9409d99c3"
+    },
+    "1800": {
+     "file": "tokyo/tokyo-16-1800.a3db89fb2f.webp",
+     "width": 1800,
+     "height": 1193,
+     "bytes": 500638,
+     "sha256": "d282cf0e59865f365781db85722f583fd580b2a3a61cc65f62e4dcf23d7d8c58"
+    },
+    "2400": {
+     "file": "tokyo/tokyo-16-2400.a3db89fb2f.webp",
+     "width": 2400,
+     "height": 1591,
+     "bytes": 1041870,
+     "sha256": "768d5363b5dc96b0f9a0fda0bf7b5e223bdec52a3d7fb1fc7ad6d1ddc07a29c8"
+    },
+    "4000": {
+     "file": "tokyo/tokyo-16-4000.a3db89fb2f.webp",
+     "width": 3130,
+     "height": 2075,
+     "bytes": 2115516,
+     "sha256": "5c0d76f3d1637c07141b4f80f8a790abb8f75db237224953f926e39c06f2b267"
+    }
+   },
+   "color": "#8d908d",
+   "blur": "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAADwAQCdASoQAAsAAsBMJQBdgCPuDpsHZOAA/spkFbCaMOqoONj/6ZWQzy9GN8ziOl2nC61qNE9ymAAA",
+   "original": {
+    "width": 3130,
+    "height": 2075
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Noritsu Koki QSS-32_33"
+   },
+   "colorConverted": false,
+   "source": "tokyo-16.jpeg",
+   "sourceSha256": "81bf6f1f2b5bf3258cd21495ac6fb4b6b787e4cb17ebea7d3a05968667288cf6"
+  },
+  "tokyo/tokyo-17": {
+   "version": "3b0d4f6667",
+   "width": 3130,
+   "height": 2075,
+   "sizes": {
+    "600": {
+     "file": "tokyo/tokyo-17-600.3b0d4f6667.webp",
+     "width": 600,
+     "height": 398,
+     "bytes": 30628,
+     "sha256": "a94b22003ec54e25af79f020645ce89848a41d3a5a9abf7431069b28dee63375"
+    },
+    "1200": {
+     "file": "tokyo/tokyo-17-1200.3b0d4f6667.webp",
+     "width": 1200,
+     "height": 796,
+     "bytes": 199878,
+     "sha256": "c3995257ffaab036dbafaa7637daf91e4651d2655ad0e84814767d999ea72db8"
+    },
+    "1800": {
+     "file": "tokyo/tokyo-17-1800.3b0d4f6667.webp",
+     "width": 1800,
+     "height": 1193,
+     "bytes": 599446,
+     "sha256": "36d29ebc3d6421e1e857c52b235ba3833e2e15368b71067793a10bbdd95a98af"
+    },
+    "2400": {
+     "file": "tokyo/tokyo-17-2400.3b0d4f6667.webp",
+     "width": 2400,
+     "height": 1591,
+     "bytes": 1229534,
+     "sha256": "5d7fd9ecbff937d5eb887f358576e968b6d338833d0209f56c524bad4dede4a0"
+    },
+    "4000": {
+     "file": "tokyo/tokyo-17-4000.3b0d4f6667.webp",
+     "width": 3130,
+     "height": 2075,
+     "bytes": 2414442,
+     "sha256": "08a3780901a7d77c362cd65d580a746d9e3f704759c6746d10ac03249f78e915"
+    }
+   },
+   "color": "#556b7c",
+   "blur": "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAADQAQCdASoQAAsAAsBMJagCdAEOqPP/AAD+9LYUYcD4cSnFrqRqNuba/7S84rsJEXB+NvU/zShPri9hYYAAAA==",
+   "original": {
+    "width": 3130,
+    "height": 2075
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Noritsu Koki QSS-32_33",
+    "date": "2024-12-04"
+   },
+   "colorConverted": false,
+   "source": "tokyo-17.jpeg",
+   "sourceSha256": "0c73fa3e0aadcc2da7189cfe12d79e1939c9ccb3657a93f42d21664ad40c6e6f"
+  },
+  "tokyo/tokyo-18": {
+   "version": "8589ce2a75",
+   "width": 3130,
+   "height": 2075,
+   "sizes": {
+    "600": {
+     "file": "tokyo/tokyo-18-600.8589ce2a75.webp",
+     "width": 600,
+     "height": 398,
+     "bytes": 33044,
+     "sha256": "3744f62e23368ae087ffc50a17fbdf46820507ccfd784b90c89d527634c68c22"
+    },
+    "1200": {
+     "file": "tokyo/tokyo-18-1200.8589ce2a75.webp",
+     "width": 1200,
+     "height": 796,
+     "bytes": 201166,
+     "sha256": "76caa16bb8af04e5a7b04dd206f0643a976b05174c6ec87ae946ce8fc8b308ed"
+    },
+    "1800": {
+     "file": "tokyo/tokyo-18-1800.8589ce2a75.webp",
+     "width": 1800,
+     "height": 1193,
+     "bytes": 588392,
+     "sha256": "b14e52baf46be012e010c4f61798a671579c38f56606806e4ab047098886b3b1"
+    },
+    "2400": {
+     "file": "tokyo/tokyo-18-2400.8589ce2a75.webp",
+     "width": 2400,
+     "height": 1591,
+     "bytes": 1216054,
+     "sha256": "0cb1595983e6afdc5b9da215ce83bf636d24bae87ac1af36510e10a07050a83e"
+    },
+    "4000": {
+     "file": "tokyo/tokyo-18-4000.8589ce2a75.webp",
+     "width": 3130,
+     "height": 2075,
+     "bytes": 2407846,
+     "sha256": "2af7f8ec8e6fba9da2fdbe0d472fb71d71a2e1c9e8a3860fe1d5ca71c34efba2"
+    }
+   },
+   "color": "#8a9392",
+   "blur": "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAADwAQCdASoQAAsAAsBMJagCdAEPdKZRLAAA/rdUBxP001rnjgXutiNEhNdbI1sjE6plFSOjLrJrvpZ+GJSHwAAA",
+   "original": {
+    "width": 3130,
+    "height": 2075
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Noritsu Koki QSS-32_33",
+    "date": "2024-12-04"
+   },
+   "colorConverted": false,
+   "source": "tokyo-18.jpeg",
+   "sourceSha256": "50a0d9d563f1b73d952d74b13a47ff87509caf98505b754b8692442ee36079d4"
+  },
+  "tokyo/tokyo-19": {
+   "version": "554ec32b64",
+   "width": 3130,
+   "height": 2075,
+   "sizes": {
+    "600": {
+     "file": "tokyo/tokyo-19-600.554ec32b64.webp",
+     "width": 600,
+     "height": 398,
+     "bytes": 47352,
+     "sha256": "355a8da264e63a7d740b753f3cf6b472a1aeb22393bc7cf88e1c846f369a624e"
+    },
+    "1200": {
+     "file": "tokyo/tokyo-19-1200.554ec32b64.webp",
+     "width": 1200,
+     "height": 796,
+     "bytes": 267738,
+     "sha256": "95b5f143f9610f4e2d06a497fcd9f6b6efb1af2a3b3250d617725f5ed3ba0550"
+    },
+    "1800": {
+     "file": "tokyo/tokyo-19-1800.554ec32b64.webp",
+     "width": 1800,
+     "height": 1193,
+     "bytes": 714264,
+     "sha256": "e01feba387f7f2abda6026348863abc5d88ecb1a82acc602f61be6f269cac271"
+    },
+    "2400": {
+     "file": "tokyo/tokyo-19-2400.554ec32b64.webp",
+     "width": 2400,
+     "height": 1591,
+     "bytes": 1426840,
+     "sha256": "7c132e815db6f3414047fe1118569733250459893623522845a1d2c033b94b40"
+    },
+    "4000": {
+     "file": "tokyo/tokyo-19-4000.554ec32b64.webp",
+     "width": 3130,
+     "height": 2075,
+     "bytes": 2570788,
+     "sha256": "8754b7462246bc8dec936025d697650ec999bbdda6cf5200d759b53c2aca68d0"
+    }
+   },
+   "color": "#6d6f6c",
+   "blur": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAADwAQCdASoQAAsAAsBMJYwCdAEP/LIN09oA/sJHCgJu8H0KZD5+ocKgtV59oVbR92sXqeL06yHoQNNdYRRPtogDgAA=",
+   "original": {
+    "width": 3130,
+    "height": 2075
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Noritsu Koki QSS-32_33",
+    "date": "2024-12-01"
+   },
+   "colorConverted": true,
+   "source": "tokyo-19.jpeg",
+   "sourceSha256": "d3991e85ea0c80ee1900af24d94e806f4d777fa0a574bb37bb14537f6371aafb"
+  },
+  "tokyo/tokyo-20": {
+   "version": "5b01b1a06b",
+   "width": 3130,
+   "height": 2075,
+   "sizes": {
+    "600": {
+     "file": "tokyo/tokyo-20-600.5b01b1a06b.webp",
+     "width": 600,
+     "height": 398,
+     "bytes": 45428,
+     "sha256": "aa10faa1ebe0944b1fd2dfbdacd78834b6820024b881441ce202b634de549c8e"
+    },
+    "1200": {
+     "file": "tokyo/tokyo-20-1200.5b01b1a06b.webp",
+     "width": 1200,
+     "height": 796,
+     "bytes": 258108,
+     "sha256": "1aec3ef586475fa5806307bb171b4a6e0a45eb3d70c413752b13485a145c68ec"
+    },
+    "1800": {
+     "file": "tokyo/tokyo-20-1800.5b01b1a06b.webp",
+     "width": 1800,
+     "height": 1193,
+     "bytes": 695222,
+     "sha256": "0c9e46984bc767c65ab0bd38406ac045ff26eea4c906b199dffba62743094ae5"
+    },
+    "2400": {
+     "file": "tokyo/tokyo-20-2400.5b01b1a06b.webp",
+     "width": 2400,
+     "height": 1591,
+     "bytes": 1405108,
+     "sha256": "c371cb88d2903a77dfa6584c52410127cc97f34a61951e044624b41bbbf419b4"
+    },
+    "4000": {
+     "file": "tokyo/tokyo-20-4000.5b01b1a06b.webp",
+     "width": 3130,
+     "height": 2075,
+     "bytes": 2549122,
+     "sha256": "d924e5a0a8d2d4eac20c8cdf6f7b37d64c068d04429d66b7c6d6d9ecbed90b58"
+    }
+   },
+   "color": "#6f7d7c",
+   "blur": "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAADwAQCdASoQAAsAAsBMJYwCdAEfkOlJAAAA+WFdK35+zETRqZAupjO8qVaspEbbwzCbIMk1yU+KeCALtQ2SzSwA",
+   "original": {
+    "width": 3130,
+    "height": 2075
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Noritsu Koki QSS-32_33",
+    "date": "2024-11-30"
+   },
+   "colorConverted": true,
+   "source": "tokyo-20.jpeg",
+   "sourceSha256": "31dfc1fcba83722b280f88fdd361cf292bc99ceb37c67e45051530614e6e289d"
+  },
+  "tokyo/tokyo-21": {
+   "version": "02fde938b6",
+   "width": 3130,
+   "height": 2075,
+   "sizes": {
+    "600": {
+     "file": "tokyo/tokyo-21-600.02fde938b6.webp",
+     "width": 600,
+     "height": 398,
+     "bytes": 71824,
+     "sha256": "a62e3ebb760cbe365c7070e20374638cfa2473ee0221ef10efacd17ff48747b5"
+    },
+    "1200": {
+     "file": "tokyo/tokyo-21-1200.02fde938b6.webp",
+     "width": 1200,
+     "height": 796,
+     "bytes": 294604,
+     "sha256": "40692c9aa9f01e45ddae9319a55bcedb7f4020cd202a5eaf18adb0acd2cb50eb"
+    },
+    "1800": {
+     "file": "tokyo/tokyo-21-1800.02fde938b6.webp",
+     "width": 1800,
+     "height": 1193,
+     "bytes": 750538,
+     "sha256": "2944a6b88a6b1afe9c88e6cbaa8baa10c5f747ed533d647f749133ae05436ef3"
+    },
+    "2400": {
+     "file": "tokyo/tokyo-21-2400.02fde938b6.webp",
+     "width": 2400,
+     "height": 1591,
+     "bytes": 1387260,
+     "sha256": "2a990d56b73eaa6f4bc6d1a9b5db59a3f85c3efad90a7b0a4f2c94981b6ad583"
+    },
+    "4000": {
+     "file": "tokyo/tokyo-21-4000.02fde938b6.webp",
+     "width": 3130,
+     "height": 2075,
+     "bytes": 2502174,
+     "sha256": "3ca518cf636723603d4d9fc4f2f61d784ace1ce6a9a463263a9f17e15ad86a9e"
+    }
+   },
+   "color": "#84827e",
+   "blur": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAABQAgCdASoQAAsAAsBMJZQCdH8AFwAP8uEIJVAA/u4UrhQvBAv4xvM0YlnmlFI9d/wO1VXUEPdlJ99q6CffYotkB6+a14IKryPgq3J3Qbz7wYwrBSJuAAAA",
+   "original": {
+    "width": 3130,
+    "height": 2075
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Noritsu Koki QSS-32_33",
+    "date": "2024-12-02"
+   },
+   "colorConverted": false,
+   "source": "tokyo-21.jpeg",
+   "sourceSha256": "13e8e4487ede7ec38e55fc9ba6f5a3ffedfc650be0b26da38d522fb8ac942eb0"
+  },
+  "tokyo/tokyo-22": {
+   "version": "b782e96460",
+   "width": 3130,
+   "height": 2075,
+   "sizes": {
+    "600": {
+     "file": "tokyo/tokyo-22-600.b782e96460.webp",
+     "width": 600,
+     "height": 398,
+     "bytes": 92966,
+     "sha256": "f65df03e57e8f856f7a27ce5420d96277634db04d0bcff88e8a84137f8e8b4ad"
+    },
+    "1200": {
+     "file": "tokyo/tokyo-22-1200.b782e96460.webp",
+     "width": 1200,
+     "height": 796,
+     "bytes": 330258,
+     "sha256": "5273d7e39dc8a6925ae9983be132ad0d888731d6b2dcf94118650a1d7b4c63de"
+    },
+    "1800": {
+     "file": "tokyo/tokyo-22-1800.b782e96460.webp",
+     "width": 1800,
+     "height": 1193,
+     "bytes": 756788,
+     "sha256": "8d87b21c41210ec4c7e56f47105129640c936c899d27fc9b1206532da06fee6e"
+    },
+    "2400": {
+     "file": "tokyo/tokyo-22-2400.b782e96460.webp",
+     "width": 2400,
+     "height": 1591,
+     "bytes": 1357414,
+     "sha256": "8631d5441dbef04cbf345eb0b9114e2d5b2ab5b273471089a6ce628bd66340d8"
+    },
+    "4000": {
+     "file": "tokyo/tokyo-22-4000.b782e96460.webp",
+     "width": 3130,
+     "height": 2075,
+     "bytes": 2393478,
+     "sha256": "4f0e83f2de9cc27bdff8ba67456944be665b9f586463ec22920f732a0acd2aa3"
+    }
+   },
+   "color": "#626c61",
+   "blur": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAAAQAgCdASoQAAsAAsBMJYgCdADp8P03CvFAAP7qXORbFaOybjrpHt/X6ahJAf1JqvNX0fZclxqfngAIZ7Dz2KZxZcYLUFVGoXCsxht1n2e0zl24ukG/tmrOPYKS26s3Th+w+Bys7yAAAA==",
+   "original": {
+    "width": 3130,
+    "height": 2075
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Noritsu Koki QSS-32_33"
+   },
+   "colorConverted": false,
+   "source": "tokyo-22.jpeg",
+   "sourceSha256": "484c4dec1f4000144e5c3086b66a5a9856c1b6abb578b436fe68fadb4426725f"
+  },
+  "tokyo/tokyo-23": {
+   "version": "9065c54a5f",
+   "width": 3130,
+   "height": 2075,
+   "sizes": {
+    "600": {
+     "file": "tokyo/tokyo-23-600.9065c54a5f.webp",
+     "width": 600,
+     "height": 398,
+     "bytes": 34042,
+     "sha256": "fcc20d0b7ac6811752c5294cb5c0d4b88a5d56b7c1845044d94860096ead702e"
+    },
+    "1200": {
+     "file": "tokyo/tokyo-23-1200.9065c54a5f.webp",
+     "width": 1200,
+     "height": 796,
+     "bytes": 211680,
+     "sha256": "a4a3d66afbf61f66f97bffbf7089c8b4378b3e088df2b1e510889d78a4a8b35e"
+    },
+    "1800": {
+     "file": "tokyo/tokyo-23-1800.9065c54a5f.webp",
+     "width": 1800,
+     "height": 1193,
+     "bytes": 599750,
+     "sha256": "28a87c80e94a41d0870e9313ddc021fa1db6ddda869c255435a617d9d280d60f"
+    },
+    "2400": {
+     "file": "tokyo/tokyo-23-2400.9065c54a5f.webp",
+     "width": 2400,
+     "height": 1591,
+     "bytes": 1235556,
+     "sha256": "71d883294904f88a9f93bee6380f60457dd9df3ebea779df34f22defc6f8aecb"
+    },
+    "4000": {
+     "file": "tokyo/tokyo-23-4000.9065c54a5f.webp",
+     "width": 3130,
+     "height": 2075,
+     "bytes": 2436240,
+     "sha256": "d66f4e7133c649fd3b2cd736b7c0a85a54200b3f484664fade194fc839f6ec7a"
+    }
+   },
+   "color": "#8d8c88",
+   "blur": "data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAACwAQCdASoQAAsAAsBMJZAAAo1ii3IIAM4iOIov5xQgtGcWx1l511xjXczetBF4V2OALAVrT61/ZuMAAAA=",
+   "original": {
+    "width": 3130,
+    "height": 2075
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Noritsu Koki QSS-32_33"
+   },
+   "colorConverted": false,
+   "source": "tokyo-23.jpeg",
+   "sourceSha256": "efd72eb53bf29b3fc795479c0b1cc1d210b01a238f59b6fea9fb68e924514e6b"
+  },
+  "tokyo/tokyo-24": {
+   "version": "8d5a53826d",
+   "width": 3130,
+   "height": 2075,
+   "sizes": {
+    "600": {
+     "file": "tokyo/tokyo-24-600.8d5a53826d.webp",
+     "width": 600,
+     "height": 398,
+     "bytes": 52938,
+     "sha256": "c43620302b3aec5726ab21d9c143103adc8fef33e58ee4f3e96f0f8b0ec68988"
+    },
+    "1200": {
+     "file": "tokyo/tokyo-24-1200.8d5a53826d.webp",
+     "width": 1200,
+     "height": 796,
+     "bytes": 239662,
+     "sha256": "f39737032ebf2a597209e33c7342da5319472aee16188e8b42cfeaebc263c46e"
+    },
+    "1800": {
+     "file": "tokyo/tokyo-24-1800.8d5a53826d.webp",
+     "width": 1800,
+     "height": 1193,
+     "bytes": 663038,
+     "sha256": "5688a5322ccbc6714ccede907c7fe5917955b20d7c97986800159df2f67d8af0"
+    },
+    "2400": {
+     "file": "tokyo/tokyo-24-2400.8d5a53826d.webp",
+     "width": 2400,
+     "height": 1591,
+     "bytes": 1353398,
+     "sha256": "e25f232c994d569275e0f833e19800f1cf2f260c5f3863e7d2428560e597fe51"
+    },
+    "4000": {
+     "file": "tokyo/tokyo-24-4000.8d5a53826d.webp",
+     "width": 3130,
+     "height": 2075,
+     "bytes": 2575762,
+     "sha256": "49ea600d383d50547c5d2901dafd3cf781e2a74cc0f8d8dc274781bcb67790d8"
+    }
+   },
+   "color": "#908d85",
+   "blur": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAADwAQCdASoQAAsAAsBMJZgC7AEfgAhAp7AA/snWKcuh77lOVtZtKka6+Ipge7IyON0A9G0rsHmH4/ddvrsYbHXJQkjDcxK1wxDp9OrZeSgAAA==",
+   "original": {
+    "width": 3130,
+    "height": 2075
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Noritsu Koki QSS-32_33",
+    "date": "2024-12-10"
+   },
+   "colorConverted": false,
+   "source": "tokyo-24.jpeg",
+   "sourceSha256": "0532b44d70fde5a99dd0aa81a1c37b2048dc7495ad0c342761572aca30247238"
+  },
+  "tokyo/tokyo-25": {
+   "version": "4bcd63c2c5",
+   "width": 3130,
+   "height": 2075,
+   "sizes": {
+    "600": {
+     "file": "tokyo/tokyo-25-600.4bcd63c2c5.webp",
+     "width": 600,
+     "height": 398,
+     "bytes": 54172,
+     "sha256": "b1b66ce7853f2e43e5a8c90984ea43653a46220dddb9a378a656ddecd002047f"
+    },
+    "1200": {
+     "file": "tokyo/tokyo-25-1200.4bcd63c2c5.webp",
+     "width": 1200,
+     "height": 796,
+     "bytes": 311590,
+     "sha256": "9e496686e8f88402c8743b99a7923bc511609cc75d22d95d277dfab8ed856bc1"
+    },
+    "1800": {
+     "file": "tokyo/tokyo-25-1800.4bcd63c2c5.webp",
+     "width": 1800,
+     "height": 1193,
+     "bytes": 834900,
+     "sha256": "ae6229350816db4b66cb0f533c3c444acc88bbce904d75df203909b7a7b47bc3"
+    },
+    "2400": {
+     "file": "tokyo/tokyo-25-2400.4bcd63c2c5.webp",
+     "width": 2400,
+     "height": 1591,
+     "bytes": 1534984,
+     "sha256": "3774b9fd4eb938209bde1c81993db2f5b57c1d64da79b6b043eca68032cfc0e5"
+    },
+    "4000": {
+     "file": "tokyo/tokyo-25-4000.4bcd63c2c5.webp",
+     "width": 3130,
+     "height": 2075,
+     "bytes": 2667872,
+     "sha256": "2d01361ea835b2e4ab3fb55ddb4294ba8fb49e58fb0c59483fab6132fab441f5"
+    }
+   },
+   "color": "#333025",
+   "blur": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAAAwAgCdASoQAAsAAsBMJZQCsAD0uqDUBck5kAD++Ftfy+bgGwOEWoa4Z3l2DpCvZEv16IhLeJ16pQcfpD+N/ND8yirXAAAA",
+   "original": {
+    "width": 3130,
+    "height": 2075
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Noritsu Koki QSS-32_33"
+   },
+   "colorConverted": true,
+   "source": "tokyo-25.jpeg",
+   "sourceSha256": "129a31dcf42667f78532f36d470fe3df53f8f38c9fc171ca902649f9ae5e2837"
+  },
+  "tokyo/tokyo-26": {
+   "version": "4b2cc06294",
+   "width": 2075,
+   "height": 3130,
+   "sizes": {
+    "600": {
+     "file": "tokyo/tokyo-26-600.4b2cc06294.webp",
+     "width": 398,
+     "height": 600,
+     "bytes": 90418,
+     "sha256": "c40e68a17501387a7986b3f464af626f471fd5a7a7c659106958737bf9151b08"
+    },
+    "1200": {
+     "file": "tokyo/tokyo-26-1200.4b2cc06294.webp",
+     "width": 796,
+     "height": 1200,
+     "bytes": 383154,
+     "sha256": "70ada02d686b786dfcf230dab761e234c44e31a4a3c222f9e835ee6267de87a0"
+    },
+    "1800": {
+     "file": "tokyo/tokyo-26-1800.4b2cc06294.webp",
+     "width": 1193,
+     "height": 1800,
+     "bytes": 917620,
+     "sha256": "bba75ba5724c9ee84e529b181e7052d9607f64be77ac5dd5e187fa17dd950492"
+    },
+    "2400": {
+     "file": "tokyo/tokyo-26-2400.4b2cc06294.webp",
+     "width": 1591,
+     "height": 2400,
+     "bytes": 1667678,
+     "sha256": "01f90230b2fb0451c81cc39eca36eb65d6aa0c64a0660baad2dcf191592d80a7"
+    },
+    "4000": {
+     "file": "tokyo/tokyo-26-4000.4b2cc06294.webp",
+     "width": 2075,
+     "height": 3130,
+     "bytes": 2861872,
+     "sha256": "8f586b943832ab4c4d741aa945b35ba6ecb6435d62bdcd7ee76c2e2859a58a34"
+    }
+   },
+   "color": "#4f493c",
+   "blur": "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAACwAQCdASoLABAAAsBMJYwCsADXCvAAAP6H7VQPMsycXN3kFAqy9lEbhvbllJRNlDVnQGMHKSB9XQ00kIjufzYLFCVkJqKE04AAAA==",
+   "original": {
+    "width": 2075,
+    "height": 3130
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Noritsu Koki QSS-32_33"
+   },
+   "colorConverted": true,
+   "source": "tokyo-26.jpeg",
+   "sourceSha256": "e0cbfea946d1fff4d322d80f51eb226170586dee3747011b96f375d98ff48351"
+  },
+  "tokyo/tokyo-27": {
+   "version": "36395e25c5",
+   "width": 2075,
+   "height": 3130,
+   "sizes": {
+    "600": {
+     "file": "tokyo/tokyo-27-600.36395e25c5.webp",
+     "width": 398,
+     "height": 600,
+     "bytes": 68198,
+     "sha256": "e759af1689cbeb9dba068f0529bb038e33830850d9e13962227c7e065a6f571d"
+    },
+    "1200": {
+     "file": "tokyo/tokyo-27-1200.36395e25c5.webp",
+     "width": 796,
+     "height": 1200,
+     "bytes": 273142,
+     "sha256": "0b96d785cdbb77fafb03f41d399514c9488d0acfe4b143a6babafa5e1bf1583e"
+    },
+    "1800": {
+     "file": "tokyo/tokyo-27-1800.36395e25c5.webp",
+     "width": 1193,
+     "height": 1800,
+     "bytes": 698460,
+     "sha256": "6aa14d9247fac38ae13e060585f56cb7a792673219f890b90f9cac399d6adf74"
+    },
+    "2400": {
+     "file": "tokyo/tokyo-27-2400.36395e25c5.webp",
+     "width": 1591,
+     "height": 2400,
+     "bytes": 1326310,
+     "sha256": "d52fc0c95eccd075a3d7444a685068ceb8ee3cfd6c34efc5528dd96276df3a05"
+    },
+    "4000": {
+     "file": "tokyo/tokyo-27-4000.36395e25c5.webp",
+     "width": 2075,
+     "height": 3130,
+     "bytes": 2454066,
+     "sha256": "cc6f7ab3618def0e82ca2dbc8038f67062f74aea1b1c9327ed0969056982f2b5"
+    }
+   },
+   "color": "#82817a",
+   "blur": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAACwAQCdASoLABAAAsBMJZQAAme5mYNyAP737R1f+m29eFH/SOOSVuCRlcQdr3EzjNl6M9mvrvxoeXwzoKez2l8N8oEKSfw/udvUBroEAAA=",
+   "original": {
+    "width": 2075,
+    "height": 3130
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Noritsu Koki QSS-32_33"
+   },
+   "colorConverted": false,
+   "source": "tokyo-27.jpeg",
+   "sourceSha256": "6ea3be2212dfde1b82135a503da40703177a4ad253b29193ff6fd3197281843c"
+  },
   "xi-ni/xi-ni-1": {
    "version": "802320897e",
    "width": 2998,
