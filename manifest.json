@@ -3823,6 +3823,60 @@
    "source": "shantou-4.jpg",
    "sourceSha256": "7097ee1f981d6e6b878cd077a0f297a66e632735b3d938d0a968e9700bc39c08"
   },
+  "shunde/shunde-10": {
+   "version": "92a8ebae21",
+   "width": 1769,
+   "height": 2152,
+   "sizes": {
+    "600": {
+     "file": "shunde/shunde-10-600.92a8ebae21.webp",
+     "width": 493,
+     "height": 600,
+     "bytes": 84814,
+     "sha256": "0427b24d1cb734a6e673bdc2a06630768e928ee56ded5bb6cd2fa12c94af381e"
+    },
+    "1200": {
+     "file": "shunde/shunde-10-1200.92a8ebae21.webp",
+     "width": 986,
+     "height": 1200,
+     "bytes": 301796,
+     "sha256": "d6e190f8c46745c35b385d9fe72eccbb0c1ace1a5b6c838ada032ad79fb02e6d"
+    },
+    "1800": {
+     "file": "shunde/shunde-10-1800.92a8ebae21.webp",
+     "width": 1480,
+     "height": 1800,
+     "bytes": 570490,
+     "sha256": "e4e108c264a20200d7cb30da1b375568ccd519e19bfb0ae29106b4adbe7213dd"
+    },
+    "2400": {
+     "file": "shunde/shunde-10-2400.92a8ebae21.webp",
+     "width": 1769,
+     "height": 2152,
+     "bytes": 740720,
+     "sha256": "ea9c8e6dfabe8705f374a4a7612d6f6865e19868c20bb5946c2957450092d7b1"
+    }
+   },
+   "color": "#6e616f",
+   "blur": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAAAwAgCdASoNABAAAsBMJagCdH8AEJtzJOZMiAD7hiA+BxOIpLa5B8A4fSgkikGdYf4JNrfF9pQrnNAiYHK5mWr0wzh5b9y9VTlIZevGMw43OiQDFBsN6KeW1GsvR+qCgAA=",
+   "original": {
+    "width": 1769,
+    "height": 2152
+   },
+   "lowRes": true,
+   "exif": {
+    "camera": "iPhone 15 Pro Max",
+    "lens": "Back triple camera 6.86mm f/1.78",
+    "focal": "6.86mm",
+    "aperture": "f/1.8",
+    "shutter": "1/100s",
+    "iso": 50,
+    "date": "2024-06-22"
+   },
+   "colorConverted": true,
+   "source": "shunde-10.jpeg",
+   "sourceSha256": "4a6edd86190a3937fc9385c5192b5aaf3d04cd75aabb8d9881abbeaad266e70e"
+  },
   "shunde/shunde-11": {
    "version": "e7f6fbabc3",
    "width": 2179,
