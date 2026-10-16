@@ -102,6 +102,12 @@ python3 tools/webimg.py prune                    # 刪掉 manifest 沒引用的�
 
 `.github/workflows/build-photos.yml`：手動（`workflow_dispatch`，參數 `photos`、`force`）或 `repository_dispatch`（`event_type: build-photos`，`client_payload.photos` 陣列）→ 從 R2 下載原圖 → `webimg.py build` → `check` → 提交、推送 → EdgeOne 自動部署。跑在 macOS（和本機同一套 ImageMagick 與 sRGB 描述檔）。
 
+`concurrency: build-photos` 讓 job 依序執行，但排隊事件的 SHA 不會跟著 main 更新。checkout 明確指定最新 `main` 並取完整歷史，避免排隊後仍從舊 manifest 出圖。提交由 `tools/publish-photos.py` 處理：rebase 衝突先 abort；若 rebase 衝突或 push 前 main 又前進，等 3 秒、fetch 並 reset 到最新 `origin/main`，只為本次下載的照片重建條目後再提交推送，最多重試 3 次（共 4 次嘗試）。其他 fetch／權限／檢查錯誤直接失敗。
+
+恢復時從工作目錄外的暫存備份還原本次已出好的 WebP，`webimg.py build --reuse-manifest <快取>` 驗證原圖雜湊、配方及檔案齊全後沿用條目，重新套用最新 EXIF 修正，**不重新編碼圖片**；每次恢復及推送前都跑 `check`。不相關照片保留最新 main 的內容。
+
+本機競爭測試（需要 ImageMagick，不連 GitHub/R2）：`python3 tools/test_publish_photos.py`。測試用兩個暫存 clone 重現 manifest rebase 衝突與 push 被搶先更新，核對雙方照片、WebP 雜湊／修改時間及無變化重跑；暫存 clone 自動清除。
+
 `photos` 可以寫資料夾（以 `/` 結尾）：`reviews/` = 全部文章圖、`reviews/orico-test-mac/` = 一篇，例如 `gh workflow run build-photos.yml -R JR-Fank/jrfank-img -f photos="reviews/"`。
 
 需要的設定（只寫位置，值不進倉庫）：

@@ -21,7 +21,7 @@ on:
   repository_dispatch:
     types: [build-photos]
 
-# 一次只跑一個，免得兩次提交互相蓋掉 manifest
+# 一次只跑一個；排隊的事件 SHA 仍可能過期，所以 checkout 明確取最新 main。
 concurrency:
   group: build-photos
   cancel-in-progress: false
@@ -47,6 +47,9 @@ jobs:
       FORCE: ${{ github.event.inputs.force == 'true' || github.event.client_payload.force == true }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
 
       - name: 原圖暫存目錄
         run: echo "JRFANK_ORIGINALS=$RUNNER_TEMP/originals" >> "$GITHUB_ENV"
@@ -103,8 +106,4 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          if git diff --cached --quiet; then echo "沒有變化"; exit 0; fi
-          git commit -q -m "photos: build ${PHOTOS:0:200} (run ${{ github.run_id }})"
-          git pull --rebase -q
-          git push
+          python3 tools/publish-photos.py
