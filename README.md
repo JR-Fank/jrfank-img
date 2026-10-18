@@ -11,7 +11,7 @@ jrfank.cc 的照片網頁檔。EdgeOne Pages 國際站（獨立專案）連這�
 - `manifest.json`：照片**技術資料的唯一來源**（`webimg.py` 產生，不要手改）。每張：
   - `sizes`：各檔的檔名、實際寬高、位元組數、SHA-256
   - `color`（整張平均色）、`blur`（長邊 16px 的 WebP data URI，網站放大模糊當占位）
-  - `exif`（相機、鏡頭、焦距、光圈、快門、ISO、日期；讀不到的沒有）、`original`（原圖寬高）、`lowRes`（原圖長邊不到 2400）
+  - `exif`（相機、鏡頭、焦距、光圈、快門、ISO、日期；讀不到的沒有）、`original`（原圖寬高）、`lowRes`（原圖長邊不到 1600；只對新出圖的照片更新，後台改看 `original` 尺寸自己判斷）
   - `source`、`sourceSha256`（原圖檔名與雜湊）
   - `transparent: true`：原圖有透明背景（只有這種才有這個欄位），網頁檔保留透明，網站不在它底下墊占位色
   - 文章圖放在另一區 **`reviews`**（鍵 `reviews/<文章>/<照片 id>`，欄位一樣）；`photos` 區只有作品照片。後台只讀 `photos`，所以文章圖不會出現在後台的「未分配」。

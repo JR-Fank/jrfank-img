@@ -55,7 +55,7 @@ LQIP = 16
 # 改了上面任何一項（或 build_one 的指令）就改這個字串：所有照片的版本跟著變，網址也變。
 # （2026-10-13 加透明處理時沒改：只影響有 alpha 的原圖，當時出過圖的原圖都沒有 alpha，強制重出逐位元組相同）
 RECIPE = f"v2 sizes={','.join(map(str, SIZES))} lanczos unsharp={UNSHARP} webp q={QUALITY} m6 sharpyuv strip srgb"
-LOW_RES = 2400  # 長邊不到這個數，後台標「清晰度不足」
+LOW_RES = 1600  # 長邊不到這個數，manifest 的 lowRes 為 true（後台改看原圖尺寸，只對數位照片提醒）
 # 照片鍵：<系列>/<id>（系列不能叫 reviews）；評測文章圖只能是三段 reviews/<文章 slug>/<id>（manifest 的 reviews 區）
 REVIEWS = "reviews/"
 KEY_RE = re.compile(r"^(?:reviews/[a-z0-9-]+/[a-z0-9-]+|(?!reviews/)[a-z0-9-]+/[a-z0-9-]+)$")
