@@ -55,7 +55,7 @@ LQIP = 16
 # 改了上面任何一項（或 build_one 的指令）就改這個字串：所有照片的版本跟著變，網址也變。
 # （2026-10-13 加透明處理時沒改：只影響有 alpha 的原圖，當時出過圖的原圖都沒有 alpha，強制重出逐位元組相同）
 RECIPE = f"v2 sizes={','.join(map(str, SIZES))} lanczos unsharp={UNSHARP} webp q={QUALITY} m6 sharpyuv strip srgb"
-LOW_RES = 2400  # 長邊不到這個數，後台標「清晰度不足」
+LOW_RES = 1600  # 長邊不到這個數，後台標「清晰度不足」
 # 照片鍵：<系列>/<id>（系列不能叫 reviews）；評測文章圖只能是三段 reviews/<文章 slug>/<id>（manifest 的 reviews 區）
 REVIEWS = "reviews/"
 KEY_RE = re.compile(r"^(?:reviews/[a-z0-9-]+/[a-z0-9-]+|(?!reviews/)[a-z0-9-]+/[a-z0-9-]+)$")
@@ -65,8 +65,34 @@ def section(key: str) -> str:
     return "reviews" if key.startswith(REVIEWS) else "photos"
 
 
+class MagickError(RuntimeError):
+    pass
+
+
+def magick_diagnostic(stderr: str, args: tuple[str, ...]) -> str:
+    """保留 ImageMagick 的錯誤原因，去除路徑、網址和環境中的憑證。"""
+    message = stderr
+    secrets = [value for key, value in os.environ.items()
+               if re.search(r"TOKEN|SECRET|PASSWORD|PASSWD|PRIVATE|CREDENTIAL|AUTH|KEY", key, re.I)
+               and len(value) >= 4]
+    paths = [arg.removesuffix("[0]") for arg in args if arg.startswith("/")]
+    for value in sorted(set(secrets + paths), key=len, reverse=True):
+        message = message.replace(value, "[已隱去]")
+    message = re.sub(r"https?://[^\s'\"]+", "[網址]", message, flags=re.I)
+    message = re.sub(r"(?i)\b(token|password|passwd|secret|authorization|credential|access[_-]?key|api[_-]?key)\s*[:=]\s*[^\s,;]+", r"\1=[已隱去]", message)
+    message = re.sub(r"(?i)\bbearer\s+\S+", "Bearer [已隱去]", message)
+    message = re.sub(r"(['\"])/[^'\"]*\1", r"\1[路徑]\1", message)
+    message = re.sub(r"(?<![\w:])/(?:[^\s'\"<>]+)", "[路徑]", message)
+    message = re.sub(r"\x1b\[[0-?]*[ -/]*[@-~]", "", message)
+    message = re.sub(r"[\x00-\x1f\x7f]+", " ", message).strip()
+    return message[:1200] or "沒有診斷輸出"
+
+
 def magick(*args: str) -> str:
-    return subprocess.run(["magick", *args], check=True, capture_output=True, text=True).stdout
+    try:
+        return subprocess.run(["magick", *args], check=True, capture_output=True, text=True).stdout
+    except subprocess.CalledProcessError as exc:
+        raise MagickError(f"ImageMagick 失敗（代碼 {exc.returncode}）：{magick_diagnostic(exc.stderr or '', args)}") from None
 
 
 def sha256(p: Path) -> str:
@@ -216,16 +242,21 @@ def build(args: list[str]) -> None:
 
     def run(kv: tuple[str, Path]) -> tuple[str, dict | None]:
         key, src = kv
-        src_sha = sha256(src)
-        prev = manifest[section(key)].get(key)
-        if cached is not None:
-            prev = cached.get(section(key), {}).get(key)
-            if not up_to_date(prev, src_sha):
-                sys.exit(f"{key}：快取或已出好的圖不完整，停止重試")
-        if cached is not None or (not opts.force and up_to_date(prev, src_sha)):
-            # EXIF 修正（exif-overrides.json）不影響圖檔，照樣更新
-            return key, {**prev, "exif": exif_fields(src, key)}
-        return key, build_one(key, src, src_sha)
+        try:
+            src_sha = sha256(src)
+            prev = manifest[section(key)].get(key)
+            if cached is not None:
+                prev = cached.get(section(key), {}).get(key)
+                if not up_to_date(prev, src_sha):
+                    sys.exit(f"{key}：快取或已出好的圖不完整，停止重試")
+            if cached is not None or (not opts.force and up_to_date(prev, src_sha)):
+                # EXIF 修正與清晰度門檻不影響圖檔，沿用圖片時也更新。
+                original = prev["original"]
+                return key, {**prev, "lowRes": max(original["width"], original["height"]) < LOW_RES,
+                             "exif": exif_fields(src, key)}
+            return key, build_one(key, src, src_sha)
+        except MagickError as exc:
+            raise MagickError(f"{key}：{exc}") from None
 
     workers = max(1, (os.cpu_count() or 4) // 2)  # 每個 magick 自己也開多執行緒
     with ThreadPoolExecutor(max_workers=workers) as pool:
@@ -366,4 +397,7 @@ def exif_fields(src: Path, key: str) -> dict:
 
 if __name__ == "__main__":
     cmd, *rest = sys.argv[1:] or ["help"]
-    {"build": build, "check": check, "prune": prune}.get(cmd, lambda _: print(__doc__))(rest)
+    try:
+        {"build": build, "check": check, "prune": prune}.get(cmd, lambda _: print(__doc__))(rest)
+    except MagickError as exc:
+        sys.exit(str(exc))

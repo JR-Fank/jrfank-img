@@ -11,7 +11,7 @@ jrfank.cc 的照片網頁檔。EdgeOne Pages 國際站（獨立專案）連這�
 - `manifest.json`：照片**技術資料的唯一來源**（`webimg.py` 產生，不要手改）。每張：
   - `sizes`：各檔的檔名、實際寬高、位元組數、SHA-256
   - `color`（整張平均色）、`blur`（長邊 16px 的 WebP data URI，網站放大模糊當占位）
-  - `exif`（相機、鏡頭、焦距、光圈、快門、ISO、日期；讀不到的沒有）、`original`（原圖寬高）、`lowRes`（原圖長邊不到 2400）
+  - `exif`（相機、鏡頭、焦距、光圈、快門、ISO、日期；讀不到的沒有）、`original`（原圖寬高）、`lowRes`（原圖長邊不到 1600；重跑已出過圖的照片時也會更新標記，不重新編碼）
   - `source`、`sourceSha256`（原圖檔名與雜湊）
   - `transparent: true`：原圖有透明背景（只有這種才有這個欄位），網頁檔保留透明，網站不在它底下墊占位色
   - 文章圖放在另一區 **`reviews`**（鍵 `reviews/<文章>/<照片 id>`，欄位一樣）；`photos` 區只有作品照片。後台只讀 `photos`，所以文章圖不會出現在後台的「未分配」。
@@ -106,7 +106,11 @@ python3 tools/webimg.py prune                    # 刪掉 manifest 沒引用的�
 
 恢復時從工作目錄外的暫存備份還原本次已出好的 WebP，`webimg.py build --reuse-manifest <快取>` 驗證原圖雜湊、配方及檔案齊全後沿用條目，重新套用最新 EXIF 修正，**不重新編碼圖片**；每次恢復及推送前都跑 `check`。不相關照片保留最新 main 的內容。
 
+推送後，Actions 從 `https://pic.jrfank.cc` 讀取 manifest，確認全部作品的鍵與版本和本次提交相符，並檢查本次處理照片及建置期間新增的 WebP；圖片檢查完成後再讀一次 manifest。最多等 15 分鐘、每 15 秒嘗試一次，失敗時整個 run 失敗且不產生證據。確認成功才上傳 `photo-deployment-proof` artifact（保留 90 天），內含 `deployment-proof.json`：確認時間、正式 origin、提交 SHA、該提交的 manifest 原始位元組 SHA-256 和全部作品的版本。這是 Actions runner 在確認時看到的狀態；之後的回滾或其他 CDN 節點需要另行確認。
+
 本機競爭測試（需要 ImageMagick，不連 GitHub/R2）：`python3 tools/test_publish_photos.py`。測試用兩個暫存 clone 重現 manifest rebase 衝突與 push 被搶先更新，核對雙方照片、WebP 雜湊／修改時間及無變化重跑；暫存 clone 自動清除。
+
+本機部署確認測試（不連正式圖片站）：`python3 tools/test_photo_deployment.py`；使用暫存 Git 倉庫及本機 HTTP 模擬未部署、部分部署、回滾、HTTP 失敗及成功。
 
 `photos` 可以寫資料夾（以 `/` 結尾）：`reviews/` = 全部文章圖、`reviews/orico-test-mac/` = 一篇，例如 `gh workflow run build-photos.yml -R JR-Fank/jrfank-img -f photos="reviews/"`。
 
