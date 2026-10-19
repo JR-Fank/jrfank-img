@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""jrfank.cc 照片網頁檔產生器（只用標準庫 + ImageMagick 7 的 magick 指令；要在 macOS 跑，用系統的 sRGB 描述檔）。
+"""jrfank.cc 照片網頁檔產生器（只用標準庫 + ImageMagick 7 的 magick 指令；macOS 的 HDR HEIC 另用系統 ColorSync/sips，並用系統的 sRGB 描述檔）。
 
 原圖不進這個倉庫：本機在 ~/Code/jrfank-site-assets/photo-originals/<系列>/<照片 id>.<副檔名>（R2 私有 bucket 的快取），
 GitHub Actions 從 R2 下載到暫存目錄（用環境變數 JRFANK_ORIGINALS 指過去）。
@@ -54,7 +54,11 @@ UNSHARP = "0x0.6+0.5+0.008"
 LQIP = 16
 # 改了上面任何一項（或 build_one 的指令）就改這個字串：所有照片的版本跟著變，網址也變。
 # （2026-10-13 加透明處理時沒改：只影響有 alpha 的原圖，當時出過圖的原圖都沒有 alpha，強制重出逐位元組相同）
-RECIPE = f"v2 sizes={','.join(map(str, SIZES))} lanczos unsharp={UNSHARP} webp q={QUALITY} m6 sharpyuv strip srgb"
+# 2026-10-19: macOS ColorSync normalizes HEIC files tagged Rec. 2100 PQ/HLG
+# before ImageMagick resizes them.  That source conversion changes output bytes,
+# so it is part of the version recipe even though ordinary JPEG/P3 output stays
+# on the existing ImageMagick path.
+RECIPE = f"v3 sizes={','.join(map(str, SIZES))} lanczos unsharp={UNSHARP} webp q={QUALITY} m6 sharpyuv strip srgb hdr-pq-colorsync"
 LOW_RES = 1600  # 長邊不到這個數，manifest 的 lowRes 為 true（後台改看原圖尺寸，只對數位照片提醒）
 # 照片鍵：<系列>/<id>（系列不能叫 reviews）；評測文章圖只能是三段 reviews/<文章 slug>/<id>（manifest 的 reviews 區）
 REVIEWS = "reviews/"
@@ -67,6 +71,72 @@ def section(key: str) -> str:
 
 def magick(*args: str) -> str:
     return subprocess.run(["magick", *args], check=True, capture_output=True, text=True).stdout
+
+
+def sips_property(src: Path, key: str) -> str:
+    """Read one macOS ImageIO property without touching the source file."""
+    try:
+        out = subprocess.run(
+            ["sips", "-g", key, str(src)], check=True, capture_output=True, text=True
+        ).stdout
+    except FileNotFoundError:
+        return ""
+    except subprocess.CalledProcessError as exc:
+        raise RuntimeError(f"sips 讀不到 {src.name} 的 {key} 屬性") from exc
+    prefix = f"{key}:"
+    for line in out.splitlines():
+        line = line.strip()
+        if line.startswith(prefix):
+            return line[len(prefix) :].strip()
+    return ""
+
+
+def is_hdr_heic(src: Path) -> bool:
+    """Detect HEIC NCLX HDR tags that ImageMagick may expose as plain sRGB."""
+    if src.suffix.lower() not in {".heic", ".heif"}:
+        return False
+    profile = sips_property(src, "profile").casefold()
+    return any(tag in profile for tag in ("2100", "pq", "hlg"))
+
+
+def sips_to_srgb(src: Path, dst: Path) -> None:
+    """ColorSync-match an HDR HEIC to the local sRGB profile as a PNG."""
+    try:
+        subprocess.run(
+            ["sips", "-m", SRGB, "-s", "format", "png", str(src), "--out", str(dst)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except FileNotFoundError as exc:
+        raise RuntimeError(f"HDR HEIC 需要 macOS sips 才能轉成 sRGB：{src}") from exc
+    except subprocess.CalledProcessError as exc:
+        raise RuntimeError(f"HDR HEIC 轉 sRGB 失敗：{src}") from exc
+
+
+def prepare_input(src: Path, tmp: Path) -> tuple[Path, bool]:
+    """Return the source used by ImageMagick and whether ColorSync converted it."""
+    if not is_hdr_heic(src):
+        return src, False
+    dst = tmp / "input-srgb.png"
+    sips_to_srgb(src, dst)
+    return dst, True
+
+
+def oriented_dimensions(src: Path) -> tuple[int, int]:
+    """Return dimensions after ImageMagick's actual auto-orient decode.
+
+    Some HEIC decoders physically apply the EXIF orientation while retaining
+    ``EXIF:Orientation`` in the metadata.  Swapping dimensions from that
+    metadata would report the opposite aspect ratio even though ``-auto-orient``
+    has no further rotation to perform.  Querying the same operation used by
+    the render path keeps manifest dimensions and output pixels in agreement.
+    """
+    raw = magick(
+        f"{src}[0]", "-auto-orient", "-format", "%w %h", "info:"
+    )
+    w, h = map(int, raw.split())
+    return w, h
 
 
 def sha256(p: Path) -> str:
@@ -134,10 +204,7 @@ def tiers_for(long_edge: int) -> list[int]:
 
 def build_one(key: str, src: Path, src_sha: str) -> dict:
     version = hashlib.sha256(f"{src_sha}\n{RECIPE}".encode()).hexdigest()[:10]
-    w0, h0 = map(int, magick("identify", "-format", "%w %h", f"{src}[0]").split())
-    orient = magick("identify", "-format", "%[EXIF:Orientation]", f"{src}[0]").strip()
-    if orient in {"5", "6", "7", "8"}:
-        w0, h0 = h0, w0
+    w0, h0 = oriented_dimensions(src)
     icc = bool(magick("identify", "-format", "%[profile:icc]", f"{src}[0]").strip())
     # 透明：有 alpha 而且不是全不透明（PNG 截圖、去背產品圖）。有 alpha 但全不透明的，alpha 拿掉
     alpha = magick("identify", "-format", "%A", f"{src}[0]").strip() not in ("Undefined", "")
@@ -145,7 +212,8 @@ def build_one(key: str, src: Path, src_sha: str) -> dict:
 
     tiers = tiers_for(max(w0, h0))
     with tempfile.TemporaryDirectory() as tmp:
-        args = [f"{src}[0]", "-auto-orient"]
+        input_src, hdr = prepare_input(src, Path(tmp))
+        args = [f"{input_src}[0]", "-auto-orient"]
         if alpha and not transparent:
             args += ["-alpha", "off"]
         if icc:
@@ -189,7 +257,7 @@ def build_one(key: str, src: Path, src_sha: str) -> dict:
         "lowRes": max(w0, h0) < LOW_RES,
         **({"transparent": True} if transparent else {}),
         "exif": exif_fields(src, key),
-        "colorConverted": icc,
+        "colorConverted": icc or hdr,
         "source": src.name,
         "sourceSha256": src_sha,
     }
