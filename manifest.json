@@ -4038,6 +4038,67 @@
    "source": "shunde-16.jpeg",
    "sourceSha256": "d4f6f82dd75175c131fb770ee81c60ce8588b477f79021e4c4a44b77f59485ae"
   },
+  "shunde/shunde-17": {
+   "version": "7a8c4bb0b8",
+   "width": 2177,
+   "height": 2669,
+   "sizes": {
+    "600": {
+     "file": "shunde/shunde-17-600.7a8c4bb0b8.webp",
+     "width": 489,
+     "height": 600,
+     "bytes": 73390,
+     "sha256": "32dd38352bcf78b32a77fd20af8dceed1d256beed30dac4efa5ea8eea36215ad"
+    },
+    "1200": {
+     "file": "shunde/shunde-17-1200.7a8c4bb0b8.webp",
+     "width": 979,
+     "height": 1200,
+     "bytes": 259664,
+     "sha256": "6342b1636ec40f1ed13d86355241f024ebbf68084306f7c818d136c8e8231dbe"
+    },
+    "1800": {
+     "file": "shunde/shunde-17-1800.7a8c4bb0b8.webp",
+     "width": 1468,
+     "height": 1800,
+     "bytes": 572968,
+     "sha256": "5f2ae2e76b4fb2c55d4ead2eefc8b38947e98cd670af086a22ba75245178fcea"
+    },
+    "2400": {
+     "file": "shunde/shunde-17-2400.7a8c4bb0b8.webp",
+     "width": 1958,
+     "height": 2400,
+     "bytes": 898120,
+     "sha256": "405da74e65a5a79c4de9f2fb720d3a7caeef0d5106dc53ba3ea2c1680b187f1c"
+    },
+    "4000": {
+     "file": "shunde/shunde-17-4000.7a8c4bb0b8.webp",
+     "width": 2177,
+     "height": 2669,
+     "bytes": 1044732,
+     "sha256": "e5e06b747f414cc1893b5627ac7ee2c7790fe54c4b9ac045e1e0d49357d49c33"
+    }
+   },
+   "color": "#6e8077",
+   "blur": "data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAABQAgCdASoNABAAAsBMJaACdH8AGAK216UZWmAA/q2zUgANTZHw/JeIEZAwIIHvohy7gRBfddT0phiGunfC9b/+OjFwL8x5ZYSBxaHeh6r0f9WTcYY8bR3ZAYac0QbU4LuYo4yr0xBuRylaJQIFItBTqGvEgtwPkTJEN3Qm/Kl0AAAA",
+   "original": {
+    "width": 2177,
+    "height": 2669
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone 15 Pro Max",
+    "lens": "Back triple camera 6.86mm f/1.78",
+    "focal": "6.86mm",
+    "aperture": "f/1.8",
+    "shutter": "1/150s",
+    "iso": 64,
+    "date": "2024-06-22"
+   },
+   "colorConverted": true,
+   "source": "shunde-17.jpeg",
+   "sourceSha256": "8ceb31ee8f3abf67abcaa029b5899307b63e705210497dd90fd9c120f452ada3"
+  },
   "stage/stage-1": {
    "version": "3d8c7242d4",
    "width": 2386,
