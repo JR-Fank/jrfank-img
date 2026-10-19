@@ -106,7 +106,11 @@ python3 tools/webimg.py prune                    # 刪掉 manifest 沒引用的�
 
 恢復時從工作目錄外的暫存備份還原本次已出好的 WebP，`webimg.py build --reuse-manifest <快取>` 驗證原圖雜湊、配方及檔案齊全後沿用條目，重新套用最新 EXIF 修正，**不重新編碼圖片**；每次恢復及推送前都跑 `check`。不相關照片保留最新 main 的內容。
 
+推送後，Actions 從 `https://pic.jrfank.cc` 讀取正式 manifest，確認全部作品的鍵與版本和本次提交相符，並檢查本次處理照片及建置期間新增的 WebP 的尺寸與 SHA-256；圖片檢查完成後再讀一次 manifest。最多等 15 分鐘、每 15 秒嘗試一次，失敗時整個 run 失敗且不產生證據。確認成功才上傳固定名稱 `photo-deployment-proof` 的 artifact（保留 90 天），內含根檔 `deployment-proof.json`：schema 1、確認時間、正式 origin、提交 SHA、該提交的 manifest 原始位元組 SHA-256 和全部作品的版本。這是 Actions runner 直接讀取正式圖片站時看到的狀態；之後的回滾或其他 CDN 節點需要另行確認。
+
 本機競爭測試（需要 ImageMagick，不連 GitHub/R2）：`python3 tools/test_publish_photos.py`。測試用兩個暫存 clone 重現 manifest rebase 衝突與 push 被搶先更新，核對雙方照片、WebP 雜湊／修改時間及無變化重跑；暫存 clone 自動清除。
+
+本機部署確認測試（不連正式圖片站）：`python3 tools/test_photo_deployment.py`；使用暫存 Git 倉庫及本機 HTTP 模擬未部署、部分部署、回滾、HTTP 失敗、同大小錯誤雜湊、成功、HEAD 不支援 fallback，以及 `all`／資料夾輸入列出全部下載照片。
 
 `photos` 可以寫資料夾（以 `/` 結尾）：`reviews/` = 全部文章圖、`reviews/orico-test-mac/` = 一篇，例如 `gh workflow run build-photos.yml -R JR-Fank/jrfank-img -f photos="reviews/"`。
 
