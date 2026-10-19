@@ -51,6 +51,9 @@ jobs:
           ref: main
           fetch-depth: 0
 
+      - name: 記錄建置起點
+        run: echo "PHOTO_BUILD_BASE=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
       - name: 原圖暫存目錄
         run: echo "JRFANK_ORIGINALS=$RUNNER_TEMP/originals" >> "$GITHUB_ENV"
 
@@ -107,3 +110,15 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           python3 tools/publish-photos.py
+
+      - name: 確認圖片站部署
+        timeout-minutes: 15
+        run: python3 tools/verify_photo_deployment.py --base "$PHOTO_BUILD_BASE" --output "$RUNNER_TEMP/deployment-proof.json"
+
+      - name: 保存部署確認
+        uses: actions/upload-artifact@v4
+        with:
+          name: photo-deployment-proof
+          path: ${{ runner.temp }}/deployment-proof.json
+          retention-days: 90
+          if-no-files-found: error
