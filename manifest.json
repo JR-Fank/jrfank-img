@@ -5373,6 +5373,91 @@
    "source": "shunde-52.jpeg",
    "sourceSha256": "599c45d4b192098a915c5b1789f7561c820947068d060f64f5c5060d07a7eb5d"
   },
+  "shunde/shunde-53": {
+   "version": "d2a5375915",
+   "width": 1675,
+   "height": 1675,
+   "sizes": {
+    "600": {
+     "file": "shunde/shunde-53-600.d2a5375915.webp",
+     "width": 600,
+     "height": 600,
+     "bytes": 70146,
+     "sha256": "ab8b6ab16642031ab414451f147d327349857977aee06b26179e17d0e7e6ed4b"
+    },
+    "1200": {
+     "file": "shunde/shunde-53-1200.d2a5375915.webp",
+     "width": 1200,
+     "height": 1200,
+     "bytes": 167626,
+     "sha256": "0e9e95c11aef7deb6765fe92a2077858eeb6f6fa69a1c57803e9d9b25e507190"
+    },
+    "1800": {
+     "file": "shunde/shunde-53-1800.d2a5375915.webp",
+     "width": 1675,
+     "height": 1675,
+     "bytes": 269730,
+     "sha256": "78fa9e12d8aebd8731d7875a69f8a3b6d94a76e3a14737ceb725c2ca3b596b65"
+    }
+   },
+   "color": "#625336",
+   "blur": "data:image/webp;base64,UklGRqgAAABXRUJQVlA4IJwAAADQAgCdASoQABAAAsBMJbACdG1btv8WsFnkzgJBp4uAAP7qOjGzvilQoODhm136p/vCWh/oj5XpaUxcOZ4RLLaW7Kjn9J8GDose4CC5FY0UCDw0km/AYdPIEf14xc3G+i2s/lrtX+yVqesonuU3yiuLuAMQ7fBJP7yCcZFyC4Xvs/79fu+tq3S32DJ1N438trODi0XgoNI9grhoAAA=",
+   "original": {
+    "width": 1675,
+    "height": 1675
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone 15 Pro Max",
+    "lens": "Back triple camera 6.86mm f/1.78",
+    "focal": "6.86mm",
+    "aperture": "f/1.8",
+    "shutter": "1/160s",
+    "iso": 64
+   },
+   "colorConverted": false,
+   "source": "shunde-53.jpeg",
+   "sourceSha256": "d145b1bdf90830c3b05f0b4a260f57b7039652ff5cf153122aad7928976a9175"
+  },
+  "shunde/shunde-54": {
+   "version": "236a5c4409",
+   "width": 1476,
+   "height": 1476,
+   "sizes": {
+    "600": {
+     "file": "shunde/shunde-54-600.236a5c4409.webp",
+     "width": 600,
+     "height": 600,
+     "bytes": 88834,
+     "sha256": "15df76706793d1c00fc628f27aa14b8ebae04af4c7810ec5ede35ed336ff4ed0"
+    },
+    "1200": {
+     "file": "shunde/shunde-54-1200.236a5c4409.webp",
+     "width": 1200,
+     "height": 1200,
+     "bytes": 227060,
+     "sha256": "65bd64453eadc7375a087df09a25a1dd05b9114ca418e46ce6bb685180d252d4"
+    },
+    "1800": {
+     "file": "shunde/shunde-54-1800.236a5c4409.webp",
+     "width": 1476,
+     "height": 1476,
+     "bytes": 305330,
+     "sha256": "b29c04f671f360ced7db437332802076a299d58998a289cc04ee747baae2090a"
+    }
+   },
+   "color": "#a99f84",
+   "blur": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAAAwAgCdASoQABAAAsBMJagCdAYulyYK44wawAD+aH0DXzGAU1nxcBAcr2pEuvyHU50iK9P/+HP4t5fa4vrcFH5uQfsclRr7NtbgeXcSPxmOkeidfwbjcugWRKKjGWRuWdFWwRlW6btdY7vc+LFWXkAwLMht5Is++oyrkG4qHUEYftwvDAAAAA==",
+   "original": {
+    "width": 1476,
+    "height": 1476
+   },
+   "lowRes": true,
+   "exif": {},
+   "colorConverted": false,
+   "source": "shunde-54.jpeg",
+   "sourceSha256": "fe26b7277f34983727ef3ceb39fa12f5997875136297df5953316c9cc0849458"
+  },
   "stage/stage-1": {
    "version": "3d8c7242d4",
    "width": 2386,
