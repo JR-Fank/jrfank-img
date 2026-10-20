@@ -5131,6 +5131,52 @@
    "source": "shunde-38.png",
    "sourceSha256": "f84c0f933a66b246225c2dd3cd74680996600bfeb7938ece01039f277fb6fede"
   },
+  "shunde/shunde-39": {
+   "version": "d0d6b952bb",
+   "width": 1301,
+   "height": 1301,
+   "sizes": {
+    "600": {
+     "file": "shunde/shunde-39-600.d0d6b952bb.webp",
+     "width": 600,
+     "height": 600,
+     "bytes": 35326,
+     "sha256": "503ad1f7511bcc1e5f1f0552bf307e9d4e2f2aab8b74ba0bc60a2e8b300a226c"
+    },
+    "1200": {
+     "file": "shunde/shunde-39-1200.d0d6b952bb.webp",
+     "width": 1200,
+     "height": 1200,
+     "bytes": 91560,
+     "sha256": "7329a3675819d3ffb1ddad4046b0480bbe8af89d9cbd7dee898e3ddaf86179ae"
+    },
+    "1800": {
+     "file": "shunde/shunde-39-1800.d0d6b952bb.webp",
+     "width": 1301,
+     "height": 1301,
+     "bytes": 107318,
+     "sha256": "9eccad70e0450c79ee042050723476e58740212bca01e9294571aabfc1abf900"
+    }
+   },
+   "color": "#453128",
+   "blur": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAABQAgCdASoQABAAAsBMJQBOgMXD33lcvdjtFRgA/veAhRpPqvB60ctokAeUUVK7MwtU9Z3u0IAF1MMhC7nVxNnEeqXSzfpZAwxCR+qZfM446UZZz1nMEBEXkjgS7PAA",
+   "original": {
+    "width": 1301,
+    "height": 1301
+   },
+   "lowRes": true,
+   "exif": {
+    "camera": "iPhone 15 Pro Max",
+    "lens": "Back triple camera 6.86mm f/1.78",
+    "focal": "6.86mm",
+    "aperture": "f/1.8",
+    "shutter": "1/150s",
+    "iso": 50
+   },
+   "colorConverted": false,
+   "source": "shunde-39.jpeg",
+   "sourceSha256": "2af3e94e7e358c23e6e30c8a3fd6eaf897ea359824ace606d21091bc3b5f1957"
+  },
   "stage/stage-1": {
    "version": "3d8c7242d4",
    "width": 2386,
