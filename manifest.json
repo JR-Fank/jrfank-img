@@ -8133,6 +8133,433 @@
    "source": "stage-2.jpg",
    "sourceSha256": "0b8abb23831c3ae395aebd0c8e189aaf3af623a58f561d625563afce2278e09a"
   },
+  "stage/stage-3": {
+   "version": "032f0a3823",
+   "width": 4000,
+   "height": 2667,
+   "sizes": {
+    "600": {
+     "file": "stage/stage-3-600.032f0a3823.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 57270,
+     "sha256": "5a17ad94e58201de9be718ea3bd56db4bed538b869eee86a2d1ef5db14ac7804"
+    },
+    "1200": {
+     "file": "stage/stage-3-1200.032f0a3823.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 244968,
+     "sha256": "f88279e1a8468af95cdd1f3d3ccc38aca0be836fa009b679c7a4463c675ae905"
+    },
+    "1800": {
+     "file": "stage/stage-3-1800.032f0a3823.webp",
+     "width": 1800,
+     "height": 1200,
+     "bytes": 709238,
+     "sha256": "629d28529ce0fc16e04e969c4b70a49a27ad01c03e51756b961c37be898d9c75"
+    },
+    "2400": {
+     "file": "stage/stage-3-2400.032f0a3823.webp",
+     "width": 2400,
+     "height": 1600,
+     "bytes": 1506220,
+     "sha256": "5cab89ffd223db429e33de1933da7e9dfc36118c00c386ddd85f14df50c3c715"
+    },
+    "4000": {
+     "file": "stage/stage-3-4000.032f0a3823.webp",
+     "width": 4000,
+     "height": 2667,
+     "bytes": 5219930,
+     "sha256": "bb197aa7361eff3d162e5b01d7275336e20c9c76b21d23499efcc94cb61f800a"
+    }
+   },
+   "color": "#7b4b70",
+   "blur": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAAAQAgCdASoQAAsAAsBMJaACdAEfZOEVXqDYAP2tGKww/FzGF067WLe5nnRejlcDrqCQtPPfU21ZuPbRSmrgAvxIvwVBQGcZLk31qpYAAAA=",
+   "original": {
+    "width": 5580,
+    "height": 3720
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Fujifilm X-T3",
+    "lens": "XC 50–230mm",
+    "focal": "230mm",
+    "aperture": "f/6.7",
+    "shutter": "1/120s",
+    "iso": 3200,
+    "date": "2023-05-28"
+   },
+   "colorConverted": true,
+   "source": "stage-3.jpeg",
+   "sourceSha256": "8996fa176e0d8235bd9a446adae52248443bb99722578aaf0e111deced0b9a03"
+  },
+  "stage/stage-4": {
+   "version": "64eec72be7",
+   "width": 4000,
+   "height": 2666,
+   "sizes": {
+    "600": {
+     "file": "stage/stage-4-600.64eec72be7.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 57372,
+     "sha256": "2ebcbd9b53f867b937542f0a4a7093ea2667d21c9af325ef175398bfd45449d3"
+    },
+    "1200": {
+     "file": "stage/stage-4-1200.64eec72be7.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 197186,
+     "sha256": "99d702260c3bbd2b77b153722513e3e249b0b883e3c527fcf460b2f7c9a2fd29"
+    },
+    "1800": {
+     "file": "stage/stage-4-1800.64eec72be7.webp",
+     "width": 1800,
+     "height": 1200,
+     "bytes": 485718,
+     "sha256": "66ab5250a0db4b7c7b0a0f06ecd4340ff83e56859691b25e17846b7b40624ba9"
+    },
+    "2400": {
+     "file": "stage/stage-4-2400.64eec72be7.webp",
+     "width": 2400,
+     "height": 1600,
+     "bytes": 951102,
+     "sha256": "ed0b817a03f5cb7cdf90a790869259c2ddc02f4aba68cf96d0d1fc30f0f1038c"
+    },
+    "4000": {
+     "file": "stage/stage-4-4000.64eec72be7.webp",
+     "width": 4000,
+     "height": 2666,
+     "bytes": 3025510,
+     "sha256": "bb88115558cbb232811c6dfc87358a1901055c9f8ab3d994d8b14a072a2e0100"
+    }
+   },
+   "color": "#473046",
+   "blur": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAADwAQCdASoQAAsAAsBMJbACdADz7Paq7wAA/vEjSE38Drx9o7n6bBCVHh2C4LzdZ4Wtbapdah+Mrn4XY7ub5FYekPXeoMXNdULoyT+65f4YjgXkaGSOZN7yWGZ1hISzEidvO5007sLmD1wA",
+   "original": {
+    "width": 6194,
+    "height": 4129
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Fujifilm X-T3",
+    "lens": "XC 50–230mm",
+    "focal": "230mm",
+    "aperture": "f/6.7",
+    "shutter": "1/30s",
+    "iso": 3200,
+    "date": "2023-05-28"
+   },
+   "colorConverted": true,
+   "source": "stage-4.jpeg",
+   "sourceSha256": "8c683d77d367c39eafc70d417cbc38763cc01bfdf557b8dd13007fc13a4c87c8"
+  },
+  "stage/stage-5": {
+   "version": "a8e84b9c84",
+   "width": 4000,
+   "height": 2666,
+   "sizes": {
+    "600": {
+     "file": "stage/stage-5-600.a8e84b9c84.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 16088,
+     "sha256": "6e82712dabc2c1e78f07c0cbd0094ea73572b5e3ee1e1a8cfd4a11ae0ea57f21"
+    },
+    "1200": {
+     "file": "stage/stage-5-1200.a8e84b9c84.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 47138,
+     "sha256": "d2160b4f46e99d39b32f64215883505074f134e0fd49c5f2b3302a10646f5270"
+    },
+    "1800": {
+     "file": "stage/stage-5-1800.a8e84b9c84.webp",
+     "width": 1800,
+     "height": 1200,
+     "bytes": 115796,
+     "sha256": "73a0a780e5584cca091ca518ca607dc0c1242f84bba41c251823351bd069c83b"
+    },
+    "2400": {
+     "file": "stage/stage-5-2400.a8e84b9c84.webp",
+     "width": 2400,
+     "height": 1600,
+     "bytes": 245166,
+     "sha256": "71019742f7802b5b79a241923d19aa40aa65a17c133128661dbea1dfc4743092"
+    },
+    "4000": {
+     "file": "stage/stage-5-4000.a8e84b9c84.webp",
+     "width": 4000,
+     "height": 2666,
+     "bytes": 852798,
+     "sha256": "9565c00712b2b329d9bd57a42ae4880d96d9d840aafbb05da49086cbcdf24cc9"
+    }
+   },
+   "color": "#150e1b",
+   "blur": "data:image/webp;base64,UklGRjgAAABXRUJQVlA4ICwAAADQAQCdASoQAAsAAsBMJZQAAud7aeOzAAD++uxGgKJq+pD1RvRvFddIbIAAAA==",
+   "original": {
+    "width": 5123,
+    "height": 3415
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Fujifilm X-T3",
+    "lens": "XC 50–230mm",
+    "focal": "230mm",
+    "aperture": "f/6.7",
+    "shutter": "1/55s",
+    "iso": 3200,
+    "date": "2023-05-28"
+   },
+   "colorConverted": true,
+   "source": "stage-5.jpeg",
+   "sourceSha256": "a89372f957dddd5f63f02b5922be0d64d61bba79a4da0d6050a28c47c1c61d08"
+  },
+  "stage/stage-6": {
+   "version": "aa1fe8c760",
+   "width": 4000,
+   "height": 2667,
+   "sizes": {
+    "600": {
+     "file": "stage/stage-6-600.aa1fe8c760.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 40690,
+     "sha256": "0fe861b3048cd4f7631d3f8ddc258678dab5216f52954d927eb774ba6cc3ae1f"
+    },
+    "1200": {
+     "file": "stage/stage-6-1200.aa1fe8c760.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 209078,
+     "sha256": "d20cf127b05bbb75c0b2c078863df9adbd53d2a3dd259bf6029cfd0d26aed79c"
+    },
+    "1800": {
+     "file": "stage/stage-6-1800.aa1fe8c760.webp",
+     "width": 1800,
+     "height": 1200,
+     "bytes": 597704,
+     "sha256": "03a81eade79127f2e030a5474e8b126d35ac22505e237fede7cb6a886de9c9c6"
+    },
+    "2400": {
+     "file": "stage/stage-6-2400.aa1fe8c760.webp",
+     "width": 2400,
+     "height": 1600,
+     "bytes": 1309692,
+     "sha256": "d7185575a33a1faf551d196275394158a6699a45ef7ead2037161af8a9a2e88c"
+    },
+    "4000": {
+     "file": "stage/stage-6-4000.aa1fe8c760.webp",
+     "width": 4000,
+     "height": 2667,
+     "bytes": 4417902,
+     "sha256": "2ca393851ceaa5d2be05b96b5750bb894fd2bbfae04d2bb8b80fca5d95e27962"
+    }
+   },
+   "color": "#6d5679",
+   "blur": "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAAAwAgCdASoQAAsAAsBMJYgCdADiVQuiqtHAAAD+1trxaorZg/XQMMWx33Ct2497wsg4pU8hu8rh+4VEj1VedsoE9bzasReU3vNAAA==",
+   "original": {
+    "width": 5259,
+    "height": 3506
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Fujifilm X-T3",
+    "lens": "XC 50–230mm",
+    "focal": "230mm",
+    "aperture": "f/6.7",
+    "shutter": "1/100s",
+    "iso": 3200,
+    "date": "2023-05-28"
+   },
+   "colorConverted": true,
+   "source": "stage-6.jpeg",
+   "sourceSha256": "c1b7fc4e075a11fc62be293e124025c0763a1493f21504129f934961a3a5455f"
+  },
+  "stage/stage-7": {
+   "version": "1e7068f20e",
+   "width": 2819,
+   "height": 1879,
+   "sizes": {
+    "600": {
+     "file": "stage/stage-7-600.1e7068f20e.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 66810,
+     "sha256": "3ad2dda2da106a50e86fde340e7877520730d010a62f615b0e7bf772d422aec6"
+    },
+    "1200": {
+     "file": "stage/stage-7-1200.1e7068f20e.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 290960,
+     "sha256": "77c00e0271c54bf5922fdb5299a9bf1e03f3e5f4c0a6cc3541e0618c4fe6eab3"
+    },
+    "1800": {
+     "file": "stage/stage-7-1800.1e7068f20e.webp",
+     "width": 1800,
+     "height": 1200,
+     "bytes": 710988,
+     "sha256": "4d5e54afc20c04e419c70a61aa8b29c80f23fb0675be4f83d52b223f378bf7b8"
+    },
+    "2400": {
+     "file": "stage/stage-7-2400.1e7068f20e.webp",
+     "width": 2400,
+     "height": 1600,
+     "bytes": 1255136,
+     "sha256": "3b30b64141d66d28d05b9d401c7f659d46741d034c1c4645c088b335a57e1d70"
+    },
+    "4000": {
+     "file": "stage/stage-7-4000.1e7068f20e.webp",
+     "width": 2819,
+     "height": 1879,
+     "bytes": 1656190,
+     "sha256": "f4d4d1f24ca4c069f31baa24661c3e0ffc4de6bde7890957043870d681c3acb6"
+    }
+   },
+   "color": "#272126",
+   "blur": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAAAwAgCdASoQAAsAAsBMJYwC7AEPAAINzh8EAAD+9swFp6QGvRBBOSY3YSWpHXqtlgNjJrZfli18O7WOh+mT22xn1WSCSAAA",
+   "original": {
+    "width": 2819,
+    "height": 1879
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Fujifilm X-T3",
+    "lens": "XC 50–230mm",
+    "focal": "230mm",
+    "aperture": "f/6.7",
+    "shutter": "1/180s",
+    "iso": 3200,
+    "date": "2023-05-28"
+   },
+   "colorConverted": true,
+   "source": "stage-7.jpeg",
+   "sourceSha256": "49c23ea7a45f64895de5bf75d1ddf875d681d960b3e9ba917132f5e7eb1e6157"
+  },
+  "stage/stage-8": {
+   "version": "ccaeb04573",
+   "width": 4000,
+   "height": 2667,
+   "sizes": {
+    "600": {
+     "file": "stage/stage-8-600.ccaeb04573.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 50988,
+     "sha256": "2718d5c8892efe67061ef3cc7ef732a36cc0ee0971b1e50543805d78014dffd2"
+    },
+    "1200": {
+     "file": "stage/stage-8-1200.ccaeb04573.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 228526,
+     "sha256": "b3913b96a9983a6efbde21af60e0dc6b5fdb9185b34d736ff88e6fa56e1c0b28"
+    },
+    "1800": {
+     "file": "stage/stage-8-1800.ccaeb04573.webp",
+     "width": 1800,
+     "height": 1200,
+     "bytes": 594898,
+     "sha256": "0c415513c181f353d3c04acbe6f57eb4f3cc61e48c34b6068ad9b392563ccaea"
+    },
+    "2400": {
+     "file": "stage/stage-8-2400.ccaeb04573.webp",
+     "width": 2400,
+     "height": 1600,
+     "bytes": 1140320,
+     "sha256": "83ec23e018a658c6a20c8a77f5236015e294ac8bc545baf8cd0de4454407497b"
+    },
+    "4000": {
+     "file": "stage/stage-8-4000.ccaeb04573.webp",
+     "width": 4000,
+     "height": 2667,
+     "bytes": 3273300,
+     "sha256": "390f23048300d64b099bae730b2646898f4271130945c3a00c7dd75c186fcda8"
+    }
+   },
+   "color": "#2f1a4a",
+   "blur": "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAAAwAgCdASoQAAsAAsBMJZgCdAEO+TYWt/2TAAD+95q9KAWGil9TKxsyP96sUm3TjIO7C9GM9bzz3HoPAksSi5KRUWAAAA==",
+   "original": {
+    "width": 4627,
+    "height": 3085
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Fujifilm X-T3",
+    "lens": "XC 50–230mm",
+    "focal": "230mm",
+    "aperture": "f/6.7",
+    "shutter": "1/340s",
+    "iso": 2500,
+    "date": "2023-05-28"
+   },
+   "colorConverted": true,
+   "source": "stage-8.jpeg",
+   "sourceSha256": "0c456854ae22eb9900086c863cf71853de82233253103cdde4251a9387beaf97"
+  },
+  "stage/stage-9": {
+   "version": "4676088743",
+   "width": 4000,
+   "height": 2666,
+   "sizes": {
+    "600": {
+     "file": "stage/stage-9-600.4676088743.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 66050,
+     "sha256": "ee3e97f592a2fe9923655333c54766b806193b159f166438a8fb62699a4de644"
+    },
+    "1200": {
+     "file": "stage/stage-9-1200.4676088743.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 202572,
+     "sha256": "f66550b5359024b87ad9d2a3ca0bc9d2ce117383afec95af4a19c8ecdedebb00"
+    },
+    "1800": {
+     "file": "stage/stage-9-1800.4676088743.webp",
+     "width": 1800,
+     "height": 1200,
+     "bytes": 466056,
+     "sha256": "5a6cace11f229a6d8f0f688ed38d5b4246f65a3c0163bc378265c6712da1b5b7"
+    },
+    "2400": {
+     "file": "stage/stage-9-2400.4676088743.webp",
+     "width": 2400,
+     "height": 1600,
+     "bytes": 850862,
+     "sha256": "c02d7b63c4cad3708ace2e275f28d41d73ef8b04d41dda46ba06e675cb149e1c"
+    },
+    "4000": {
+     "file": "stage/stage-9-4000.4676088743.webp",
+     "width": 4000,
+     "height": 2666,
+     "bytes": 2349632,
+     "sha256": "8fc7d51715090ef2a1e36397350da79f6bc746d9cfc507ce23304a14f95a4bbc"
+    }
+   },
+   "color": "#2a2844",
+   "blur": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAADwAQCdASoQAAsAAsBMJaAAAujfMzvRuaAA/vQ7+UqZQYBCh5eQNwv8mCkUQPvuouCiyd528YtXkLtj28bjAzuoWmmB3j7Ln6fmP0eOHmKQdjyJSAMgAA==",
+   "original": {
+    "width": 4787,
+    "height": 3191
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Fujifilm X-T3",
+    "lens": "XC 50–230mm",
+    "focal": "50mm",
+    "aperture": "f/4.5",
+    "shutter": "1/9s",
+    "iso": 3200,
+    "date": "2023-05-28"
+   },
+   "colorConverted": true,
+   "source": "stage-9.jpeg",
+   "sourceSha256": "2ec149072cf998c1410c1a8f693eababce7f5f94e71e027870834f2d22c9ded9"
+  },
   "tokyo/tokyo-13": {
    "version": "bb1acf58ff",
    "width": 3130,
