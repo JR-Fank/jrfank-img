@@ -2,6 +2,2304 @@
  "version": 2,
  "recipe": "v3 sizes=600,1200,1800,2400,4000 lanczos unsharp=0x0.6+0.5+0.008 webp q=88 m6 sharpyuv strip srgb hdr-pq-colorsync",
  "photos": {
+  "ao-da-li-ya/ao-da-li-ya-1": {
+   "version": "f668801cfd",
+   "width": 3000,
+   "height": 4000,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-1-600.f668801cfd.webp",
+     "width": 450,
+     "height": 600,
+     "bytes": 50290,
+     "sha256": "5ba4ca9bd3ec83d8e3af995ad871f4e5ac1e39b54fa62648784d458db2df19f1"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-1-1200.f668801cfd.webp",
+     "width": 900,
+     "height": 1200,
+     "bytes": 262660,
+     "sha256": "2593d618b3ab56a293c596946b24957f85301b803f01b31c55cd6036fed0a736"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-1-1800.f668801cfd.webp",
+     "width": 1350,
+     "height": 1800,
+     "bytes": 707882,
+     "sha256": "375090e997e7ecdc56727ff302720b79082cb98dd5192565bd6ac015aeac9481"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-1-2400.f668801cfd.webp",
+     "width": 1800,
+     "height": 2400,
+     "bytes": 1285094,
+     "sha256": "43a63faddc4e5b65f1ee34fcbb75b52aa120e10782e09901d5eab4051aa5552a"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-1-4000.f668801cfd.webp",
+     "width": 3000,
+     "height": 4000,
+     "bytes": 3257808,
+     "sha256": "fe98a97c0fa9512947b6d4321c6b797616930f0d8af8623d7807905fd682cef2"
+    }
+   },
+   "color": "#507392",
+   "blur": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAADQAQCdASoMABAAAsBMJZACdAELKRKCQAD88aPL3ossvmEFpceU4JJbH4fIjFz9uOfv1CvMCrqrcutyOwhaNryzm/j9gAAA",
+   "original": {
+    "width": 3024,
+    "height": 4032
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone 15 Pro Max",
+    "lens": "Back triple camera 15.66mm f/2.8",
+    "focal": "16mm",
+    "aperture": "f/2.8",
+    "shutter": "1/1100s",
+    "iso": 50,
+    "date": "2024-12-01"
+   },
+   "colorConverted": true,
+   "source": "ao-da-li-ya-1.jpeg",
+   "sourceSha256": "5951915037ff4ee5a3f332b157b8527a236ede0375403c73010bd130a2bf88f3"
+  },
+  "ao-da-li-ya/ao-da-li-ya-10": {
+   "version": "413da51815",
+   "width": 4000,
+   "height": 2667,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-10-600.413da51815.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 119508,
+     "sha256": "d1a08568a989619348af0212d9315ce468659e0f5b2be88c1be54b231c577d9e"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-10-1200.413da51815.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 391176,
+     "sha256": "47d5f63777ed628d0c19d22b4e70b8be43c056b98a0fe34500e3efbd26ef48a3"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-10-1800.413da51815.webp",
+     "width": 1800,
+     "height": 1200,
+     "bytes": 821688,
+     "sha256": "2f32f9b86f00d36ba2df94872cbb835983366f4595e910662e65c0f68769b46f"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-10-2400.413da51815.webp",
+     "width": 2400,
+     "height": 1600,
+     "bytes": 1400070,
+     "sha256": "9e5552c0999b4805e68f2c650fafe2a5f73b78108662b81e39fb69018ce56ec6"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-10-4000.413da51815.webp",
+     "width": 4000,
+     "height": 2667,
+     "bytes": 3400350,
+     "sha256": "55cd9717cd2512cab0d7ddf226362b828252d13e4e059f2df7da81743186fbb5"
+    }
+   },
+   "color": "#6d6260",
+   "blur": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAABwAgCdASoQAAsAAsBMJQBOj+AhwNpvAEnwCjAAAP7j6tI5rznck3+H4gBqV09c/FDOB5nkqr53BocDC09tQM+x210bKe67fJRD0ZPdohn5OyQtv8LeL3AoZ6j2jFqLjH/gvxMAAAA=",
+   "original": {
+    "width": 7728,
+    "height": 5152
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Fujifilm X100VI",
+    "focal": "23mm",
+    "aperture": "f/4",
+    "shutter": "1/210s",
+    "iso": 500,
+    "date": "2024-12-02"
+   },
+   "colorConverted": false,
+   "source": "ao-da-li-ya-10.jpeg",
+   "sourceSha256": "8a44d3560501039b5428c3cfdd8f0d37de6c58e9398696d126800aacbb7dc69e"
+  },
+  "ao-da-li-ya/ao-da-li-ya-11": {
+   "version": "0425465014",
+   "width": 4000,
+   "height": 2667,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-11-600.0425465014.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 77298,
+     "sha256": "6fed7f579fda55b894cb8acc7a14670c788ad61b2606a45d27c1ddb21525e09e"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-11-1200.0425465014.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 237800,
+     "sha256": "0263d9ec44e95718ba9a4b1e265d31d87d853499b7b32be5a610b049c75f43e7"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-11-1800.0425465014.webp",
+     "width": 1800,
+     "height": 1200,
+     "bytes": 535856,
+     "sha256": "f1ad7697ca895f0e4e69f3de51be9d5a61a06d4a6f1497a879c4c17bdd66586a"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-11-2400.0425465014.webp",
+     "width": 2400,
+     "height": 1600,
+     "bytes": 1000100,
+     "sha256": "6fe7fc0cefc6d278bf90b6b3cd2d8d3a347e42ab7b8bca09ebfb0ce92070b36f"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-11-4000.0425465014.webp",
+     "width": 4000,
+     "height": 2667,
+     "bytes": 2641082,
+     "sha256": "8e32ffb33ed77ee6eba85911e9596bc6c432b7fc3f0095d762662cbf4ecab787"
+    }
+   },
+   "color": "#75756e",
+   "blur": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAABQAgCdASoQAAsAAsBMJQBdgMW50BfD1OivW6AA/ZocsJF0/0VWb75ouMXf50GjyZaCOQajEo7+oWjV8+7yityxbPKBOMkQtED8rMFnoe3Rqa29/IPj2THW3mmCCUGvRi0XhsuBK2c6wgAA",
+   "original": {
+    "width": 7728,
+    "height": 5152
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Fujifilm X100VI",
+    "focal": "23mm",
+    "aperture": "f/2.8",
+    "shutter": "1/150s",
+    "iso": 500,
+    "date": "2024-12-02"
+   },
+   "colorConverted": true,
+   "source": "ao-da-li-ya-11.jpeg",
+   "sourceSha256": "5679ac7ba68801982dd147fba600c6e8dbdadb393fed85ccb853ce979bc6098f"
+  },
+  "ao-da-li-ya/ao-da-li-ya-12": {
+   "version": "f6a48ec185",
+   "width": 4000,
+   "height": 2666,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-12-600.f6a48ec185.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 86758,
+     "sha256": "5e62fc874581e0353cd245e9b0768cabbf16c9abf5938a3618f4c5b0fb2c14bb"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-12-1200.f6a48ec185.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 280910,
+     "sha256": "41278b364c683918027e2858625f7e347770aa530421201fe391c0c7c215723a"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-12-1800.f6a48ec185.webp",
+     "width": 1800,
+     "height": 1200,
+     "bytes": 610264,
+     "sha256": "44b1898558bab3b1d24167777aa49d9482a0c3da5a8f964c1b88dc842dc07da3"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-12-2400.f6a48ec185.webp",
+     "width": 2400,
+     "height": 1600,
+     "bytes": 1074710,
+     "sha256": "60da38ead2839ca280dd89de3bfccd63ef3fe0fa3efe0e04d6b13a69e0e5b416"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-12-4000.f6a48ec185.webp",
+     "width": 4000,
+     "height": 2666,
+     "bytes": 2489088,
+     "sha256": "b3ce17736736fae2194d10bc6f66d959ad0a1e7fe90a57421b76a589f3917cfb"
+    }
+   },
+   "color": "#564e43",
+   "blur": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAABwAgCdASoQAAsAAsBMJagCdH8AguCMueO4hjAAAP7xeq74YqPzVhWNQI+judklYZ01xQwSwHY/A8FQ4oKIZb/tWBBY+6ywfL01XFO1DRt+151GHJREBa0jWmrTTt1piw3pTAAA",
+   "original": {
+    "width": 7312,
+    "height": 4874
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Fujifilm X100VI",
+    "focal": "23mm",
+    "aperture": "f/2.5",
+    "shutter": "1/80s",
+    "iso": 500,
+    "date": "2024-12-03"
+   },
+   "colorConverted": true,
+   "source": "ao-da-li-ya-12.jpeg",
+   "sourceSha256": "d47f8e91a345c0c554a8608761af8d4dea4a824f530d89207212504c0f6d44ad"
+  },
+  "ao-da-li-ya/ao-da-li-ya-13": {
+   "version": "acf7c83300",
+   "width": 4000,
+   "height": 2667,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-13-600.acf7c83300.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 27472,
+     "sha256": "4173fe07d95a0547f10400b9e88445885694ed9cd22aea5eb7ef9aa37bee3117"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-13-1200.acf7c83300.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 66106,
+     "sha256": "8249610dab1e72429d393ff2125e5fe8c7c702a63ed5eba329bcb7e0fdf81ce1"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-13-1800.acf7c83300.webp",
+     "width": 1800,
+     "height": 1200,
+     "bytes": 106896,
+     "sha256": "20378aa48b9155139611b7b7f1a470965cb59c635489f9a1068dc0c9fa225273"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-13-2400.acf7c83300.webp",
+     "width": 2400,
+     "height": 1600,
+     "bytes": 159680,
+     "sha256": "45e430d05fa3a018e4bbc0f53c69ee796e15226e7401dd6358ccf6f395274891"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-13-4000.acf7c83300.webp",
+     "width": 4000,
+     "height": 2667,
+     "bytes": 652630,
+     "sha256": "2a079674ecff27ac54acf6e198a29997e37d7faad417c84a5229ca049397f422"
+    }
+   },
+   "color": "#5c4e39",
+   "blur": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAAAQAgCdASoQAAsAAsBMJYgCdAEfvKxYCKD4AP7tDbnvnRfAvioE/tjtnXRo+PqtMOSXH7wh9c4j84B5TuKOMyjoy4PIF9eXiMyWmsiyUO94AA==",
+   "original": {
+    "width": 7728,
+    "height": 5152
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Fujifilm X100VI",
+    "focal": "23mm",
+    "aperture": "f/2.8",
+    "shutter": "1/110s",
+    "iso": 500,
+    "date": "2024-12-03"
+   },
+   "colorConverted": true,
+   "source": "ao-da-li-ya-13.jpeg",
+   "sourceSha256": "748b7d4af1998d1ef2a0c1d1ebd5b971a1c94a079ac58c0a9f08fa0196ff5f55"
+  },
+  "ao-da-li-ya/ao-da-li-ya-14": {
+   "version": "d90df90b52",
+   "width": 4000,
+   "height": 2667,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-14-600.d90df90b52.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 20792,
+     "sha256": "29e264bdc6ab95b145a190f09c4dc5f83133312406c7a625e9ff7f54a6cd48ad"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-14-1200.d90df90b52.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 47016,
+     "sha256": "8e7d2253ddaec52a95424df507f27560bbd6cd3d7c90718f7b57fcb1b759c9b5"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-14-1800.d90df90b52.webp",
+     "width": 1800,
+     "height": 1200,
+     "bytes": 75074,
+     "sha256": "b6b57f24db03b07f8c5d943018660008f9bd78110bd0bbec871802ff0f8aff81"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-14-2400.d90df90b52.webp",
+     "width": 2400,
+     "height": 1600,
+     "bytes": 106546,
+     "sha256": "6cb5dad312c1183bcdd07e1bc2ec77208f19550e34df8d4fa51f11cc5954b004"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-14-4000.d90df90b52.webp",
+     "width": 4000,
+     "height": 2667,
+     "bytes": 236210,
+     "sha256": "911607f8470df322ae5839be9bc85dc532565446a240d3981e7c881bb0653676"
+    }
+   },
+   "color": "#262422",
+   "blur": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAADQAQCdASoQAAsAAsBMJZwAAtuIG+a7gAD++dqPC/O/SD+kKwf9hZOmupGfv93m4M8oKVxwF84hUcKxLstOGga9YP+KYOsG8vT/AAAA",
+   "original": {
+    "width": 7728,
+    "height": 5152
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Fujifilm X100VI",
+    "focal": "23mm",
+    "aperture": "f/2",
+    "shutter": "1/55s",
+    "iso": 500,
+    "date": "2024-12-03"
+   },
+   "colorConverted": true,
+   "source": "ao-da-li-ya-14.jpeg",
+   "sourceSha256": "132aba17b48ee56dbd759c5a6ec1903a7e11c3bb04f60779d2644c31901db17a"
+  },
+  "ao-da-li-ya/ao-da-li-ya-15": {
+   "version": "5b3668b8ce",
+   "width": 4000,
+   "height": 2667,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-15-600.5b3668b8ce.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 54630,
+     "sha256": "0cd90a9436bf2c4706e777c401605e58903bc7dcfe2594cc6202aa776acf9b95"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-15-1200.5b3668b8ce.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 142416,
+     "sha256": "1ab58c7cf96538832194779c0a69f20f926286b5db1fbc6b4f07fa179ac23c2f"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-15-1800.5b3668b8ce.webp",
+     "width": 1800,
+     "height": 1200,
+     "bytes": 240724,
+     "sha256": "0c41a1ea31a0eb8bae4126d89707d10019932beb996b61f101ca77aa7733b2e1"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-15-2400.5b3668b8ce.webp",
+     "width": 2400,
+     "height": 1600,
+     "bytes": 357740,
+     "sha256": "814f4d9dc51966ffd97ad066c488e060633d49b0e36bc355a80a5b0b1e77c55a"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-15-4000.5b3668b8ce.webp",
+     "width": 4000,
+     "height": 2667,
+     "bytes": 977458,
+     "sha256": "5baa49be29c36ff9d273bcee7e4844556d7fd9973ccd60fb167c2675ffef947a"
+    }
+   },
+   "color": "#4a423c",
+   "blur": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAADwAQCdASoQAAsAAsBMJZQCdADyu4VRsGAA/vXd0ygeHUcaTOh1uYQpSbkbP3hJQmvqqZ6FGNLphM8QlVoM/5+LMq5AoagelKg1UST6cb8l0oM2vg34heskPhKAAA==",
+   "original": {
+    "width": 7728,
+    "height": 5152
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Fujifilm X100VI",
+    "focal": "23mm",
+    "aperture": "f/2",
+    "shutter": "1/35s",
+    "iso": 800,
+    "date": "2024-12-03"
+   },
+   "colorConverted": true,
+   "source": "ao-da-li-ya-15.jpeg",
+   "sourceSha256": "f438f6dc974942a03e2386392e2dff31a74cebd4bbf035390d47580016f2daf3"
+  },
+  "ao-da-li-ya/ao-da-li-ya-16": {
+   "version": "754725bb68",
+   "width": 4000,
+   "height": 2667,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-16-600.754725bb68.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 53030,
+     "sha256": "fdb06927716ec86a3c1809cd4f797435ac9935da740d0bdb5cbc1e5b9e2f8ae1"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-16-1200.754725bb68.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 197396,
+     "sha256": "8e1b9711f0061b4a77548d809ec1d0197b52ed9f5c411fbe64a38eebc02b09df"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-16-1800.754725bb68.webp",
+     "width": 1800,
+     "height": 1200,
+     "bytes": 424916,
+     "sha256": "36fec46b27aa4dd9e810e2c0e259abb19446ad13b564486b3a45fc0316f8dfc0"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-16-2400.754725bb68.webp",
+     "width": 2400,
+     "height": 1600,
+     "bytes": 743938,
+     "sha256": "c7082779c9db989fdb8cd5fd5c20bef3038e83d1a8fa5c64226a08eb7699d983"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-16-4000.754725bb68.webp",
+     "width": 4000,
+     "height": 2667,
+     "bytes": 1945504,
+     "sha256": "728e29b26f0b06de4ee00c2ba109f7104f9f3d784f907156656cc8bbcb3e9899"
+    }
+   },
+   "color": "#b4aaad",
+   "blur": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAACQAQCdASoQAAsAAsBMJZwAAu1wCCAA/vi9MYc2Lzft3lvuEklOVeoPx2AonhVdZPF67s9jIuUfSSEcnGe0YeQAAAA=",
+   "original": {
+    "width": 4318,
+    "height": 2879
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Fujifilm X100VI",
+    "focal": "23mm",
+    "aperture": "f/5",
+    "shutter": "1/480s",
+    "iso": 500,
+    "date": "2024-12-03"
+   },
+   "colorConverted": true,
+   "source": "ao-da-li-ya-16.jpeg",
+   "sourceSha256": "f51b55d37dc2f7e1cdc7c1153dc097c0a507d8f88a5c96546ade59076d4b63da"
+  },
+  "ao-da-li-ya/ao-da-li-ya-17": {
+   "version": "22d3c8b88f",
+   "width": 4000,
+   "height": 3000,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-17-600.22d3c8b88f.webp",
+     "width": 600,
+     "height": 450,
+     "bytes": 50708,
+     "sha256": "a53748e512a8ebc9892b04c033979c62b4d86d3eac1779cbd377562eb45f1b70"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-17-1200.22d3c8b88f.webp",
+     "width": 1200,
+     "height": 900,
+     "bytes": 201318,
+     "sha256": "29197bdf9324ad8f2c8ed6f058bc4af89960daaa18f9299e6462e7e082ccd5f3"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-17-1800.22d3c8b88f.webp",
+     "width": 1800,
+     "height": 1350,
+     "bytes": 546426,
+     "sha256": "1e177a2a649b9e423730dd27e84b1e98e13d0502f0a807359013082de946c10b"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-17-2400.22d3c8b88f.webp",
+     "width": 2400,
+     "height": 1800,
+     "bytes": 1049096,
+     "sha256": "a500f44894ab8b48cabb1826b870c281e649813434ea1031c13b4a58ceba48c4"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-17-4000.22d3c8b88f.webp",
+     "width": 4000,
+     "height": 3000,
+     "bytes": 2773928,
+     "sha256": "58bf07154d2c06a75b6e3e58e97ee5a3dec4948e140d62df5778e1d8fac500ea"
+    }
+   },
+   "color": "#919196",
+   "blur": "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAAAQAgCdASoQAAwAAsBMJZwC7AEO9Y4UaXcAAP7000CM0FEeHAh5uopCY5iq0yzJlVV1wPtXZDl6dmSUrukl4DH91h6GYkoe8mAAAA==",
+   "original": {
+    "width": 6861,
+    "height": 5146
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Fujifilm X100VI",
+    "focal": "23mm",
+    "aperture": "f/5.6",
+    "shutter": "1/600s",
+    "iso": 500,
+    "date": "2024-12-03"
+   },
+   "colorConverted": true,
+   "source": "ao-da-li-ya-17.jpeg",
+   "sourceSha256": "ef894d6ede8bba5e56c4e86a4e0d1ab74458659f301a044b7eb2514d78bc2d61"
+  },
+  "ao-da-li-ya/ao-da-li-ya-18": {
+   "version": "d510b16002",
+   "width": 4000,
+   "height": 2667,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-18-600.d510b16002.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 16100,
+     "sha256": "3101f52dfc44ebbafb830b4451ae54187a893b66e8d332e558d634acbff653ef"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-18-1200.d510b16002.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 69280,
+     "sha256": "15fa74e9ea0c3b025f51d8641bbbeff80e36844465f09e2c97ada4e11d7b1054"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-18-1800.d510b16002.webp",
+     "width": 1800,
+     "height": 1200,
+     "bytes": 238772,
+     "sha256": "3896475a69b1ed9963ca00b257308d1db8ab5731307d8450fe4181a9c6dba5e7"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-18-2400.d510b16002.webp",
+     "width": 2400,
+     "height": 1600,
+     "bytes": 558158,
+     "sha256": "68b21a006c8f723692f11c997e490bcd30fd7cc6df0a477f533474d78d134179"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-18-4000.d510b16002.webp",
+     "width": 4000,
+     "height": 2667,
+     "bytes": 1743778,
+     "sha256": "625609e91fd44830fb8be67ccc71770e55e37b35a8f692fbdb5d09449d275b1d"
+    }
+   },
+   "color": "#265d7f",
+   "blur": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAADwAQCdASoQAAsAAsBMJbACdAENVfA2RwAA/vRTqRfEbczMM+btoi8ptmy/pjHofVZkOMkW7edv2p9p0AdMC/WrzQac5BgA",
+   "original": {
+    "width": 7728,
+    "height": 5152
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Fujifilm X100VI",
+    "focal": "23mm",
+    "aperture": "f/8",
+    "shutter": "1/1900s",
+    "iso": 500,
+    "date": "2024-12-04"
+   },
+   "colorConverted": false,
+   "source": "ao-da-li-ya-18.jpeg",
+   "sourceSha256": "ad823eec6098a457871e4dc8fd6ffdab33185df2a65037de610f7f4a9dccfbd7"
+  },
+  "ao-da-li-ya/ao-da-li-ya-19": {
+   "version": "82fb7998f0",
+   "width": 4000,
+   "height": 2667,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-19-600.82fb7998f0.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 41406,
+     "sha256": "67627bec8b53c336338c2512730aff3c45802bb3ada66184c10d495ed010f978"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-19-1200.82fb7998f0.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 195080,
+     "sha256": "b85422a06efacedb1b8ebdfdee4b15daa44db0a4ac22d356d36037db5fefc79f"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-19-1800.82fb7998f0.webp",
+     "width": 1800,
+     "height": 1200,
+     "bytes": 543130,
+     "sha256": "255bfc4b32e7e716fa74b22ad6ba073d01fd5014fb784c10f1556bfe34d37f99"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-19-2400.82fb7998f0.webp",
+     "width": 2400,
+     "height": 1600,
+     "bytes": 1085346,
+     "sha256": "c6cbc258f943b99ca2bfd21e002e062077e4e0876a207a77f82e799e5d4a09bc"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-19-4000.82fb7998f0.webp",
+     "width": 4000,
+     "height": 2667,
+     "bytes": 3105594,
+     "sha256": "adbff81cf36576f997bcded86fcb761f69730b5cc2bf37c9254fc9446bf47532"
+    }
+   },
+   "color": "#5a7586",
+   "blur": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAAAQAgCdASoQAAsAAsBMJagCdAEPEHtNfMwgAPyMklByyx3EGz5+85eGcuDEsws8U+g55Aq5A7Tz98ejEDQQrp2y+2XMgE9wAAA=",
+   "original": {
+    "width": 7728,
+    "height": 5152
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Fujifilm X100VI",
+    "focal": "23mm",
+    "aperture": "f/7.1",
+    "shutter": "1/1800s",
+    "iso": 500,
+    "date": "2024-12-04"
+   },
+   "colorConverted": false,
+   "source": "ao-da-li-ya-19.jpeg",
+   "sourceSha256": "5b6a3adf05fb0043e452751376f4f7de3af62f899b36cffd620c4256a0671846"
+  },
+  "ao-da-li-ya/ao-da-li-ya-2": {
+   "version": "4e1d16d76f",
+   "width": 3000,
+   "height": 4000,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-2-600.4e1d16d76f.webp",
+     "width": 450,
+     "height": 600,
+     "bytes": 104842,
+     "sha256": "476fdef776337ad136f239b427b18fa41cd6a93d8b13b2c8ea24abaad1aeacfa"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-2-1200.4e1d16d76f.webp",
+     "width": 900,
+     "height": 1200,
+     "bytes": 389782,
+     "sha256": "58b0a09119075c9dd623ebdf22d3d02bad26b80f6ab0ea52b64af1146f8d2370"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-2-1800.4e1d16d76f.webp",
+     "width": 1350,
+     "height": 1800,
+     "bytes": 801688,
+     "sha256": "175b3e4857c2756260824ccc8d58e84760c4169e8ed97a0230c5055b99a8bc2c"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-2-2400.4e1d16d76f.webp",
+     "width": 1800,
+     "height": 2400,
+     "bytes": 1236394,
+     "sha256": "577c0c7637ea03d4a5c285d7ccf7b9e481b6d1e1e3f0f4b27e82c6190b146a21"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-2-4000.4e1d16d76f.webp",
+     "width": 3000,
+     "height": 4000,
+     "bytes": 2427974,
+     "sha256": "9dd6cb93163f12ed688c3616a4e62f091032adf89745227f9f914911d987f6e8"
+    }
+   },
+   "color": "#645f61",
+   "blur": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAAAwAgCdASoMABAAAsBMJQBOkBsi4pVHQs4jAAD+iCv/3UrSmEUmXlYegPiwehps1f3CeMsRJtwHE1W2yen+hYdn27BpEJwaeRW9Bb71C6w5UtdDGQClOWYLpzcvUUdjJ7yjvrNgAAA=",
+   "original": {
+    "width": 3024,
+    "height": 4032
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone 15 Pro Max",
+    "lens": "Back triple camera 15.66mm f/2.8",
+    "focal": "16mm",
+    "aperture": "f/2.8",
+    "shutter": "1/100s",
+    "iso": 250,
+    "date": "2024-12-01"
+   },
+   "colorConverted": true,
+   "source": "ao-da-li-ya-2.jpeg",
+   "sourceSha256": "663ee0245f404f110f2d895734506ae5453f398f68a57f353ddf97afc8f1da91"
+  },
+  "ao-da-li-ya/ao-da-li-ya-20": {
+   "version": "70c5191700",
+   "width": 4000,
+   "height": 2667,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-20-600.70c5191700.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 22988,
+     "sha256": "83953640518192ef51bb569e4c514aad68e3141514c89b9b42cf40bc3dc4bacb"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-20-1200.70c5191700.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 90358,
+     "sha256": "de7a321dec1759aa6bfc4419ec1402a8990d4d6d0e98eee1bd16c27fa6d366b4"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-20-1800.70c5191700.webp",
+     "width": 1800,
+     "height": 1200,
+     "bytes": 284792,
+     "sha256": "ac7175e41c456bc7a3862d17e9f7f9ccb86574a67d366a7bb8f79e9917738785"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-20-2400.70c5191700.webp",
+     "width": 2400,
+     "height": 1600,
+     "bytes": 709546,
+     "sha256": "719769fb37c1274c33487cbf838b937074379dddf045c4fc7b7e1e8a9fe3d479"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-20-4000.70c5191700.webp",
+     "width": 4000,
+     "height": 2667,
+     "bytes": 2202238,
+     "sha256": "a0cfdabf9e1f19a8f89a578e3954e6c68ff214c023b848c8656d090f09648d11"
+    }
+   },
+   "color": "#2e5f7e",
+   "blur": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAADwAQCdASoQAAsAAsBMJbACdAELVXk9VMAA/vLaFGu9muv2+6EICyCuNDUL5BQNV3F+WD5NxPkNxN29PX+1PdDycc+j8csJ0oTjQaAf1wAAAA==",
+   "original": {
+    "width": 7728,
+    "height": 5152
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Fujifilm X100VI",
+    "focal": "23mm",
+    "aperture": "f/8",
+    "shutter": "1/1900s",
+    "iso": 500,
+    "date": "2024-12-04"
+   },
+   "colorConverted": false,
+   "source": "ao-da-li-ya-20.jpeg",
+   "sourceSha256": "5c4e5472c46df94c250667832fc7a051273cffba63e575e01929157232eb93d1"
+  },
+  "ao-da-li-ya/ao-da-li-ya-21": {
+   "version": "0752ebf7d4",
+   "width": 4000,
+   "height": 2667,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-21-600.0752ebf7d4.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 47840,
+     "sha256": "4eb2fa1041b7e60af870bf6949751e6b930ce15df89f1efa8e03f83b0f62ea02"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-21-1200.0752ebf7d4.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 200952,
+     "sha256": "2158dbed9e344b0481d7b95977f9e50dcd2a5b048a5dd18764cc03199a8e7372"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-21-1800.0752ebf7d4.webp",
+     "width": 1800,
+     "height": 1200,
+     "bytes": 558176,
+     "sha256": "a2fcd5601a8c192b10a7f412e18e2bc92499d0ada29913289a1ebfe42946b3fe"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-21-2400.0752ebf7d4.webp",
+     "width": 2400,
+     "height": 1600,
+     "bytes": 1123698,
+     "sha256": "56171ced0856fb4065b60ec94528d6eed1ae31bfbcd029f89fb94956693fa70d"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-21-4000.0752ebf7d4.webp",
+     "width": 4000,
+     "height": 2667,
+     "bytes": 3186518,
+     "sha256": "2205cc5173d243abcddcfbc78f37779e15d2c7e70200fc8ac92b36ffb0d79c28"
+    }
+   },
+   "color": "#5a7274",
+   "blur": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADQAQCdASoQAAsAAsBMJYgCdAENCCe6/AD+th4lCOPN4m4DabO4StfXjjI2Mc7ktu0/9BSuSohK49s7FMYR6gLUq4SEiYQEAAA=",
+   "original": {
+    "width": 7728,
+    "height": 5152
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Fujifilm X100VI",
+    "focal": "23mm",
+    "aperture": "f/7.1",
+    "shutter": "1/1900s",
+    "iso": 500,
+    "date": "2024-12-04"
+   },
+   "colorConverted": false,
+   "source": "ao-da-li-ya-21.jpeg",
+   "sourceSha256": "c7ed3cd6bfaad277ca02b410afc22680139bc2fe2232ee04afc5e7c9dea06b5c"
+  },
+  "ao-da-li-ya/ao-da-li-ya-22": {
+   "version": "60f80b1512",
+   "width": 3888,
+   "height": 2592,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-22-600.60f80b1512.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 33298,
+     "sha256": "60877350b5b7d307ed7af21d7eeb5e1c41580744ffcdbb3bc8b66f24d2d5a592"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-22-1200.60f80b1512.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 178108,
+     "sha256": "fc20bda49daae1f672efcb29a52389ec0b0dcae982e8346e319777793842e9f5"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-22-1800.60f80b1512.webp",
+     "width": 1800,
+     "height": 1200,
+     "bytes": 433466,
+     "sha256": "d6217b6df6138666ddbcf54c01c208c62dec075e879c5735fcf8978a95de6889"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-22-2400.60f80b1512.webp",
+     "width": 2400,
+     "height": 1600,
+     "bytes": 726546,
+     "sha256": "1746f89adf0bbbfeeb8736c7d4f66618c16fb674a425eaf5b3b0b984511aa1ac"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-22-4000.60f80b1512.webp",
+     "width": 3888,
+     "height": 2592,
+     "bytes": 1791600,
+     "sha256": "6a25c6b2bd3b6252cbb0e27095f51ed80f275ef78c8b2e07fa86e53b55858c26"
+    }
+   },
+   "color": "#57747f",
+   "blur": "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAADwAQCdASoQAAsAAsBMJYgCdADpHJ+kXoAA/rGE51rNFD+9gVuU17LmszHcqb8IoNd0RQ4xYbp6AAAA",
+   "original": {
+    "width": 3888,
+    "height": 2592
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Fujifilm X100VI",
+    "focal": "23mm",
+    "aperture": "f/8",
+    "shutter": "1/2000s",
+    "iso": 500,
+    "date": "2024-12-04"
+   },
+   "colorConverted": false,
+   "source": "ao-da-li-ya-22.jpeg",
+   "sourceSha256": "b9999db911c74d2dd3e6304a04a087247d90f9be662bf54dd4cdee5842045283"
+  },
+  "ao-da-li-ya/ao-da-li-ya-23": {
+   "version": "b8adf53dcf",
+   "width": 4000,
+   "height": 2667,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-23-600.b8adf53dcf.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 33100,
+     "sha256": "b626610b280193174266b7ac6addf5b11e158880b7485457dd4c0e8d53ce7d71"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-23-1200.b8adf53dcf.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 86396,
+     "sha256": "e401592d01d0b6cd3e76748d6247a7e0d76c284d6b249ce90581999faf7fa1c6"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-23-1800.b8adf53dcf.webp",
+     "width": 1800,
+     "height": 1200,
+     "bytes": 272622,
+     "sha256": "34114dda8350349a943e6ea6b119eb0359daff29d4146ac1e978157dd24454c0"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-23-2400.b8adf53dcf.webp",
+     "width": 2400,
+     "height": 1600,
+     "bytes": 630122,
+     "sha256": "e8b0f73f37bc1788aee9b7c35b82164efd0726f64837d7037e0188c613e0f88d"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-23-4000.b8adf53dcf.webp",
+     "width": 4000,
+     "height": 2667,
+     "bytes": 1981926,
+     "sha256": "999d0daea388c8304762f2fe326c6712e13e6440d6c7728fb516d964487e61fd"
+    }
+   },
+   "color": "#676462",
+   "blur": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAACwAQCdASoQAAsAAsBMJZwAAb+3MTEAAP7xkp+s8XNPyQ7UaFTRZru4EfGslrI5HgObPNnBX70JLTRxWa64YwyWYdNBU/kU8otIkgLzWb9VF67B3GRwAA==",
+   "original": {
+    "width": 7728,
+    "height": 5152
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Fujifilm X100VI",
+    "focal": "23mm",
+    "aperture": "f/2",
+    "shutter": "1/34s",
+    "iso": 1250,
+    "date": "2024-12-04"
+   },
+   "colorConverted": false,
+   "source": "ao-da-li-ya-23.jpeg",
+   "sourceSha256": "cc0e2fae44a875ecad3926921626f582696afcf0b82a43a2ba9bb1824415f3cc"
+  },
+  "ao-da-li-ya/ao-da-li-ya-24": {
+   "version": "a2fb532689",
+   "width": 4000,
+   "height": 2667,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-24-600.a2fb532689.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 61608,
+     "sha256": "e4692440690842e8c1ff9c7e019a6974bac0b53115d2e4432ee8f680da8c9544"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-24-1200.a2fb532689.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 202630,
+     "sha256": "20c1b006f0aef2a8b76dd3d17b303170ea80151f2904d2f489b00b6dab45c646"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-24-1800.a2fb532689.webp",
+     "width": 1800,
+     "height": 1200,
+     "bytes": 436978,
+     "sha256": "25cc5edf3b8948d01fc343a7fa1b651370d726721967de6f1213098445fc4980"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-24-2400.a2fb532689.webp",
+     "width": 2400,
+     "height": 1600,
+     "bytes": 775554,
+     "sha256": "815ad724184c5666ac8c2818971efe99e723aa317464d9cd4ca89f00a770208b"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-24-4000.a2fb532689.webp",
+     "width": 4000,
+     "height": 2667,
+     "bytes": 2400592,
+     "sha256": "d2ebc6fc4d8b5969ccebc44e4b7b57c0fa8829e03cea2916ae51c0d43847971b"
+    }
+   },
+   "color": "#889098",
+   "blur": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAAAQAgCdASoQAAsAAsBMJZQCdAEPS0HnYY/AAP70Av24BF/FV/ThYaas951y5YvsfT8sjc95eC7nDkDD0PGm+kM+gWhFAwk/LKKDMNJq1H7Omfp1/jUcz0xQAAA=",
+   "original": {
+    "width": 7728,
+    "height": 5152
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Fujifilm X100VI",
+    "focal": "23mm",
+    "aperture": "f/4",
+    "shutter": "1/240s",
+    "iso": 500,
+    "date": "2024-12-05"
+   },
+   "colorConverted": true,
+   "source": "ao-da-li-ya-24.jpeg",
+   "sourceSha256": "5d8ef4d1b967e11f446b9c62fb5a7a35f82902dd0781131526a0ab0392d35338"
+  },
+  "ao-da-li-ya/ao-da-li-ya-25": {
+   "version": "815514b664",
+   "width": 4000,
+   "height": 2666,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-25-600.815514b664.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 26788,
+     "sha256": "4c9c6eedff24dd71f3de22cf6e564fdb02838584486943c9e58c35a6431fa7e4"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-25-1200.815514b664.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 64548,
+     "sha256": "3f6380442b1978ff460ac7d83a69d00f819766e91fb1d98e4ebb688d9860843f"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-25-1800.815514b664.webp",
+     "width": 1800,
+     "height": 1200,
+     "bytes": 111342,
+     "sha256": "3ac9db2e0fc02654b5d6c8771b40a5242c1daca62b0004719fdc0eef7d65d721"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-25-2400.815514b664.webp",
+     "width": 2400,
+     "height": 1600,
+     "bytes": 185898,
+     "sha256": "ddf712a73f79025c685a9ee296fd928533e9da8ac52609c1116e1b318b987094"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-25-4000.815514b664.webp",
+     "width": 4000,
+     "height": 2666,
+     "bytes": 743738,
+     "sha256": "e811f67a0b834e0d1893630d1f37132e7a0cdf7db4c95c1b93f2055ef7a74771"
+    }
+   },
+   "color": "#776e71",
+   "blur": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAADQAQCdASoQAAsAAsBMJZQAAurQSksQAAD+8Ex06DaD1eP8tqosTWI6ERYd8/dXsOvJ343QVBrwXjQkgXrQSlry+S04B80GkdxtJGVS3VsUAyxMKOAAAA==",
+   "original": {
+    "width": 7565,
+    "height": 5043
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Fujifilm X100VI",
+    "focal": "23mm",
+    "aperture": "f/2.5",
+    "shutter": "1/110s",
+    "iso": 500,
+    "date": "2024-12-05"
+   },
+   "colorConverted": true,
+   "source": "ao-da-li-ya-25.jpeg",
+   "sourceSha256": "0c8549f59b078bf3ec230d3ad6e864cd71d519f3588163259628481286d9d973"
+  },
+  "ao-da-li-ya/ao-da-li-ya-26": {
+   "version": "bd08fedbc5",
+   "width": 2777,
+   "height": 1851,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-26-600.bd08fedbc5.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 70726,
+     "sha256": "17d3f90b1f7f79ed6d97bf278450dfebb6627b1f656e13bac85225e556152c8f"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-26-1200.bd08fedbc5.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 267156,
+     "sha256": "3b5b073db0b910d48414b7a755a475868b547e8a0338eb21828faf29395ccc27"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-26-1800.bd08fedbc5.webp",
+     "width": 1800,
+     "height": 1200,
+     "bytes": 551988,
+     "sha256": "f2d21165fcde50ae20e11b7899b3964534443376a39e0686b81aba38db62eaa5"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-26-2400.bd08fedbc5.webp",
+     "width": 2400,
+     "height": 1600,
+     "bytes": 861504,
+     "sha256": "f5bb846a4557d86a9f11458719e51f887adaa0d439b9d9534e46ba373f4a08c0"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-26-4000.bd08fedbc5.webp",
+     "width": 2777,
+     "height": 1851,
+     "bytes": 1097418,
+     "sha256": "2af2e08180f76867c54217beb1bd8f05e5e97134358ab107c50096da21a57f36"
+    }
+   },
+   "color": "#7e6565",
+   "blur": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAAAQAgCdASoQAAsAAsBMJYgCdAEIjZKgQ0eYAP3wZZQEND/0+fYUo3FXKJLtDENFfJsEai9zMjvRM8N/0Gq+PYnJ4XEl2G9HmF+OWcTCNmZ8DiIKBur1AAAA",
+   "original": {
+    "width": 2777,
+    "height": 1851
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Fujifilm X100VI",
+    "focal": "23mm",
+    "aperture": "f/3.2",
+    "shutter": "1/140s",
+    "iso": 500,
+    "date": "2024-12-05"
+   },
+   "colorConverted": true,
+   "source": "ao-da-li-ya-26.jpeg",
+   "sourceSha256": "f8a0b18eae1b4d962f93c902de76b11971fb9ebb021944cce6531ca93ba06509"
+  },
+  "ao-da-li-ya/ao-da-li-ya-27": {
+   "version": "8589b750d5",
+   "width": 3576,
+   "height": 3022,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-27-600.8589b750d5.webp",
+     "width": 600,
+     "height": 507,
+     "bytes": 102954,
+     "sha256": "b95579e32c8c30d6145639e91a6d7e4178505ce3ba880e0556d3cf329f38f663"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-27-1200.8589b750d5.webp",
+     "width": 1200,
+     "height": 1014,
+     "bytes": 310860,
+     "sha256": "6902b29bbe8ca46cbe4f86b17cb8974b12d1b8e6e4ed1113ced905efff7b1496"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-27-1800.8589b750d5.webp",
+     "width": 1800,
+     "height": 1521,
+     "bytes": 518942,
+     "sha256": "140b8947bf33659459d8807460776a77be383c767af20f15756aa1b975d320b1"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-27-2400.8589b750d5.webp",
+     "width": 2400,
+     "height": 2028,
+     "bytes": 723162,
+     "sha256": "9c4e9c41a2ccd9bfc4dd3ce84e0e7dbcbc98cc20957b4a45550b48af4ba021cb"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-27-4000.8589b750d5.webp",
+     "width": 3576,
+     "height": 3022,
+     "bytes": 1097614,
+     "sha256": "58b65c5530afd1eaad88f6cf6201c8315ba9d4bf97594b34887c555751c94a9f"
+    }
+   },
+   "color": "#4c4747",
+   "blur": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAAAQAgCdASoQAA4AAsBMJZQCsAEO+QGV2I2QAP7Q+4TfxVb6smwHTp3KnT3jqW00BDl47d7u+y2+MfsydM/bPYJO8HCq9N9LiszkoCw/4IFPUZKTRvkkmEz91MWkNCZjzk3sAAAA",
+   "original": {
+    "width": 3576,
+    "height": 3022
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone 15 Pro Max",
+    "lens": "Back camera 6.765mm f/1.78",
+    "focal": "6.76mm",
+    "aperture": "f/1.8",
+    "shutter": "1/100s",
+    "iso": 160,
+    "date": "2024-12-06"
+   },
+   "colorConverted": true,
+   "source": "ao-da-li-ya-27.jpeg",
+   "sourceSha256": "112cbb78e0c988eb6b3886a391dee4a564026c31e6a3378f0ddcc12b47b14fac"
+  },
+  "ao-da-li-ya/ao-da-li-ya-28": {
+   "version": "f52b04a0e0",
+   "width": 3577,
+   "height": 3023,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-28-600.f52b04a0e0.webp",
+     "width": 600,
+     "height": 507,
+     "bytes": 112828,
+     "sha256": "badfd64f6b537a576bc2b4f96990786c53eadc3798090b99ed0c29a501fcc2aa"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-28-1200.f52b04a0e0.webp",
+     "width": 1200,
+     "height": 1014,
+     "bytes": 315442,
+     "sha256": "e320f1e7990b8c0996283c2a6745b224c8f0a21ddfb12d8a7e7aaf723e7cdb14"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-28-1800.f52b04a0e0.webp",
+     "width": 1800,
+     "height": 1521,
+     "bytes": 503688,
+     "sha256": "fd97950379b9ea75dfb4de550a2945a71ab04b8c98e5c03b9e4d0e17a24b5499"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-28-2400.f52b04a0e0.webp",
+     "width": 2400,
+     "height": 2028,
+     "bytes": 661700,
+     "sha256": "112a5f0b5d44fef20b1a60d9fc665fa686ccb289fffd01756807259e628b97e3"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-28-4000.f52b04a0e0.webp",
+     "width": 3577,
+     "height": 3023,
+     "bytes": 1037010,
+     "sha256": "9f78b86ba54bd4922d1e3f8197b6bad0cc6934243ebd830d7075b84bfa598933"
+    }
+   },
+   "color": "#484940",
+   "blur": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAAAwAgCdASoQAA4AAsBMJYwAD5OOz3xxWcBgkAD+5k+s/Ltb2A94CByw68R7PnKvz4n3GLDTNBGFQgilSKmNQhCjoohMN/RXCYbKp8cBoef8/CGeEbrqxxf3HacxHCjzcBgOoD2CK55hZyrenegT1AAA",
+   "original": {
+    "width": 3577,
+    "height": 3023
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone 15 Pro Max",
+    "lens": "Back camera 6.765mm f/1.78",
+    "focal": "6.76mm",
+    "aperture": "f/1.8",
+    "shutter": "1/50s",
+    "iso": 160,
+    "date": "2024-12-06"
+   },
+   "colorConverted": true,
+   "source": "ao-da-li-ya-28.jpeg",
+   "sourceSha256": "fabb78234abbe76594b5fb13aac2976a818e30e77c228be852a7876b64d27969"
+  },
+  "ao-da-li-ya/ao-da-li-ya-29": {
+   "version": "358dba149b",
+   "width": 3576,
+   "height": 3022,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-29-600.358dba149b.webp",
+     "width": 600,
+     "height": 507,
+     "bytes": 88576,
+     "sha256": "30e51ce3c0fab7b54d87092e4ffd2d15e13a8475dd616f2d5201ac0ed6953f49"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-29-1200.358dba149b.webp",
+     "width": 1200,
+     "height": 1014,
+     "bytes": 300710,
+     "sha256": "7d07bde0aca8b9f8214f46493451a30d6b50e4251bdc004714c69c6085a85b4c"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-29-1800.358dba149b.webp",
+     "width": 1800,
+     "height": 1521,
+     "bytes": 520730,
+     "sha256": "fb9aed36b9e2f157553d77a7a36838fd7ce4ff7a4d6c18f9075912a028ec17dd"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-29-2400.358dba149b.webp",
+     "width": 2400,
+     "height": 2028,
+     "bytes": 732186,
+     "sha256": "24c9cc85075905739019643e7f9b222580f445e94e402966db8de51e5c389afc"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-29-4000.358dba149b.webp",
+     "width": 3576,
+     "height": 3022,
+     "bytes": 1168904,
+     "sha256": "d361dc78f9e0de0e50af02ea930dcdde3d8972b4da0d6b7e71c8086e6f57b0a7"
+    }
+   },
+   "color": "#474845",
+   "blur": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAABQAgCdASoQAA4AAsBMJYwC7AYw7kuh2fVk50AA/vM5yK9ll6CFf01enQ+9HpAvjzDBGIhs+8h2LU90GfwQxwkaaGnnjcrkIBBZ2Hgtx0ONPH1NS3R7kW+X4YD9yfCztsqQ1ENzJsfIWYNwzz4wAA==",
+   "original": {
+    "width": 3576,
+    "height": 3022
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone 15 Pro Max",
+    "lens": "Back camera 15.66mm f/2.8",
+    "focal": "16mm",
+    "aperture": "f/2.8",
+    "shutter": "1/34s",
+    "iso": 640,
+    "date": "2024-12-05"
+   },
+   "colorConverted": true,
+   "source": "ao-da-li-ya-29.jpeg",
+   "sourceSha256": "eacaf40929b719db9ec05bb42be1f0add83c00fd702ddf42fde66ad6e579fce3"
+  },
+  "ao-da-li-ya/ao-da-li-ya-3": {
+   "version": "a2cae50586",
+   "width": 4000,
+   "height": 2667,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-3-600.a2cae50586.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 76520,
+     "sha256": "04f2ce1e2ac50d653789c5a74b882f44abcf973306163fcfa333aec7bfc1f807"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-3-1200.a2cae50586.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 230330,
+     "sha256": "ee4dae966b83106b19c998af5a346e354acadfb7801c10203f223d44e95aecee"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-3-1800.a2cae50586.webp",
+     "width": 1800,
+     "height": 1200,
+     "bytes": 413518,
+     "sha256": "8c8e848bb05cc5ff88cb783510a793ce5942295aa3167b74f310ec846122c848"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-3-2400.a2cae50586.webp",
+     "width": 2400,
+     "height": 1600,
+     "bytes": 609982,
+     "sha256": "6f407b0fc8a099558f5f90a066563a9909e1fef5346869012f657cade0846dea"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-3-4000.a2cae50586.webp",
+     "width": 4000,
+     "height": 2667,
+     "bytes": 1070114,
+     "sha256": "42335867429e952b2c4365214ac310fe27f6b2b047a2dc9789807895f297206e"
+    }
+   },
+   "color": "#6b625a",
+   "blur": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAAAQAgCdASoQAAsAAsBMJQBOgCB/91SXBA2gAP7rGy+ufiDo2O1sp2IA3cp5XCct8meu1ERnXrLSCPT2qlaZ1GqJlDIpfImbc0UrVUOasNbVIuTuiAA=",
+   "original": {
+    "width": 8064,
+    "height": 5376
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone 15 Pro Max",
+    "lens": "Back camera 6.765mm f/1.78",
+    "focal": "6.76mm",
+    "aperture": "f/1.8",
+    "shutter": "1/1175s",
+    "iso": 100,
+    "date": "2024-12-01"
+   },
+   "colorConverted": false,
+   "source": "ao-da-li-ya-3.jpeg",
+   "sourceSha256": "2982d58a537edebdbd3dd64299327ad174b4da8a04be0c20a5ac2e079f1dde3d"
+  },
+  "ao-da-li-ya/ao-da-li-ya-30": {
+   "version": "4ec49105d0",
+   "width": 3577,
+   "height": 3023,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-30-600.4ec49105d0.webp",
+     "width": 600,
+     "height": 507,
+     "bytes": 96226,
+     "sha256": "31aa4f7621c26fa4f3e4a884a66b08b9bc84017bc804fae6de5020b4990c91a8"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-30-1200.4ec49105d0.webp",
+     "width": 1200,
+     "height": 1014,
+     "bytes": 278398,
+     "sha256": "e9661e07c450c193404abc9a8237e8d45623dc5c38c4785f537ee3c02ab2d586"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-30-1800.4ec49105d0.webp",
+     "width": 1800,
+     "height": 1521,
+     "bytes": 431112,
+     "sha256": "19918b0ddc70e2964d08ad48bc340957bbca9a1d72935b9b0f7f55b68d85c80c"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-30-2400.4ec49105d0.webp",
+     "width": 2400,
+     "height": 2028,
+     "bytes": 574764,
+     "sha256": "b2f8a0d849404e965ab2ae9f43477e405f6a3201c79e317eead0ceb50aca4042"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-30-4000.4ec49105d0.webp",
+     "width": 3577,
+     "height": 3023,
+     "bytes": 902984,
+     "sha256": "1f4ac99beb01f9b85efb8b2baf765cae20c8dbdb24914c570f4e46140c5f871e"
+    }
+   },
+   "color": "#55464e",
+   "blur": "data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAAAwAgCdASoQAA4AAsBMJYwAD5GuhRkd3grSkAD+9u9vWezlMA06cBFkfDivxzFxMB6NrrTdzNNMkzec+SZ4t/mD2MEarQfRYI1HYLEefBi8AXMogkUla8TZQPLmNqFceAFEkD8+SwiZTS+syDZQFOr/QIAAAA==",
+   "original": {
+    "width": 3577,
+    "height": 3023
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone 15 Pro Max",
+    "lens": "Back camera 6.765mm f/1.78",
+    "focal": "6.76mm",
+    "aperture": "f/1.8",
+    "shutter": "1/59s",
+    "iso": 200,
+    "date": "2024-12-05"
+   },
+   "colorConverted": true,
+   "source": "ao-da-li-ya-30.jpeg",
+   "sourceSha256": "de4b2a12fdf6d6fbc5384997c6221903a5dd93713aae3b3ac5bc5eaa3b66a079"
+  },
+  "ao-da-li-ya/ao-da-li-ya-31": {
+   "version": "5511c01f41",
+   "width": 3577,
+   "height": 3023,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-31-600.5511c01f41.webp",
+     "width": 600,
+     "height": 507,
+     "bytes": 60158,
+     "sha256": "0f0ae91c4fa96f0ad83c8bd4053fa1652024f49bf573f25a151b4d6e3e2e4b22"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-31-1200.5511c01f41.webp",
+     "width": 1200,
+     "height": 1014,
+     "bytes": 171132,
+     "sha256": "6bd4740874b4d585676bf244a09807d56b12bc6780f8628b249bfa4f27c7869a"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-31-1800.5511c01f41.webp",
+     "width": 1800,
+     "height": 1521,
+     "bytes": 274468,
+     "sha256": "89f0f2b352fd4d017477e320028aa5bb41a9511b1d55f98f43a794258829a686"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-31-2400.5511c01f41.webp",
+     "width": 2400,
+     "height": 2028,
+     "bytes": 386526,
+     "sha256": "22cd97505fddc5d7504e7b8ecad380fbe4033b6f29c25753cd48e3414a47b066"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-31-4000.5511c01f41.webp",
+     "width": 3577,
+     "height": 3023,
+     "bytes": 637078,
+     "sha256": "eac163a83771a93453e178b0d1369cdee8da27c298e1f215974b626be45784f4"
+    }
+   },
+   "color": "#4c5252",
+   "blur": "data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAAAQAgCdASoQAA4AAsBMJZwAEQPJCJUP3SwAAP7eIZ2T3SkeSx9eDHybU1Yt3ZvuQri/TzwerinVGDc+yJuo+FwtFF7u1BXQK0zunHlInZfD4E74hQZbWIaabW8D2Wke6iaW57Iei2/wm8oqi+sa8HplScQspyAA",
+   "original": {
+    "width": 3577,
+    "height": 3023
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone 15 Pro Max",
+    "lens": "Back camera 6.765mm f/1.78",
+    "focal": "6.76mm",
+    "aperture": "f/1.8",
+    "shutter": "1/119s",
+    "iso": 160,
+    "date": "2024-12-05"
+   },
+   "colorConverted": true,
+   "source": "ao-da-li-ya-31.jpeg",
+   "sourceSha256": "cd3e7f88ac51f14e0d589322c828bb660c77b55e3d8714785ca5c81ce41db288"
+  },
+  "ao-da-li-ya/ao-da-li-ya-32": {
+   "version": "52a3e8f953",
+   "width": 3577,
+   "height": 3023,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-32-600.52a3e8f953.webp",
+     "width": 600,
+     "height": 507,
+     "bytes": 83468,
+     "sha256": "b86a559c3ceb3292d54fb0dea90501215fa699ce3966388855f0b33b3b705a76"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-32-1200.52a3e8f953.webp",
+     "width": 1200,
+     "height": 1014,
+     "bytes": 230188,
+     "sha256": "efca76d0ad16507be89349aca9b29890e83a4bb6db0258dee075cf646206f2f6"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-32-1800.52a3e8f953.webp",
+     "width": 1800,
+     "height": 1521,
+     "bytes": 359588,
+     "sha256": "1107ac8914f7607ba6b74c7091ee2d4c0f1a508885784ce6668d722cb9290148"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-32-2400.52a3e8f953.webp",
+     "width": 2400,
+     "height": 2028,
+     "bytes": 493560,
+     "sha256": "59cf65de104c06b1c8c94a8f68fe306935bc197d38c2fa7cfa506fc241e1ca17"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-32-4000.52a3e8f953.webp",
+     "width": 3577,
+     "height": 3023,
+     "bytes": 777876,
+     "sha256": "39edf0574028f03ad48d5dd3bdc1933d3d895b6a9c3cd69cd7f976e5e4a7533d"
+    }
+   },
+   "color": "#6e6361",
+   "blur": "data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAABwAgCdASoQAA4AAsBMJYwCdAYtVvPEd7dvKyAAAP7SbLc0ZXDWJrLW+owEtetH3PPiqN0qstx4uXpbqeeib3ub+b2MxSNk+hulic1LZocnYUwZxT7ifhTx6Xgisy+gzCE67kkG+QcHI7Lb+E3k8sjQzjeEEYAA",
+   "original": {
+    "width": 3577,
+    "height": 3023
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone 15 Pro Max",
+    "lens": "Back camera 6.765mm f/1.78",
+    "focal": "6.76mm",
+    "aperture": "f/1.8",
+    "shutter": "1/79s",
+    "iso": 200,
+    "date": "2024-12-05"
+   },
+   "colorConverted": true,
+   "source": "ao-da-li-ya-32.jpeg",
+   "sourceSha256": "776885c73773e84b97687ab5565d8c3b63a988346d2a54fb9877d380daa2dba2"
+  },
+  "ao-da-li-ya/ao-da-li-ya-33": {
+   "version": "f812f1eea8",
+   "width": 3576,
+   "height": 3022,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-33-600.f812f1eea8.webp",
+     "width": 600,
+     "height": 507,
+     "bytes": 74922,
+     "sha256": "7bb8c181e98be5d6397edb991e0043a8486a7b8db86e88327cf1b453751383d6"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-33-1200.f812f1eea8.webp",
+     "width": 1200,
+     "height": 1014,
+     "bytes": 274868,
+     "sha256": "7aac5f132f82bb1633847479a6a0a76e0e3f6e83153397628ee554a5382f673a"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-33-1800.f812f1eea8.webp",
+     "width": 1800,
+     "height": 1521,
+     "bytes": 466596,
+     "sha256": "4edd763402c1a31170e87b37814f3d880fe5ee99c36c404fd1f39f64a212435a"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-33-2400.f812f1eea8.webp",
+     "width": 2400,
+     "height": 2028,
+     "bytes": 634396,
+     "sha256": "fcfbac203cd0f1b507e72ac18570c28ab0a55b121ca21b25653612ceb071c88a"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-33-4000.f812f1eea8.webp",
+     "width": 3576,
+     "height": 3022,
+     "bytes": 992334,
+     "sha256": "cf4d82dd1f6dbc6f132da6594a7025a3813a18a0cce0dc125af5ec67430a9c6d"
+    }
+   },
+   "color": "#373431",
+   "blur": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAADQAQCdASoQAA4AAsBMJZwAAp03KQRKiAD+7ShU7ywKcXsjYdSnnp/5RV8WSHvH8E82jwP5/ZPhby+IZtufbDRqmY4376gltJifCvbQkZL2LeItG+4kSuQuDqDgAA==",
+   "original": {
+    "width": 3576,
+    "height": 3022
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone 15 Pro Max",
+    "lens": "Back camera 6.765mm f/1.78",
+    "focal": "6.76mm",
+    "aperture": "f/1.8",
+    "shutter": "1/50s",
+    "iso": 640,
+    "date": "2024-12-05"
+   },
+   "colorConverted": true,
+   "source": "ao-da-li-ya-33.jpeg",
+   "sourceSha256": "cf3c192ce5dae153f438d9a5354c4e3b24f460140d248c270abdd46022f19592"
+  },
+  "ao-da-li-ya/ao-da-li-ya-34": {
+   "version": "958cfd377c",
+   "width": 3576,
+   "height": 3022,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-34-600.958cfd377c.webp",
+     "width": 600,
+     "height": 507,
+     "bytes": 61838,
+     "sha256": "a21ea951828e6db515320bf35c125efcb0b8111638a8ea329a79f3e2165db839"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-34-1200.958cfd377c.webp",
+     "width": 1200,
+     "height": 1014,
+     "bytes": 175282,
+     "sha256": "7dead24b29d81e93e1f71e84cd1f4ad777de304e560a8d5d6fd7b991f07624bb"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-34-1800.958cfd377c.webp",
+     "width": 1800,
+     "height": 1521,
+     "bytes": 295568,
+     "sha256": "2d80f134c09ab2bae30ad2d25fc408c1b4037c271bf6e62d8a06e53e72aab309"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-34-2400.958cfd377c.webp",
+     "width": 2400,
+     "height": 2028,
+     "bytes": 403752,
+     "sha256": "10ded6509b439782446dc92d008b04bdd2a7ad8936475f9dc2ce691eb34f55d6"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-34-4000.958cfd377c.webp",
+     "width": 3576,
+     "height": 3022,
+     "bytes": 630714,
+     "sha256": "92b5b590a7dff8dc2feebf56c4e82c01c44f387e1b6d0e309a6c98892622cbf5"
+    }
+   },
+   "color": "#26241f",
+   "blur": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAAAQAgCdASoQAA4AAsBMJZQCw7DxGN9CI5bwAP73yLtWUvcUhEXDwdGjv4C9a2XkVXHRTuXwB5jkB7GV7Cqt8j04kC4ssSsxF7m6xh/AAAA=",
+   "original": {
+    "width": 3576,
+    "height": 3022
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone 15 Pro Max",
+    "lens": "Back camera 6.765mm f/1.78",
+    "focal": "6.76mm",
+    "aperture": "f/1.8",
+    "shutter": "1/33s",
+    "iso": 800,
+    "date": "2024-12-05"
+   },
+   "colorConverted": true,
+   "source": "ao-da-li-ya-34.jpeg",
+   "sourceSha256": "e85d49bded319f3916452ff5a62d08d22e289d8055000c252fda4ec4de383ff8"
+  },
+  "ao-da-li-ya/ao-da-li-ya-35": {
+   "version": "0473c98139",
+   "width": 3022,
+   "height": 3576,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-35-600.0473c98139.webp",
+     "width": 507,
+     "height": 600,
+     "bytes": 118388,
+     "sha256": "7472082f5d4307234205ea13814e9b40824d7c4eb913a67d7d552de197441b37"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-35-1200.0473c98139.webp",
+     "width": 1014,
+     "height": 1200,
+     "bytes": 391338,
+     "sha256": "0f6d209f2a03790c10fae5a706443e21d60a480affbb16c8a30cdba3dc1c9ab1"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-35-1800.0473c98139.webp",
+     "width": 1521,
+     "height": 1800,
+     "bytes": 711018,
+     "sha256": "f564a33f9b0fe68ff146a055a0599093f1cfb0ef7a6474122c0f6d9b1664aa15"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-35-2400.0473c98139.webp",
+     "width": 2028,
+     "height": 2400,
+     "bytes": 1021426,
+     "sha256": "1c6dc0ac2783b872f53c48a46fab82670c91c10e9b2bff4e19c3289ba2ba5c0d"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-35-4000.0473c98139.webp",
+     "width": 3022,
+     "height": 3576,
+     "bytes": 1536514,
+     "sha256": "f0d4d245dabf7b4146fdca7f148696afdc552851ba3f4a7cfaed91b67c9aae37"
+    }
+   },
+   "color": "#4e4541",
+   "blur": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAADwAQCdASoOABAAAsBMJZQCdAEWfcQ6ygAA/cedQQVpB8JHv5hIYM+VTLm0bMokmOzz5xn1l+vkOu2/ToNH5q/j2Kw03PVIf82iVj7w+HUEcWdZ+/kXUo7u7kUS3JFQNUsb1HcgAAA=",
+   "original": {
+    "width": 3022,
+    "height": 3576
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone 15 Pro Max",
+    "lens": "Back camera 6.765mm f/1.78",
+    "focal": "6.76mm",
+    "aperture": "f/1.8",
+    "shutter": "1/166s",
+    "iso": 100,
+    "date": "2024-12-06"
+   },
+   "colorConverted": true,
+   "source": "ao-da-li-ya-35.jpeg",
+   "sourceSha256": "f4eba93669c9494325d8e52025da0a692557273d2013bf97c4afb43b4c5bdab9"
+  },
+  "ao-da-li-ya/ao-da-li-ya-36": {
+   "version": "acf057bc5d",
+   "width": 3840,
+   "height": 2160,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-36-600.acf057bc5d.webp",
+     "width": 600,
+     "height": 338,
+     "bytes": 75688,
+     "sha256": "a956d761385dbbebae3b404e3c3948bd7aa939654b22261e5e13aee53ce8cb12"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-36-1200.acf057bc5d.webp",
+     "width": 1200,
+     "height": 675,
+     "bytes": 276968,
+     "sha256": "e48aeed536084602ad7e64ebfc96da0a5a6ff9563de888fa05cc110630596d57"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-36-1800.acf057bc5d.webp",
+     "width": 1800,
+     "height": 1013,
+     "bytes": 563608,
+     "sha256": "2c945deb797abdd39ae2bb85f0245891b4eef3439ed02d49b48e274921bed3a2"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-36-2400.acf057bc5d.webp",
+     "width": 2400,
+     "height": 1350,
+     "bytes": 880482,
+     "sha256": "e4e86639c0ef7d71f95ea071184ceea05dd969b34c4b94c2d692ad7071a9e5cb"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-36-4000.acf057bc5d.webp",
+     "width": 3840,
+     "height": 2160,
+     "bytes": 1855098,
+     "sha256": "a46e96b9507569531e4a827cf0bf39b1bf60bd97a9d4186ba4252e04a58ea004"
+    }
+   },
+   "color": "#757c79",
+   "blur": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAAAwAgCdASoQAAkAAsBMJZACdH8AGEUABOQokAD8Hd2Oq3/dMcWIneyJcWp03iGTKlGPE+t2POfL/Tw0VFi2vyVq/3xfzS5x+dAcLbvNxFn7+ovyJf4m5J89OV0AAA==",
+   "original": {
+    "width": 3840,
+    "height": 2160
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone 15 Pro Max",
+    "lens": "Back triple camera 15.66mm f/2.8",
+    "focal": "16mm",
+    "aperture": "f/2.8",
+    "shutter": "1/202s",
+    "iso": 40,
+    "date": "2024-12-07"
+   },
+   "colorConverted": true,
+   "source": "ao-da-li-ya-36.jpeg",
+   "sourceSha256": "84b0db56fcce7ffe180cb3eecbb40312fb2955b66616001ff541fde3f6e7511d"
+  },
+  "ao-da-li-ya/ao-da-li-ya-37": {
+   "version": "0c63bd8f18",
+   "width": 3576,
+   "height": 3022,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-37-600.0c63bd8f18.webp",
+     "width": 600,
+     "height": 507,
+     "bytes": 124662,
+     "sha256": "ec514adec6fff42e7a1c8f8177aa53554fd8cae72efd29152ed85f3061383213"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-37-1200.0c63bd8f18.webp",
+     "width": 1200,
+     "height": 1014,
+     "bytes": 391276,
+     "sha256": "ec95b4aec3547bb2756b417a305719443b3df32812a482728500fe3b7083da33"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-37-1800.0c63bd8f18.webp",
+     "width": 1800,
+     "height": 1521,
+     "bytes": 650430,
+     "sha256": "586f04fc90ffbf46191b1a0b61b1b88fb2d91bd8fa24516ac37c6062b9b3ab3c"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-37-2400.0c63bd8f18.webp",
+     "width": 2400,
+     "height": 2028,
+     "bytes": 900940,
+     "sha256": "2df5d950b3914fb5ca3a52a73af3e61e3867a3de8d6eb096bd9f4a70d13f26eb"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-37-4000.0c63bd8f18.webp",
+     "width": 3576,
+     "height": 3022,
+     "bytes": 1383422,
+     "sha256": "dc9ef405bc53775b17fcdeb14b29f881fb51c031f74e640dd6dc4cf23fb51449"
+    }
+   },
+   "color": "#5a564f",
+   "blur": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAAAQAgCdASoQAA4AAsBMJQBdgCG8vc4ACfEAAP7mntqdapbskOXtzG0vHvPVTzTtczy0E39bcQqax5zgDTDocvoBSUlIXq39IhKz3ziz3G/GguYT8lxw0zRTMfivojAah7pYAA==",
+   "original": {
+    "width": 3576,
+    "height": 3022
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone 15 Pro Max",
+    "lens": "Back camera 15.66mm f/2.8",
+    "focal": "16mm",
+    "aperture": "f/2.8",
+    "shutter": "1/121s",
+    "iso": 250,
+    "date": "2024-12-07"
+   },
+   "colorConverted": true,
+   "source": "ao-da-li-ya-37.jpeg",
+   "sourceSha256": "e10664f53a8951a9889156be8a03549c386eed475ba543c3f36753d59a4ac911"
+  },
+  "ao-da-li-ya/ao-da-li-ya-38": {
+   "version": "6b68377cdf",
+   "width": 2797,
+   "height": 2364,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-38-600.6b68377cdf.webp",
+     "width": 600,
+     "height": 507,
+     "bytes": 88376,
+     "sha256": "fc2fdfa1c35b1d6653e845bc35bf6ebcc623ad7f959fd4c881b3596ab6601cbc"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-38-1200.6b68377cdf.webp",
+     "width": 1200,
+     "height": 1014,
+     "bytes": 252800,
+     "sha256": "0d7fe5c79c2fbe0079b0d5465b1237b2ef5170f77c8a91b78c066ab249662644"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-38-1800.6b68377cdf.webp",
+     "width": 1800,
+     "height": 1521,
+     "bytes": 399480,
+     "sha256": "0883de245b0db92f1d3f9565f08f9f7646ffa9ac743d4e0310cf5b7d21e6d797"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-38-2400.6b68377cdf.webp",
+     "width": 2400,
+     "height": 2028,
+     "bytes": 537842,
+     "sha256": "56ef3543f695f83b784ce33a02df7b9c8052b3e2625ca66f12a984bb2dcca50f"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-38-4000.6b68377cdf.webp",
+     "width": 2797,
+     "height": 2364,
+     "bytes": 640306,
+     "sha256": "c34708cf1eeb39a6d9f3003b41a70288eb28fe50677089673cb18c9d2475c95c"
+    }
+   },
+   "color": "#4b4d4d",
+   "blur": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAACwAQCdASoQAA4AAsBMJZwAApesTGWwAP70X3c5t81IO0pTT2Y8ePztpOa7FnvyIILd0gW3IDt5IieQRPbJ27Jg+IovxKnNtJ2kQwbE/MybNbzh8ReMagYCkH1eVccG0IAAAA==",
+   "original": {
+    "width": 2797,
+    "height": 2364
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone 15 Pro Max",
+    "lens": "Back triple camera 15.66mm f/2.8",
+    "focal": "16mm",
+    "aperture": "f/2.8",
+    "shutter": "1/99s",
+    "iso": 50,
+    "date": "2024-12-07"
+   },
+   "colorConverted": true,
+   "source": "ao-da-li-ya-38.jpeg",
+   "sourceSha256": "c18aa9207471a54e0ed9e08927c51cf5e050bac598d34b2502afd019f7cc01e3"
+  },
+  "ao-da-li-ya/ao-da-li-ya-4": {
+   "version": "7317fb4592",
+   "width": 2667,
+   "height": 4000,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-4-600.7317fb4592.webp",
+     "width": 400,
+     "height": 600,
+     "bytes": 88630,
+     "sha256": "ebf72f691e0108885348708b7d6072f58b902a22916875896159b34b3db79f58"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-4-1200.7317fb4592.webp",
+     "width": 800,
+     "height": 1200,
+     "bytes": 281012,
+     "sha256": "2c9bf1f7654f5ddfdde664e7dec0a34bd7c1e91f8a3f71b075441f39d40738fe"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-4-1800.7317fb4592.webp",
+     "width": 1200,
+     "height": 1800,
+     "bytes": 487560,
+     "sha256": "a758ded187ff97072ad936124a32eb2778a6c612d1a0e9f4c2b3c2d95ac50fb8"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-4-2400.7317fb4592.webp",
+     "width": 1600,
+     "height": 2400,
+     "bytes": 669784,
+     "sha256": "df69654bb49a3556ef5f6ebe510b34eaebb4ede4dc5f214b415e3f6e7bce08d0"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-4-4000.7317fb4592.webp",
+     "width": 2667,
+     "height": 4000,
+     "bytes": 1165652,
+     "sha256": "d15ae7cf1b961098b512b550593dd6bcc1af5a94f964592b313e345e4f262d5e"
+    }
+   },
+   "color": "#5f5f54",
+   "blur": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAADQAQCdASoLABAAAsBMJQBdgBuc8uL7AAD+rcc43Vy8OvoOfjKIXgdQZ3dowYec9xhe+J9vB4FSomaN8yulm5ZVNZcIU+U+3FHAEitqZAAAAA==",
+   "original": {
+    "width": 2688,
+    "height": 4032
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone 15 Pro Max",
+    "lens": "Back camera 6.765mm f/1.78",
+    "focal": "6.76mm",
+    "aperture": "f/1.8",
+    "shutter": "1/115s",
+    "iso": 100,
+    "date": "2024-12-01"
+   },
+   "colorConverted": false,
+   "source": "ao-da-li-ya-4.jpeg",
+   "sourceSha256": "5d1c941a971958bf1acce2226ff9a98c951dd5950e7ce8634a88674699ce73f7"
+  },
+  "ao-da-li-ya/ao-da-li-ya-5": {
+   "version": "59349513ea",
+   "width": 4000,
+   "height": 2667,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-5-600.59349513ea.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 44574,
+     "sha256": "061f949749d6644434a154089a8575c6d668237ed9f52c1d8fe11d18f23e6e48"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-5-1200.59349513ea.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 115188,
+     "sha256": "3f2578dcbb096d2f7c374cd5327a92df3b13886eb10e135f1a00b46be2fc1af8"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-5-1800.59349513ea.webp",
+     "width": 1800,
+     "height": 1200,
+     "bytes": 186590,
+     "sha256": "4e7e3e454e13a2ad4d00017533deca846016e6b0d738cd0ad8525f3088578636"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-5-2400.59349513ea.webp",
+     "width": 2400,
+     "height": 1600,
+     "bytes": 255806,
+     "sha256": "aee2725bb5814dcf4fba40739c9a8cf83805896744ade8f3940dc4f8060cfa2d"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-5-4000.59349513ea.webp",
+     "width": 4000,
+     "height": 2667,
+     "bytes": 472916,
+     "sha256": "65e33ac7f3a8d336047eaca4e39da5dbd3d40a7f36eb942cb2441ee391239ad1"
+    }
+   },
+   "color": "#6a6a6c",
+   "blur": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAADwAQCdASoQAAsAAsBMJZwAAuzTBWIbmQAA/rI+Mll5qy3oTA5+jNwsovSpISPC7aZXepp6Xu/1wvXfzu46HYOQR4OiAxzgf3HdDcULWSrxXX/rG4oAAA==",
+   "original": {
+    "width": 4032,
+    "height": 2688
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone 15 Pro Max",
+    "lens": "Back camera 6.765mm f/1.78",
+    "focal": "6.76mm",
+    "aperture": "f/1.8",
+    "shutter": "1/685s",
+    "iso": 64,
+    "date": "2024-12-01"
+   },
+   "colorConverted": false,
+   "source": "ao-da-li-ya-5.jpeg",
+   "sourceSha256": "e9bed400f3e8af39fd5aca0ec0fa10b57259c2503c3d8c84d2f482ad4fe51219"
+  },
+  "ao-da-li-ya/ao-da-li-ya-6": {
+   "version": "96111b95e9",
+   "width": 4000,
+   "height": 2667,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-6-600.96111b95e9.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 67340,
+     "sha256": "35838e52862f91618d827e9dfb5d020a49001cc4dd591a36229bbd32025f0b9e"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-6-1200.96111b95e9.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 203004,
+     "sha256": "44b5ba6e38e5dc139f89130113db5341517b6f37c02832e5333491dc97fea8b0"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-6-1800.96111b95e9.webp",
+     "width": 1800,
+     "height": 1200,
+     "bytes": 365868,
+     "sha256": "ea7235c483c805269139a3cba36f18e989178fc760a1420972f74e0c0647ff54"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-6-2400.96111b95e9.webp",
+     "width": 2400,
+     "height": 1600,
+     "bytes": 530582,
+     "sha256": "2f297ac7c9897fe9cb458874f762b0abd8b1508baa0b523f5798b9a00d5dab54"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-6-4000.96111b95e9.webp",
+     "width": 4000,
+     "height": 2667,
+     "bytes": 1086582,
+     "sha256": "17793634de07fbf38d7e18eb5bc8c59cd4408fbc73d144ddd201c8a841f8fc01"
+    }
+   },
+   "color": "#68696b",
+   "blur": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAADwAQCdASoQAAsAAsBMJZwAAsTFaJVgoAAA8qd7kmOP/c2/b+CEJJaS1kR8pUvRUXPWNyXc9ImZzw+wurVtmah64cYRN/h2D9lvXr2Myo3XiSpuZPl4AA==",
+   "original": {
+    "width": 4032,
+    "height": 2688
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone 15 Pro Max",
+    "lens": "Back camera 15.66mm f/2.8",
+    "focal": "16mm",
+    "aperture": "f/2.8",
+    "shutter": "1/146s",
+    "iso": 32,
+    "date": "2024-12-01"
+   },
+   "colorConverted": false,
+   "source": "ao-da-li-ya-6.jpeg",
+   "sourceSha256": "a7788aec7f9fad50d96fb594aa1941df5210fd96802c3aa35813bb14689faf89"
+  },
+  "ao-da-li-ya/ao-da-li-ya-7": {
+   "version": "d50c048d95",
+   "width": 4000,
+   "height": 2667,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-7-600.d50c048d95.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 79826,
+     "sha256": "08b3307791d477dc54b8732c0bbc8a5b6a7ecd726564b8ccf111bbb36fed219b"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-7-1200.d50c048d95.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 295022,
+     "sha256": "ea6a52b7d7da67b57949c5a2945e11904095f2398937421a503bf748864cf8da"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-7-1800.d50c048d95.webp",
+     "width": 1800,
+     "height": 1200,
+     "bytes": 657304,
+     "sha256": "d0d2287cf29fd9fccf632e90dbc7e377975bc9354fec35dcdc2e973354c451af"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-7-2400.d50c048d95.webp",
+     "width": 2400,
+     "height": 1600,
+     "bytes": 1203282,
+     "sha256": "b6e2ebfd53beecef71947392c3f3a180e20226a8c6a5cd9eb1d7abbc72460a77"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-7-4000.d50c048d95.webp",
+     "width": 4000,
+     "height": 2667,
+     "bytes": 3468578,
+     "sha256": "010e5967cc7cbccbcbc66e2b96db252fdbefedf55d70a97bdace73e16be8209e"
+    }
+   },
+   "color": "#6f7a71",
+   "blur": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAADwAQCdASoQAAsAAsBMJZgCdAYsjmrkQKAA/ub8k23SGP8McGxa1CrEKMwfPvBK2fjpDlF8TK+7tAhdi0YC0Nhw5LRtHIvncVhxm/57reT215Iy8f3uzkquDhmpRrREE8dl4oEmITjrqrQZnjw2gAAA",
+   "original": {
+    "width": 6961,
+    "height": 4641
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Fujifilm X100VI",
+    "focal": "23mm",
+    "aperture": "f/4.5",
+    "shutter": "1/2200s",
+    "iso": 500,
+    "date": "2024-12-02"
+   },
+   "colorConverted": true,
+   "source": "ao-da-li-ya-7.jpeg",
+   "sourceSha256": "51f9e1f05eb6b3edfb29573e787fc3bf73d367ea7bf80bc0a432185820953675"
+  },
+  "ao-da-li-ya/ao-da-li-ya-8": {
+   "version": "17cdbec9c4",
+   "width": 4000,
+   "height": 2667,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-8-600.17cdbec9c4.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 81630,
+     "sha256": "a1a0c8dc1b16d97e0a125069f8e2ab133630af3c131620e310a4471d4309842d"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-8-1200.17cdbec9c4.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 271440,
+     "sha256": "15c3c6623acc2646018c53dd3accf1e8a6838780fc071ac6a30267e82e925cd1"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-8-1800.17cdbec9c4.webp",
+     "width": 1800,
+     "height": 1200,
+     "bytes": 566332,
+     "sha256": "815927704c3d47f67d25f5b2dce8cbe79ee22e7f08bf73532db480995b6d0aa1"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-8-2400.17cdbec9c4.webp",
+     "width": 2400,
+     "height": 1600,
+     "bytes": 987868,
+     "sha256": "a97d5a4cdfd97d3b4ad784a3ebd8c37383a6bc84837f0624f459d82653bcf423"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-8-4000.17cdbec9c4.webp",
+     "width": 4000,
+     "height": 2667,
+     "bytes": 2567966,
+     "sha256": "d4faa677206bc4dcf581af49e29c235ee1653820be3acf30d4d60b4a151953c8"
+    }
+   },
+   "color": "#788785",
+   "blur": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAAAQAgCdASoQAAsAAsBMJaACdAEQzZT0NdAwAPff5/o1GckLVi4P2CvHzr74rIoZobWRkoFQUnh1N9GAG1nGdW72TkGK8RDN0qHBciP2D2dIyBaXOQ0qwKEAAAA=",
+   "original": {
+    "width": 7728,
+    "height": 5152
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Fujifilm X100VI",
+    "focal": "23mm",
+    "aperture": "f/4.5",
+    "shutter": "1/1250s",
+    "iso": 500,
+    "date": "2024-12-02"
+   },
+   "colorConverted": true,
+   "source": "ao-da-li-ya-8.jpeg",
+   "sourceSha256": "cf94c571c543b5fd5e32d0dfa5d286563a38839a09f43a89dc9e3ab9b758aa12"
+  },
+  "ao-da-li-ya/ao-da-li-ya-9": {
+   "version": "c2a35ad0e9",
+   "width": 4000,
+   "height": 2667,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-9-600.c2a35ad0e9.webp",
+     "width": 600,
+     "height": 400,
+     "bytes": 74432,
+     "sha256": "bf3c1df8bb6026674a3ca5321154207c7f43d7d5c592c807f3cb8e6d00405e82"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-9-1200.c2a35ad0e9.webp",
+     "width": 1200,
+     "height": 800,
+     "bytes": 186596,
+     "sha256": "a48eae2ebba51a3e532eff5cc0a12b6d8a50415de2a204393833882080161491"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-9-1800.c2a35ad0e9.webp",
+     "width": 1800,
+     "height": 1200,
+     "bytes": 315724,
+     "sha256": "5b3fa525d0bd33a5f121eb77c19aa03fb4ca21a1f235b697e971c12af4369699"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-9-2400.c2a35ad0e9.webp",
+     "width": 2400,
+     "height": 1600,
+     "bytes": 571418,
+     "sha256": "efc78d4186da761de19f9869c2ceb3ad70cc006a95fac492a41fe339f59570df"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-9-4000.c2a35ad0e9.webp",
+     "width": 4000,
+     "height": 2667,
+     "bytes": 2353050,
+     "sha256": "e1375dbd0d0db4e1b231a9e70ad15b0fa9358c71bcf897e71f70a5b933208155"
+    }
+   },
+   "color": "#62747c",
+   "blur": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAAAQAgCdASoQAAsAAsBMJbACdAEJvyfbz7oAAPzXuVDjwZFUO8+YUi9ENLEIYd1bmFIW6oRi6LwGKEcH1l+Et/R06N3z5+oee0viDuYuu2iRoAHmGs+sXUYfZh3oN7GOa4RNXRDAAAA=",
+   "original": {
+    "width": 7728,
+    "height": 5152
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "Fujifilm X100VI",
+    "focal": "23mm",
+    "aperture": "f/5.6",
+    "shutter": "1/1800s",
+    "iso": 500,
+    "date": "2024-12-02"
+   },
+   "colorConverted": true,
+   "source": "ao-da-li-ya-9.jpeg",
+   "sourceSha256": "ba5b94d0b5414c67dc53c0735bf200ad20ec7011f50d5ded52b77c2c608ea033"
+  },
   "gba/gba-1": {
    "version": "6328d29981",
    "width": 4000,
