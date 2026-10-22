@@ -8079,6 +8079,250 @@
    "source": "stage-1.jpg",
    "sourceSha256": "62ebf466f0a4b6dd4a0bbf1133d2587eb07731b01c1eef23e9e16ab8d69fd949"
   },
+  "stage/stage-10": {
+   "version": "b044fc8e09",
+   "width": 4000,
+   "height": 3000,
+   "sizes": {
+    "600": {
+     "file": "stage/stage-10-600.b044fc8e09.webp",
+     "width": 600,
+     "height": 450,
+     "bytes": 72384,
+     "sha256": "1ba4df0bb56c8543149821e5dff1e76b1f324366872dcd3812e21b24f17c63cc"
+    },
+    "1200": {
+     "file": "stage/stage-10-1200.b044fc8e09.webp",
+     "width": 1200,
+     "height": 900,
+     "bytes": 241018,
+     "sha256": "b269e9be09e8a80e2cda19ff989451814accc747fe5ccc08cb7a1d450922d5c2"
+    },
+    "1800": {
+     "file": "stage/stage-10-1800.b044fc8e09.webp",
+     "width": 1800,
+     "height": 1350,
+     "bytes": 471902,
+     "sha256": "d7fbddd91f54289ea545d6cb0a436cff685a0d3af0bcc01eaabf7eb756e24de0"
+    },
+    "2400": {
+     "file": "stage/stage-10-2400.b044fc8e09.webp",
+     "width": 2400,
+     "height": 1800,
+     "bytes": 759634,
+     "sha256": "40f16b3b433e5d0454f913bd412f7e6009c5007def741acae1e2d863c340ecbc"
+    },
+    "4000": {
+     "file": "stage/stage-10-4000.b044fc8e09.webp",
+     "width": 4000,
+     "height": 3000,
+     "bytes": 1670888,
+     "sha256": "8808236004633969aad74fe180ca58485e299e764f25bbc81f768a7722e1bba7"
+    }
+   },
+   "color": "#221514",
+   "blur": "data:image/webp;base64,UklGRkQAAABXRUJQVlA4IDgAAADQAQCdASoQAAwAAsBMJZQAAucQoWP/QAD++2fh/3LE4rn5UfunApBY3l9qRBvvEEbeKWb26PqYAA==",
+   "original": {
+    "width": 8064,
+    "height": 6048
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone 15 Pro Max",
+    "lens": "Back triple camera 6.86mm f/1.78",
+    "focal": "6.86mm",
+    "aperture": "f/1.8",
+    "shutter": "1/30s",
+    "iso": 1000,
+    "date": "2024-07-12"
+   },
+   "colorConverted": true,
+   "source": "stage-10.jpeg",
+   "sourceSha256": "b40a2031cac496c7df22d744c5099e3800c43ba38ed64b9b7274a8eaddc48ffa"
+  },
+  "stage/stage-11": {
+   "version": "03b6499e78",
+   "width": 4000,
+   "height": 3000,
+   "sizes": {
+    "600": {
+     "file": "stage/stage-11-600.03b6499e78.webp",
+     "width": 600,
+     "height": 450,
+     "bytes": 71418,
+     "sha256": "fa36736cd286bdf458df523ccd856bc4ea388d7e32a581cb6e36577e89306b49"
+    },
+    "1200": {
+     "file": "stage/stage-11-1200.03b6499e78.webp",
+     "width": 1200,
+     "height": 900,
+     "bytes": 201628,
+     "sha256": "df0ff877d95b8423e2f397592564ecad64fff69c06bc137809b78704909d948d"
+    },
+    "1800": {
+     "file": "stage/stage-11-1800.03b6499e78.webp",
+     "width": 1800,
+     "height": 1350,
+     "bytes": 375896,
+     "sha256": "4e43b684d1834757a500eb37a41dd29039c63638df66c10e58807a5b1a829b4e"
+    },
+    "2400": {
+     "file": "stage/stage-11-2400.03b6499e78.webp",
+     "width": 2400,
+     "height": 1800,
+     "bytes": 536534,
+     "sha256": "1337c37343bc6f003088664de4e6bb4404a00dfd7cee6700af86cc8376f4a89e"
+    },
+    "4000": {
+     "file": "stage/stage-11-4000.03b6499e78.webp",
+     "width": 4000,
+     "height": 3000,
+     "bytes": 1044356,
+     "sha256": "4f171d9b1995d2c55a7f634ad6f006b0a89d587d4e1f02d82258856159bff7e0"
+    }
+   },
+   "color": "#601d5b",
+   "blur": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAADQAQCdASoQAAwAAsBMJbACdADWzFq5wAD+74c+X9e1JbcZD4pqx/QBrTsuOSxZqCAMSY13Az0vN2MqtE7rmoZ7zYheU/qtiMPMYkoINBkvdzPJvmATmmkI5u9bjyqY2OjNbWATMfc74AAA",
+   "original": {
+    "width": 4032,
+    "height": 3024
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone 15 Pro Max",
+    "lens": "Back triple camera 15.66mm f/2.8",
+    "focal": "16mm",
+    "aperture": "f/2.8",
+    "shutter": "1/40s",
+    "iso": 1250,
+    "date": "2024-07-12"
+   },
+   "colorConverted": true,
+   "source": "stage-11.jpeg",
+   "sourceSha256": "8a1d76f985f73f38c2ea347466d9e4565153c7aded786760257a7e2fdec854eb"
+  },
+  "stage/stage-12": {
+   "version": "78fa365a7d",
+   "width": 3840,
+   "height": 2160,
+   "sizes": {
+    "600": {
+     "file": "stage/stage-12-600.78fa365a7d.webp",
+     "width": 600,
+     "height": 338,
+     "bytes": 35408,
+     "sha256": "dd6f50338a4cfcbcc93cdaad8e7fe12f7eb2b4e444eb278108b7f5bb15b6a0b3"
+    },
+    "1200": {
+     "file": "stage/stage-12-1200.78fa365a7d.webp",
+     "width": 1200,
+     "height": 675,
+     "bytes": 97972,
+     "sha256": "cdaa737b6d05ad896824855cac02eb5cf693f667edd13e6c0c5c83f022209d9b"
+    },
+    "1800": {
+     "file": "stage/stage-12-1800.78fa365a7d.webp",
+     "width": 1800,
+     "height": 1013,
+     "bytes": 193530,
+     "sha256": "a9f06142977c362e319ef473d2004eff2f5cfcb7d75ffb3f49e986eac4b36e10"
+    },
+    "2400": {
+     "file": "stage/stage-12-2400.78fa365a7d.webp",
+     "width": 2400,
+     "height": 1350,
+     "bytes": 317744,
+     "sha256": "36be45ec60f9e31c5751659c2e765b4f396e6efa1e4ffa263b6047b2e1fee448"
+    },
+    "4000": {
+     "file": "stage/stage-12-4000.78fa365a7d.webp",
+     "width": 3840,
+     "height": 2160,
+     "bytes": 679210,
+     "sha256": "4019faa6128cd427f2ed3ec3eca142cde156203d02bb83c0c83973b6b9b895fa"
+    }
+   },
+   "color": "#23221b",
+   "blur": "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAADwAQCdASoQAAkAAsBMJZQAAqHVp9ma3gAA/vlSonGMX0vXOeyP+lyL1FLIqqd0lvH8d9zBcqn98DlMcdQAAA==",
+   "original": {
+    "width": 3840,
+    "height": 2160
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone 15 Pro Max",
+    "lens": "Back triple camera 15.66mm f/2.8",
+    "focal": "16mm",
+    "aperture": "f/2.8",
+    "shutter": "1/100s",
+    "iso": 50,
+    "date": "2024-07-12"
+   },
+   "colorConverted": true,
+   "source": "stage-12.jpeg",
+   "sourceSha256": "220714ac98fb66e5b5a4d934b5bf1c73a13507539d7115e632c3e74cf5c1063b"
+  },
+  "stage/stage-13": {
+   "version": "6cf1a2809d",
+   "width": 4000,
+   "height": 3000,
+   "sizes": {
+    "600": {
+     "file": "stage/stage-13-600.6cf1a2809d.webp",
+     "width": 600,
+     "height": 450,
+     "bytes": 73412,
+     "sha256": "50718d84ba3fa0701f6adaf4bc05dcdd104177932135037a1fba0b381decd70f"
+    },
+    "1200": {
+     "file": "stage/stage-13-1200.6cf1a2809d.webp",
+     "width": 1200,
+     "height": 900,
+     "bytes": 235718,
+     "sha256": "760edf6e3c8235b2bb37aafee502127b080e13fa45d3c35a70e61f8753081e61"
+    },
+    "1800": {
+     "file": "stage/stage-13-1800.6cf1a2809d.webp",
+     "width": 1800,
+     "height": 1350,
+     "bytes": 426992,
+     "sha256": "9845164c39337881f6372f6f61807c05d81d8eb3a24d50739ad28ae367bf9afc"
+    },
+    "2400": {
+     "file": "stage/stage-13-2400.6cf1a2809d.webp",
+     "width": 2400,
+     "height": 1800,
+     "bytes": 630284,
+     "sha256": "b2323daea31fad4421fbd56df622634e83220388779981883922913dc561c7a7"
+    },
+    "4000": {
+     "file": "stage/stage-13-4000.6cf1a2809d.webp",
+     "width": 4000,
+     "height": 3000,
+     "bytes": 1223402,
+     "sha256": "0258c707b2d45d9ac374cdd34649a4d7f2342466fc4617f0b602443fcde206c4"
+    }
+   },
+   "color": "#593e39",
+   "blur": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAADwAQCdASoQAAwAAsBMJYgCdAEOegS24iAA/uRqd7aT+qd+ummcG5+oAbgfDU/d7Ec6J9SAWrzmgZOURMAAGkbjF22LgKOeJSYXDSAA",
+   "original": {
+    "width": 8064,
+    "height": 6048
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone 15 Pro Max",
+    "lens": "Back triple camera 6.86mm f/1.78",
+    "focal": "6.86mm",
+    "aperture": "f/1.8",
+    "shutter": "1/50s",
+    "iso": 320,
+    "date": "2024-07-12"
+   },
+   "colorConverted": true,
+   "source": "stage-13.jpeg",
+   "sourceSha256": "f414a906965607ae3215d97fef3f0b34a69f8545370caadb88e81f260959e5cc"
+  },
   "stage/stage-2": {
    "version": "8c4d594d06",
    "width": 2130,
