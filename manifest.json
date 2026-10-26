@@ -2098,59 +2098,6 @@
       "source": "ao-da-li-ya-40.jpg",
       "sourceSha256": "211d0be7b6c200514a4e953c323bf689da7810dce99d73947bd2e0dc6f42302c"
     },
-    "ao-da-li-ya/ao-da-li-ya-48": {
-      "version": "8f8b80ee05",
-      "width": 1125,
-      "height": 2436,
-      "sizes": {
-        "600": {
-          "file": "ao-da-li-ya/ao-da-li-ya-48-600.8f8b80ee05.webp",
-          "width": 277,
-          "height": 600,
-          "bytes": 20550,
-          "sha256": "af6627e8c82bf42b9a1a5f1d6818e1a18559460483bc06eefac0ed245e996945"
-        },
-        "1200": {
-          "file": "ao-da-li-ya/ao-da-li-ya-48-1200.8f8b80ee05.webp",
-          "width": 554,
-          "height": 1200,
-          "bytes": 51454,
-          "sha256": "6b4e381f58ec689cb93b8364af2a0614af9fd56e8d6db172c76315b9ec5f42bb"
-        },
-        "1800": {
-          "file": "ao-da-li-ya/ao-da-li-ya-48-1800.8f8b80ee05.webp",
-          "width": 831,
-          "height": 1800,
-          "bytes": 85626,
-          "sha256": "d3e0a3e53902ac7212eabb432371a1ffa87f07453988f68678f379af8a7ab46c"
-        },
-        "2400": {
-          "file": "ao-da-li-ya/ao-da-li-ya-48-2400.8f8b80ee05.webp",
-          "width": 1108,
-          "height": 2400,
-          "bytes": 116024,
-          "sha256": "d0389e1a3988b22ba6c3e47178e163d2e70cf0424efa54bef166e3c0b53a95f5"
-        },
-        "4000": {
-          "file": "ao-da-li-ya/ao-da-li-ya-48-4000.8f8b80ee05.webp",
-          "width": 1125,
-          "height": 2436,
-          "bytes": 118466,
-          "sha256": "2119bf20b6b3736d2d8995bd635672326ccfe26cd22f04e234cf07fb5c721f1f"
-        }
-      },
-      "color": "#f0eef2",
-      "blur": "data:image/webp;base64,UklGRjwAAABXRUJQVlA4IDAAAABwAQCdASoHABAAAsBMJaTyFACmgAD+9g1bn9r6dnRaZRBQWjtPnu7my4tAXQAJgAA=",
-      "original": {
-        "width": 1125,
-        "height": 2436
-      },
-      "lowRes": false,
-      "exif": {},
-      "colorConverted": true,
-      "source": "ao-da-li-ya-48.jpeg",
-      "sourceSha256": "fc909969968cb73f20001869b8ae26d88c3b4616cbb2dbb837306181d70287ee"
-    },
     "ao-da-li-ya/ao-da-li-ya-49": {
       "version": "34e5c0c22a",
       "width": 945,
