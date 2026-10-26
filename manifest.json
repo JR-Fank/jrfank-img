@@ -2159,59 +2159,6 @@
       "source": "ao-da-li-ya-5.jpeg",
       "sourceSha256": "e9bed400f3e8af39fd5aca0ec0fa10b57259c2503c3d8c84d2f482ad4fe51219"
     },
-    "ao-da-li-ya/ao-da-li-ya-50": {
-      "version": "903db42dc9",
-      "width": 2880,
-      "height": 1620,
-      "sizes": {
-        "600": {
-          "file": "ao-da-li-ya/ao-da-li-ya-50-600.903db42dc9.webp",
-          "width": 600,
-          "height": 338,
-          "bytes": 25542,
-          "sha256": "5fe7ddd1db53a909a462fcf0535624258cd3fcb77c4a3a8f1a3f17d54fbbd4f5"
-        },
-        "1200": {
-          "file": "ao-da-li-ya/ao-da-li-ya-50-1200.903db42dc9.webp",
-          "width": 1200,
-          "height": 675,
-          "bytes": 63372,
-          "sha256": "fff3b370267eb83275fcb901dff58599cb5a0e42d603a4245ea1a6ccd73eec12"
-        },
-        "1800": {
-          "file": "ao-da-li-ya/ao-da-li-ya-50-1800.903db42dc9.webp",
-          "width": 1800,
-          "height": 1013,
-          "bytes": 101298,
-          "sha256": "0dad65e4c507f9f2370b9533136bdf72258832753515a7c1c2da35f45a0683e5"
-        },
-        "2400": {
-          "file": "ao-da-li-ya/ao-da-li-ya-50-2400.903db42dc9.webp",
-          "width": 2400,
-          "height": 1350,
-          "bytes": 139586,
-          "sha256": "2f0716d6d5920c1cd0774cde2ffbb4b2041ad0737992029b30ae76cef4b0b7cc"
-        },
-        "4000": {
-          "file": "ao-da-li-ya/ao-da-li-ya-50-4000.903db42dc9.webp",
-          "width": 2880,
-          "height": 1620,
-          "bytes": 164936,
-          "sha256": "47986e9c66aba4a96e3592c718282d2b2b777f6e78c73323f67b9864fd6f355b"
-        }
-      },
-      "color": "#81766e",
-      "blur": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAADwAQCdASoQAAkAAsBMJZQCdH8AGBrT9XgA/vG0XFNiiH78JFs2dX7w5Gc1kKOfVRMMv63UYL74kH+ydf1/pBZ/v/usSZBR+ScU3yRDloei9K9tMnuIZ+EfpW4AAA==",
-      "original": {
-        "width": 2880,
-        "height": 1620
-      },
-      "lowRes": false,
-      "exif": {},
-      "colorConverted": false,
-      "source": "ao-da-li-ya-50.png",
-      "sourceSha256": "f01b7802323752545cc510b987bf2bdf156750310f16ce2c6b2c45edc5024aa9"
-    },
     "ao-da-li-ya/ao-da-li-ya-51": {
       "version": "8378e253a4",
       "width": 4000,
