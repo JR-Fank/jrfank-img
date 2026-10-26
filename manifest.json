@@ -2098,45 +2098,6 @@
       "source": "ao-da-li-ya-40.jpg",
       "sourceSha256": "211d0be7b6c200514a4e953c323bf689da7810dce99d73947bd2e0dc6f42302c"
     },
-    "ao-da-li-ya/ao-da-li-ya-49": {
-      "version": "34e5c0c22a",
-      "width": 945,
-      "height": 1665,
-      "sizes": {
-        "600": {
-          "file": "ao-da-li-ya/ao-da-li-ya-49-600.34e5c0c22a.webp",
-          "width": 341,
-          "height": 600,
-          "bytes": 23992,
-          "sha256": "0f2f01bb020c716ce538205b27935cd54409ae0db61d38cca1286edd729f2086"
-        },
-        "1200": {
-          "file": "ao-da-li-ya/ao-da-li-ya-49-1200.34e5c0c22a.webp",
-          "width": 681,
-          "height": 1200,
-          "bytes": 57680,
-          "sha256": "cc12a684d98327c8ff2d50da2381e985d6381c346615433a95e1cf779733b201"
-        },
-        "1800": {
-          "file": "ao-da-li-ya/ao-da-li-ya-49-1800.34e5c0c22a.webp",
-          "width": 945,
-          "height": 1665,
-          "bytes": 86532,
-          "sha256": "4d10c88bd002b18cde3dc20631f360056bc7f89097b88821568cc7adb73ad55b"
-        }
-      },
-      "color": "#f6dfcc",
-      "blur": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAAAwAgCdASoJABAAAsBMJZACdEf/geiejpIHEAD++N+BEeoC7K4jRPki8IiCpUxSSw4CCmj0qF9/rblXGIO/U1dDKVzjvy7QAAA=",
-      "original": {
-        "width": 945,
-        "height": 1665
-      },
-      "lowRes": false,
-      "exif": {},
-      "colorConverted": false,
-      "source": "ao-da-li-ya-49.png",
-      "sourceSha256": "9f5789a853c1be43269f0078a2b10402f59b40bf323857d1408f7d5c594cbb1a"
-    },
     "ao-da-li-ya/ao-da-li-ya-5": {
       "version": "59349513ea",
       "width": 4000,
