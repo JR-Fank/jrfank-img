@@ -39,8 +39,11 @@ def git(root, *args):
     return subprocess.check_output(["git", *args], cwd=root)
 
 
+ASSET_EXTS = (".webp", ".mp4")
+
+
 def valid_file(name):
-    if not isinstance(name, str) or not name.endswith(".webp") or not name:
+    if not isinstance(name, str) or not name.endswith(ASSET_EXTS) or not name:
         raise ValueError("圖片檔名不對")
     path = PurePosixPath(name)
     if path.is_absolute() or str(path) != name or any(part in (".", "..") for part in path.parts):
@@ -79,7 +82,7 @@ def asset_details(item, key):
 
 
 def prepare(root, base, keys):
-    """核對已推送的 manifest，找出本次處理與建置期間新增的所有 WebP。"""
+    """核對已推送的 manifest，找出本次處理與建置期間新增的所有 WebP 和 MP4。"""
     root = Path(root)
     if not re.fullmatch(r"[0-9a-f]{40}", base):
         raise ValueError("建置起點 SHA 不對")
@@ -102,7 +105,14 @@ def prepare(root, base, keys):
         if not isinstance(info, dict) or not isinstance(info.get("sizes"), dict) or not info["sizes"]:
             raise ValueError(f"{key}：找不到本次照片的 manifest 資料")
         targets[key] = (section, info)
-        for item in info["sizes"].values():
+        items = list(info["sizes"].values())
+        for part in ("video", "live"):
+            if part in info:
+                files = info[part].get("files") if isinstance(info[part], dict) else None
+                if not isinstance(files, dict) or not files:
+                    raise ValueError(f"{key}：manifest 的 {part} 資料不對")
+                items += files.values()
+        for item in items:
             name, details = asset_details(item, key)
             if name in assets and assets[name] != details:
                 raise ValueError(f"{name}：manifest 的檔案資料不一致")
@@ -113,7 +123,7 @@ def prepare(root, base, keys):
         if not entry:
             continue
         name = entry.decode("utf-8")
-        if name.endswith(".webp") and name not in assets:
+        if name.endswith(ASSET_EXTS) and name not in assets:
             valid_file(name)
             path = root / name
             assets[name] = (path.stat().st_size, webimg.sha256(path))
@@ -121,7 +131,7 @@ def prepare(root, base, keys):
     for name, (size, digest) in assets.items():
         path = root / name
         if not path.is_file() or path.stat().st_size != size or webimg.sha256(path) != digest:
-            raise ValueError(f"{name}：本機 WebP 與 manifest 不符")
+            raise ValueError(f"{name}：本機檔案與 manifest 不符")
     return {"manifestSha256": hashlib.sha256(raw).hexdigest(), "sourceSha": source_sha,
             "photos": versions, "targets": targets, "assets": assets}
 
@@ -169,7 +179,8 @@ def check_manifest(snapshot, manifest, versions):
         raise NotReady("線上 photos 版本與本次 manifest 不一致")
     for key, (section, info) in snapshot["targets"].items():
         remote = manifest.get(section, {}).get(key)
-        if not isinstance(remote, dict) or remote.get("version") != info.get("version") or remote.get("sizes") != info["sizes"]:
+        if (not isinstance(remote, dict) or remote.get("version") != info.get("version") or remote.get("sizes") != info["sizes"]
+                or remote.get("video") != info.get("video") or remote.get("live") != info.get("live")):
             raise NotReady(f"{key}：線上圖片資料尚未一致")
 
 
@@ -240,7 +251,7 @@ def wait_and_write(snapshot, origin, output, timeout=900, interval=15):
             except OSError:
                 temp_path.unlink(missing_ok=True)
                 raise
-            print(f"圖片部署已確認：{len(proof['photos'])} 張作品、{len(snapshot['assets'])} 個 WebP", flush=True)
+            print(f"圖片部署已確認：{len(proof['photos'])} 張作品、{len(snapshot['assets'])} 個檔案（WebP／MP4）", flush=True)
             return proof
         except (NotReady, OSError, http.client.HTTPException) as exc:
             detail = str(exc) if isinstance(exc, NotReady) else type(exc).__name__
@@ -257,7 +268,7 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     args.output.unlink(missing_ok=True)
-    keys = [key for key, _ in webimg.originals([])]
+    keys = webimg.batch_keys()  # 出圖失敗的影片不在本次提交裡，不驗證
     snapshot = prepare(webimg.ROOT, args.base, keys)
     wait_and_write(snapshot, ORIGIN, args.output)
 
