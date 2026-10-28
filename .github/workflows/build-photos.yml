@@ -60,6 +60,9 @@ jobs:
           echo "JRFANK_ORIGINALS=$RUNNER_TEMP/originals" >> "$GITHUB_ENV"
           # 出片失敗（太長、太大的影片）的照片鍵；publish 和部署確認跳過這些，其他照片照常提交
           echo "JRFANK_BUILD_FAILURES=$RUNNER_TEMP/build-failures.txt" >> "$GITHUB_ENV"
+          # 同一批失敗的鍵＋原因代碼（JSON）：存成 photo-build-failures artifact，後台讀它在那一張上顯示中文原因
+          echo "JRFANK_BUILD_FAILURES_JSON=$RUNNER_TEMP/build-failures/build-failures.json" >> "$GITHUB_ENV"
+          mkdir -p "$RUNNER_TEMP/build-failures"
 
       - name: 安裝 ImageMagick
         run: |
@@ -131,6 +134,30 @@ jobs:
           python3 tools/webimg.py build ${keys[@]+"${keys[@]}"} ${flags[@]+"${flags[@]}"} || status=$?
           if [ "$status" = 3 ]; then echo "BUILD_PARTIAL=1" >> "$GITHUB_ENV"; elif [ "$status" != 0 ]; then exit "$status"; fi
           python3 tools/webimg.py check
+
+      # 有照片出片失敗：先存失敗報告（後面的提交或部署確認失敗也拿得到），再寫進 job summary 給人看
+      - name: 保存出片失敗報告
+        if: env.BUILD_PARTIAL == '1'
+        uses: actions/upload-artifact@v4
+        with:
+          name: photo-build-failures
+          path: ${{ runner.temp }}/build-failures/build-failures.json
+          retention-days: 30
+          if-no-files-found: error
+
+      - name: 出片失敗摘要
+        if: env.BUILD_PARTIAL == '1'
+        run: |
+          python3 - "$JRFANK_BUILD_FAILURES_JSON" >> "$GITHUB_STEP_SUMMARY" <<'PY'
+          import json, sys
+          report = json.load(open(sys.argv[1]))
+          print("### 出片失敗的照片（其他照片照常提交）\n")
+          print("| 照片 | 種類 | 原因代碼 | 訊息 |")
+          print("| --- | --- | --- | --- |")
+          for f in report["failures"]:
+              msg = f["message"].replace("|", "\\|").replace("\n", " ")[:300]
+              print(f"| `{f['key']}` | {f['kind']} | {f['code']} | {msg} |")
+          PY
 
       - name: 提交、推送
         run: |

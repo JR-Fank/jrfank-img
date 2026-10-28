@@ -70,6 +70,8 @@ ColorSync 產生的 PNG 只存在單張照片的暫存目錄，最後的 WebP �
 
 **失敗**：太長、太大或讀不了的影片只讓那一張失敗（中文原因印在輸出裡），其他照片照常出圖、manifest 照常更新；`build` 結束時退出碼 3。設了 `JRFANK_BUILD_FAILURES` 就把失敗的鍵寫進那個檔，`publish-photos.py` 和部署確認會跳過它們。Actions 照常提交其他照片，最後一步再讓 run 失敗。
 
+**失敗報告**：設了 `JRFANK_BUILD_FAILURES_JSON` 就另外寫一份 JSON：`{"schema": 1, "failures": [{"key", "kind", "code", "message", "duration"?}]}`。`key` 是照片鍵（不含副檔名），`kind` 是 `live`／`video`，`code` 是 `too-long`（超過 15 秒，帶 `duration` 秒數）、`too-large`（超過 20 MB）、`hdr`（HDR 轉 SDR 失敗）、`unreadable`（讀不了、沒有畫面軌或長度）、`ffmpeg`（其他編碼失敗）、`tool`（找不到 ffmpeg）。有失敗時 Actions 在「出圖」之後馬上存成 artifact **`photo-build-failures`**（保留 30 天，內含 `build-failures.json`），並把表格寫進 job summary；後台讀這個 artifact，在失敗的那一張上顯示中文原因。
+
 **ffmpeg**：Homebrew 核心的 `ffmpeg` 沒有 zimg（沒有 `zscale`），要裝 keg-only 的 **`ffmpeg-full`**（`brew install ffmpeg-full`，不會覆蓋原本的 ffmpeg）。`webvid.py` 依序找 `JRFANK_FFMPEG_DIR`、`/opt/homebrew/opt/ffmpeg-full/bin`、PATH；沒有 `zscale` 時 HDR 影片會以清楚的錯誤失敗，SDR 影片照常。
 
 `stray_files`／`prune`、`check`、`publish-photos.py` 和部署確認都涵蓋 MP4。本機測試：`python3 tools/test_webvid.py`（用 ffmpeg 現做測試片：SDR、10-bit HLG、直拍、帶 GPS、20 秒、HEIC＋MOV、只有 MOV）。

@@ -40,7 +40,15 @@ VIDEO_RECIPE = (
 
 
 class VideoError(RuntimeError):
-    """單一影片出片失敗（webimg.py 只讓這一張失敗，其他照常處理）"""
+    """單一影片出片失敗（webimg.py 只讓這一張失敗，其他照常處理）。
+
+    code 給後台看（build-failures.json）：too-long、too-large、hdr、unreadable、ffmpeg、tool；
+    duration 只有 too-long 才有（秒）。"""
+
+    def __init__(self, message: str, code: str = "ffmpeg", duration: float | None = None):
+        super().__init__(message)
+        self.code = code
+        self.duration = duration
 
 
 @cache
@@ -51,7 +59,7 @@ def binary(name: str) -> str:
             return str(Path(d) / name)
     found = shutil.which(name)
     if not found:
-        raise VideoError(f"找不到 {name}，影片無法出片（brew install ffmpeg-full）")
+        raise VideoError(f"找不到 {name}，影片無法出片（brew install ffmpeg-full）", "tool")
     return found
 
 
@@ -68,7 +76,7 @@ def ffprobe(src: Path) -> dict:
             check=True, capture_output=True, text=True,
         ).stdout
     except subprocess.CalledProcessError as exc:
-        raise VideoError(f"{src.name}：ffprobe 讀不了這個影片（{exc.stderr.strip()[-200:]}）") from None
+        raise VideoError(f"{src.name}：ffprobe 讀不了這個影片（{exc.stderr.strip()[-200:]}）", "unreadable") from None
     return json.loads(out)
 
 
@@ -92,14 +100,14 @@ def probe(src: Path) -> Meta:
     data = ffprobe(src)
     videos = [s for s in data.get("streams", []) if s.get("codec_type") == "video" and not s.get("disposition", {}).get("attached_pic")]
     if not videos:
-        raise VideoError(f"{src.name}：找不到畫面軌")
+        raise VideoError(f"{src.name}：找不到畫面軌", "unreadable")
     v = videos[0]
     try:
         duration = float(data.get("format", {}).get("duration") or v.get("duration"))
     except (TypeError, ValueError):
-        raise VideoError(f"{src.name}：讀不到影片長度") from None
+        raise VideoError(f"{src.name}：讀不到影片長度", "unreadable") from None
     if duration > MAX_SECONDS:
-        raise VideoError(f"{src.name}：影片長 {duration:.1f} 秒，超過 {MAX_SECONDS} 秒上限，這一張不出片（請先剪短再上傳）")
+        raise VideoError(f"{src.name}：影片長 {duration:.1f} 秒，超過 {MAX_SECONDS} 秒上限，這一張不出片（請先剪短再上傳）", "too-long", round(duration, 1))
     rotation = 0
     for side in v.get("side_data_list", []):
         if "rotation" in side:
@@ -162,7 +170,7 @@ def color_chain(meta: Meta, rgb: bool) -> str:
     rin = "full" if meta.full_range else "limited"
     if meta.hdr:
         if not has_filter("zscale"):
-            raise VideoError(f"這台機器的 ffmpeg（{binary('ffmpeg')}）沒有 zscale 濾鏡，HDR 影片無法轉 SDR（brew install ffmpeg-full）")
+            raise VideoError(f"這台機器的 ffmpeg（{binary('ffmpeg')}）沒有 zscale 濾鏡，HDR 影片無法轉 SDR（brew install ffmpeg-full）", "hdr")
         chain = (
             f"zscale=tin={meta.transfer}:min={ZSCALE_MATRIX.get(meta.matrix, '2020_ncl')}:pin=2020:rin={rin}"
             ":t=linear:npl=100,format=gbrpf32le,zscale=p=709,tonemap=tonemap=hable:desat=0,"
@@ -175,18 +183,19 @@ def color_chain(meta: Meta, rgb: bool) -> str:
     return f"scale=in_color_matrix={m}:out_color_matrix=bt709:in_range={srange}:out_range=tv,format=yuv420p"
 
 
-def run_ffmpeg(args: list[str], what: str) -> None:
+def run_ffmpeg(args: list[str], what: str, code: str = "ffmpeg") -> None:
     try:
         subprocess.run([binary("ffmpeg"), "-nostdin", "-hide_banner", "-loglevel", "error", "-y", *args],
                        check=True, capture_output=True, text=True)
     except subprocess.CalledProcessError as exc:
-        raise VideoError(f"{what}：ffmpeg 失敗（{exc.stderr.strip()[-300:]}）") from None
+        raise VideoError(f"{what}：ffmpeg 失敗（{exc.stderr.strip()[-300:]}）", code) from None
 
 
 def cover(src: Path, meta: Meta, dst: Path) -> None:
     """第一格畫面（轉正、HDR 轉 SDR）存成 16-bit PPM（沒有任何中繼資料），交給 webimg 的 WebP 流程"""
     run_ffmpeg(["-i", str(src), "-map", "0:v:0", "-frames:v", "1", "-vf", color_chain(meta, rgb=True),
-                "-map_metadata", "-1", "-c:v", "ppm", "-f", "image2", str(dst)], f"{src.name} 取封面")
+                "-map_metadata", "-1", "-c:v", "ppm", "-f", "image2", str(dst)], f"{src.name} 取封面",
+               "hdr" if meta.hdr else "ffmpeg")
 
 
 def encode(src: Path, meta: Meta, w: int, h: int, maxrate: float, crf: int, audio: bool, dst: Path) -> None:
@@ -207,7 +216,8 @@ def encode(src: Path, meta: Meta, w: int, h: int, maxrate: float, crf: int, audi
         "-movflags", "+faststart", "-fflags", "+bitexact", "-flags:v", "+bitexact", "-flags:a", "+bitexact",
         "-f", "mp4", str(dst),
     ]
-    run_ffmpeg(args, f"{src.name} 出 {w}×{h}")
+    # HDR 片的 ffmpeg 失敗多半在 zscale／tonemap 轉換那一段
+    run_ffmpeg(args, f"{src.name} 出 {w}×{h}", "hdr" if meta.hdr else "ffmpeg")
 
 
 def sha256(p: Path) -> str:
@@ -232,7 +242,7 @@ def render(src: Path, meta: Meta, out_dir: Path, key: str, version: str, audio: 
             encode(src, meta, w, h, MAXRATE[tier] / 2, RETRY_CRF, keep_audio, dst)
             if dst.stat().st_size > MAX_BYTES:
                 mb = dst.stat().st_size / 1e6
-                raise VideoError(f"{src.name}：{tier} 檔降低碼率重做後仍有 {mb:.1f} MB，超過 {MAX_BYTES // 1_000_000} MB 上限，這一張不出片")
+                raise VideoError(f"{src.name}：{tier} 檔降低碼率重做後仍有 {mb:.1f} MB，超過 {MAX_BYTES // 1_000_000} MB 上限，這一張不出片", "too-large")
         files[str(tier)] = {"file": file, "bytes": dst.stat().st_size, "sha256": sha256(dst)}
         last = (w, h)
     return {

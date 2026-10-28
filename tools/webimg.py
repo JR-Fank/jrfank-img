@@ -412,7 +412,7 @@ def build(args: list[str]) -> None:
         live = live_prev if reuse and moving else build_live(key, video, vid_sha)
         return {**info, "live": live}
 
-    def run(item: tuple[str, Path | None, Path | None]) -> tuple[str, dict | None, str | None]:
+    def run(item: tuple[str, Path | None, Path | None]) -> tuple[str, dict | None, dict | None]:
         key, image, video = item
         prev = manifest[section(key)].get(key)
         if cached is not None:
@@ -422,16 +422,19 @@ def build(args: list[str]) -> None:
         try:
             info = run_live(key, image, video, prev) if image else run_video(key, video, prev)
         except webvid().VideoError as exc:
-            return key, None, str(exc)
+            failure = {"key": key, "kind": "live" if image else "video", "code": exc.code, "message": str(exc)}
+            if exc.duration is not None:
+                failure["duration"] = exc.duration
+            return key, None, failure
         return key, info, None
 
-    failures: list[tuple[str, str]] = []
+    failures: list[dict] = []
     workers = max(1, (os.cpu_count() or 4) // 2)  # 每個 magick 自己也開多執行緒
     with ThreadPoolExecutor(max_workers=workers) as pool:
         for key, info, error in pool.map(run, items):
             if error:
-                failures.append((key, error))
-                print(f"{key}: ✗ 失敗：{error}")
+                failures.append(error)
+                print(f"{key}: ✗ 失敗：{error['message']}")
                 continue
             photos = manifest[section(key)]
             old = photos.get(key, {}).get("version")
@@ -451,12 +454,23 @@ def build(args: list[str]) -> None:
     save_manifest(manifest)
     record = os.environ.get("JRFANK_BUILD_FAILURES")
     if record:
-        Path(record).write_text("".join(f"{k}\n" for k, _ in failures))
+        Path(record).write_text("".join(f"{f['key']}\n" for f in failures))
+    write_failure_report(failures)
     if failures:
         print(f"\n{len(failures)} 張失敗（其他照片已照常處理、manifest 已更新）：")
-        for key, error in failures:
-            print(f"  ✗ {key}：{error}")
+        for f in failures:
+            print(f"  ✗ {f['key']}：{f['message']}")
         sys.exit(3)
+
+
+def write_failure_report(failures: list[dict]) -> None:
+    """設了 JRFANK_BUILD_FAILURES_JSON 就把失敗的鍵和原因寫成 JSON（Actions 存成 photo-build-failures artifact，後台讀它在那一張上顯示原因）。
+    鍵是照片鍵（<系列>/<id>，不含副檔名）；code 見 webvid.VideoError。沒有失敗也寫（failures 是空的）"""
+    out = os.environ.get("JRFANK_BUILD_FAILURES_JSON")
+    if not out:
+        return
+    report = {"schema": 1, "failures": sorted(failures, key=lambda f: f["key"])}
+    Path(out).write_text(json.dumps(report, ensure_ascii=False, indent=1) + "\n")
 
 
 def outputs(info: dict) -> list[tuple[str, dict]]:
