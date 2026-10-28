@@ -88,11 +88,12 @@ class WebvidBuildTest(unittest.TestCase):
             patch.object(webimg, "ORIGINALS", root / "originals"),
             patch.object(webimg, "MANIFEST", root / "manifest.json"),
             patch.object(webimg, "OVERRIDES", root / "exif-overrides.json"),
-            patch.dict(os.environ, {"JRFANK_BUILD_FAILURES": str(tmp / "failures.txt")}),
+            patch.dict(os.environ, {"JRFANK_BUILD_FAILURES": str(tmp / "failures.txt"), "JRFANK_BUILD_FAILURES_JSON": str(tmp / "failures.json")}),
         ]
         for p in cls.patches:
             p.start()
         cls.failures = tmp / "failures.txt"
+        cls.failures_json = tmp / "failures.json"
         cls.build_output, cls.build_exit = cls.run_build([])
         cls.manifest = json.loads((root / "manifest.json").read_text())
         cls.photos = cls.manifest["photos"]
@@ -161,8 +162,17 @@ class WebvidBuildTest(unittest.TestCase):
         meta = webvid.probe(self.root / "originals/vid/hlg.mov")
         self.assertTrue(meta.hdr)
         with patch.object(webvid, "has_filter", return_value=False):
-            with self.assertRaisesRegex(webvid.VideoError, "沒有 zscale 濾鏡，HDR 影片無法轉 SDR"):
+            with self.assertRaisesRegex(webvid.VideoError, "沒有 zscale 濾鏡，HDR 影片無法轉 SDR") as ctx:
                 webvid.color_chain(meta, rgb=False)
+        self.assertEqual(ctx.exception.code, "hdr")
+        # HDR 片在 ffmpeg 轉換那一步失敗也算 hdr；SDR 片是一般的 ffmpeg 失敗
+        sdr = webvid.probe(self.root / "originals/vid/sdr.mp4")
+        with patch.object(webvid.subprocess, "run", side_effect=subprocess.CalledProcessError(1, "ffmpeg", stderr="zscale: boom")):
+            with self.assertRaises(webvid.VideoError) as hdr_fail:
+                webvid.encode(self.root / "originals/vid/hlg.mov", meta, 640, 360, 3, 22, False, Path("/dev/null"))
+            with self.assertRaises(webvid.VideoError) as sdr_fail:
+                webvid.encode(self.root / "originals/vid/sdr.mp4", sdr, 640, 360, 3, 22, False, Path("/dev/null"))
+        self.assertEqual((hdr_fail.exception.code, sdr_fail.exception.code), ("hdr", "ffmpeg"))
 
     def test_portrait_is_rotated_upright(self) -> None:
         entry = self.photos["vid/portrait"]
@@ -192,6 +202,13 @@ class WebvidBuildTest(unittest.TestCase):
         self.assertIn("vid/long: ✗ 失敗：long.mov：影片長 20.0 秒，超過 15 秒上限", self.build_output)
         self.assertNotIn("vid/long", self.photos)
         self.assertEqual(self.failures.read_text(), "vid/long\n")
+        # 後台讀的失敗報告（photo-build-failures artifact）：照片鍵、種類、原因代碼、秒數、原訊息
+        report = json.loads(self.failures_json.read_text())
+        self.assertEqual(report["schema"], 1)
+        self.assertEqual(len(report["failures"]), 1)
+        f = report["failures"][0]
+        self.assertEqual((f["key"], f["kind"], f["code"], f["duration"]), ("vid/long", "video", "too-long", 20.0))
+        self.assertIn("超過 15 秒上限", f["message"])
         self.assertFalse(list(self.root.glob("vid/long-*")))
         self.assertIn("vid/photo", self.photos)  # 其他照片照常處理
         self.assertNotIn("vid/long", webimg.batch_keys())
@@ -271,9 +288,10 @@ class WebvidBuildTest(unittest.TestCase):
             return real(*args)
 
         with tempfile.TemporaryDirectory() as td, patch.object(webvid, "MAX_BYTES", 1000), patch.object(webvid, "encode", side_effect=spy):
-            with self.assertRaisesRegex(webvid.VideoError, "降低碼率重做後仍有 .* MB，超過"):
+            with self.assertRaisesRegex(webvid.VideoError, "降低碼率重做後仍有 .* MB，超過") as ctx:
                 webvid.render(self.root / "originals/vid/sdr.mp4", meta, Path(td), "vid/x", "0" * 10, audio=True)
         self.assertEqual(calls, [(3, 22), (1.5, 26)])
+        self.assertEqual(ctx.exception.code, "too-large")
 
     def test_deploy_prepare_includes_mp4(self) -> None:
         self.git("add", "-A")
