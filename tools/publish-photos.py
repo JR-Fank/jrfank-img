@@ -22,8 +22,8 @@ def revision(ref: str) -> str:
 
 
 def publish() -> None:
-    # Actions 的原圖目錄只裝本次下載的照片，包括資料夾／all 展開後的集合。
-    keys = [key for key, _ in webimg.originals([])]
+    # Actions 的原圖目錄只裝本次下載的照片，包括資料夾／all 展開後的集合；出圖失敗的（太長、太大的影片）不提交。
+    keys = webimg.batch_keys()
     if not keys:
         sys.exit("沒有本次照片，停止提交")
     manifest = webimg.load_manifest()

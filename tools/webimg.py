@@ -25,11 +25,17 @@ GitHub Actions 從 R2 下載到暫存目錄（用環境變數 JRFANK_ORIGINALS �
   python3 tools/webimg.py build reviews/orico-test-mac/orico-test-mac-3
   python3 tools/webimg.py check                    # 核對 manifest 和檔案（存在、大小、SHA-256、沒有多餘的檔）
   python3 tools/webimg.py prune                    # 刪掉 manifest 沒引用的舊版本檔（網站換到新版本、部署完再跑）
+
+影片（.mov／.mp4／.m4v，出片細節見 tools/webvid.py）：
+  - 同一個 id 同時有圖片原檔和影片原檔 = Live Photo：靜態圖照舊出 WebP，影片出兩檔無聲 MP4，manifest 加 live 欄位
+  - 只有影片原檔 = 影片：第一格畫面當封面走同一套 WebP 五檔，影片出兩檔 MP4（保留聲音），manifest 加 video 欄位
+  - 單一影片失敗（太長、太大、讀不了）只讓那一張失敗，其他照常處理；結束時退出碼 3
 """
 from __future__ import annotations
 
 import argparse
 import base64
+import importlib.util
 import hashlib
 import json
 import os
@@ -37,6 +43,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import threading
 from concurrent.futures import ThreadPoolExecutor
 from fractions import Fraction
 from pathlib import Path
@@ -47,6 +54,8 @@ MANIFEST = ROOT / "manifest.json"
 OVERRIDES = ROOT / "exif-overrides.json"
 SRGB = "/System/Library/ColorSync/Profiles/sRGB Profile.icc"
 EXTS = {".jpg", ".jpeg", ".png", ".tif", ".tiff", ".heic", ".heif", ".webp"}
+VIDEO_EXTS = {".mov", ".mp4", ".m4v"}  # 和 webvid.VIDEO_EXTS 一樣（這裡不載入 webvid）
+MAX_OUTPUT_BYTES = 24_000_000  # check 的單檔上限（EdgeOne 單檔上限 25 MB）
 
 SIZES = (600, 1200, 1800, 2400, 4000)
 QUALITY = 88  # 品質比對見 README「品質」
@@ -63,6 +72,22 @@ LOW_RES = 1600  # 長邊不到這個數，manifest 的 lowRes 為 true（後台�
 # 照片鍵：<系列>/<id>（系列不能叫 reviews）；評測文章圖只能是三段 reviews/<文章 slug>/<id>（manifest 的 reviews 區）
 REVIEWS = "reviews/"
 KEY_RE = re.compile(r"^(?:reviews/[a-z0-9-]+/[a-z0-9-]+|(?!reviews/)[a-z0-9-]+/[a-z0-9-]+)$")
+
+
+_WEBVID_LOCK = threading.Lock()
+
+
+def webvid():
+    """影片才需要 ffmpeg：用到時才載入 tools/webvid.py（build 是多執行緒，載入要上鎖）"""
+    with _WEBVID_LOCK:
+        mod = sys.modules.get("webvid")
+        if mod is None:
+            spec = importlib.util.spec_from_file_location("webvid", Path(__file__).with_name("webvid.py"))
+            assert spec and spec.loader
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            sys.modules["webvid"] = mod
+        return mod
 
 
 def section(key: str) -> str:
@@ -147,27 +172,40 @@ def sha256(p: Path) -> str:
     return h.hexdigest()
 
 
-def originals(only: list[str]) -> list[tuple[str, Path]]:
-    out = []
+def sources(only: list[str]) -> list[tuple[str, Path | None, Path | None]]:
+    """[(鍵, 圖片原檔, 影片原檔)]：兩個都有 = Live Photo；只有影片 = 影片"""
+    found: dict[str, dict[str, list[Path]]] = {}
     for p in sorted([*ORIGINALS.glob("*/*"), *ORIGINALS.glob(f"{REVIEWS}*/*")]):
-        if not p.is_file() or p.suffix.lower() not in EXTS:
+        ext = p.suffix.lower()
+        if not p.is_file() or ext not in EXTS | VIDEO_EXTS:
             continue
         key = p.relative_to(ORIGINALS).with_suffix("").as_posix()
         if not KEY_RE.match(key):
             sys.exit(f"原圖路徑不對：{p.relative_to(ORIGINALS)}（要是 <系列>/<id>.<副檔名>〔系列不能叫 reviews〕或 reviews/<文章>/<id>.<副檔名>，小寫英數和 -）")
         if not only or key in only:
-            out.append((key, p))
+            found.setdefault(key, {"image": [], "video": []})["video" if ext in VIDEO_EXTS else "image"].append(p)
     bad = [k for k in only if not KEY_RE.match(k)]
     if bad:
         sys.exit(f"照片鍵不對：{', '.join(bad)}（<系列>/<id> 或 reviews/<文章>/<id>）")
-    keys = [k for k, _ in out]
-    dup = {k for k in keys if keys.count(k) > 1}
+    dup = sorted(k for k, v in found.items() if len(v["image"]) > 1 or len(v["video"]) > 1)
     if dup:
-        sys.exit(f"同一個照片 id 有兩個原圖：{', '.join(sorted(dup))}")
-    missing = set(only) - set(keys)
+        sys.exit(f"同一個照片 id 有兩個原圖（或兩個影片）：{', '.join(dup)}")
+    missing = set(only) - set(found)
     if missing:
         sys.exit(f"找不到原圖：{', '.join(sorted(missing))}（在 {ORIGINALS}）")
-    return out
+    return [(k, (v["image"] or [None])[0], (v["video"] or [None])[0]) for k, v in sorted(found.items())]
+
+
+def originals(only: list[str]) -> list[tuple[str, Path]]:
+    """[(鍵, 主原檔)]：有圖片原檔就是圖片，否則是影片"""
+    return [(k, image or video) for k, image, video in sources(only)]
+
+
+def batch_keys() -> list[str]:
+    """本次下載的照片，扣掉出圖失敗的（build 把失敗的鍵寫進 JRFANK_BUILD_FAILURES 指的檔）"""
+    path = os.environ.get("JRFANK_BUILD_FAILURES")
+    failed = set(Path(path).read_text().split()) if path and Path(path).is_file() else set()
+    return [k for k, _ in originals([]) if k not in failed]
 
 
 def load_manifest() -> dict:
@@ -202,17 +240,34 @@ def tiers_for(long_edge: int) -> list[int]:
     return out
 
 
-def build_one(key: str, src: Path, src_sha: str) -> dict:
-    version = hashlib.sha256(f"{src_sha}\n{RECIPE}".encode()).hexdigest()[:10]
-    w0, h0 = oriented_dimensions(src)
-    icc = bool(magick("identify", "-format", "%[profile:icc]", f"{src}[0]").strip())
+def photo_version(src_sha: str) -> str:
+    return hashlib.sha256(f"{src_sha}\n{RECIPE}".encode()).hexdigest()[:10]
+
+
+def video_version(video_sha: str) -> str:
+    """只有影片的條目：封面 WebP 和 MP4 共用，照片配方或影片配方改了都會變"""
+    return hashlib.sha256(f"{video_sha}\n{RECIPE}\n{webvid().VIDEO_RECIPE}".encode()).hexdigest()[:10]
+
+
+def live_version(video_sha: str) -> str:
+    """Live Photo 的動態部分：只看影片和影片配方（靜態圖照舊用 photo_version）"""
+    return hashlib.sha256(f"{video_sha}\n{webvid().VIDEO_RECIPE}\nlive".encode()).hexdigest()[:10]
+
+
+def build_one(key: str, src: Path, src_sha: str, *, frame: Path | None = None, version: str | None = None,
+              exif: dict | None = None, converted: bool = False) -> dict:
+    """出 WebP 五檔。frame：影片的封面畫面（src 是影片時由 build_video 傳入）"""
+    version = version or photo_version(src_sha)
+    pic = frame or src
+    w0, h0 = oriented_dimensions(pic)
+    icc = bool(magick("identify", "-format", "%[profile:icc]", f"{pic}[0]").strip())
     # 透明：有 alpha 而且不是全不透明（PNG 截圖、去背產品圖）。有 alpha 但全不透明的，alpha 拿掉
-    alpha = magick("identify", "-format", "%A", f"{src}[0]").strip() not in ("Undefined", "")
-    transparent = alpha and magick("identify", "-format", "%[opaque]", f"{src}[0]").strip() != "True"
+    alpha = magick("identify", "-format", "%A", f"{pic}[0]").strip() not in ("Undefined", "")
+    transparent = alpha and magick("identify", "-format", "%[opaque]", f"{pic}[0]").strip() != "True"
 
     tiers = tiers_for(max(w0, h0))
     with tempfile.TemporaryDirectory() as tmp:
-        input_src, hdr = prepare_input(src, Path(tmp))
+        input_src, hdr = prepare_input(pic, Path(tmp))
         args = [f"{input_src}[0]", "-auto-orient"]
         if alpha and not transparent:
             args += ["-alpha", "off"]
@@ -256,18 +311,61 @@ def build_one(key: str, src: Path, src_sha: str) -> dict:
         "original": {"width": w0, "height": h0},
         "lowRes": max(w0, h0) < LOW_RES,
         **({"transparent": True} if transparent else {}),
-        "exif": exif_fields(src, key),
-        "colorConverted": icc or hdr,
+        "exif": exif if exif is not None else exif_fields(src, key),
+        "colorConverted": icc or hdr or converted,
         "source": src.name,
         "sourceSha256": src_sha,
     }
 
 
-def up_to_date(info: dict | None, src_sha: str) -> bool:
+def up_to_date(info: dict | None, src_sha: str, version: str | None = None) -> bool:
     if not info or info.get("sourceSha256") != src_sha:
         return False
-    version = hashlib.sha256(f"{src_sha}\n{RECIPE}".encode()).hexdigest()[:10]
+    version = version or photo_version(src_sha)
     return info.get("version") == version and all((ROOT / t["file"]).exists() for t in info["sizes"].values())
+
+
+def motion_up_to_date(part: dict | None, version: str) -> bool:
+    return bool(part) and all(
+        t["file"].endswith(f".{version}.mp4") and (ROOT / t["file"]).exists() for t in part["files"].values()
+    )
+
+
+def install(tmp: Path, part: dict) -> None:
+    """MP4 先出在暫存目錄，整張成功才放進倉庫（失敗不留半套檔）"""
+    for t in part["files"].values():
+        dst = ROOT / t["file"]
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        dst.write_bytes((tmp / t["file"]).read_bytes())
+
+
+def video_exif(meta, key: str) -> dict:
+    return exif_fields(None, key, webvid().exif_tags(meta))
+
+
+def build_video(key: str, src: Path, src_sha: str) -> dict:
+    """只有影片：第一格當封面出 WebP 五檔，影片出兩檔 MP4（保留聲音）"""
+    wv = webvid()
+    meta = wv.probe(src)  # 太長在這裡就失敗，什麼都不出
+    version = video_version(src_sha)
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        video = wv.render(src, meta, tmp, key, version, audio=True)
+        wv.cover(src, meta, tmp / "cover.ppm")
+        info = build_one(key, src, src_sha, frame=tmp / "cover.ppm", version=version,
+                         exif=video_exif(meta, key), converted=meta.hdr)
+        install(tmp, video)
+    return {**info, "video": video}
+
+
+def build_live(key: str, src: Path, src_sha: str) -> dict:
+    """Live Photo 的動態部分：兩檔無聲 MP4"""
+    wv = webvid()
+    meta = wv.probe(src)
+    with tempfile.TemporaryDirectory() as tmp:
+        live = wv.render(src, meta, Path(tmp), key, live_version(src_sha), audio=False)
+        install(Path(tmp), live)
+    return {**live, "source": src.name, "sourceSha256": src_sha}
 
 
 def build(args: list[str]) -> None:
@@ -276,47 +374,109 @@ def build(args: list[str]) -> None:
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--reuse-manifest", type=Path, help="重試時沿用這次已出好的圖與條目，不重新編碼")
     opts = parser.parse_args(args)
-    items = originals(opts.keys)
+    items = sources(opts.keys)
     manifest = load_manifest()
     cached = json.loads(opts.reuse_manifest.read_text()) if opts.reuse_manifest else None
     if cached and cached.get("recipe") != RECIPE:
         sys.exit("快取的出圖配方不同，不能沿用")
 
-    def run(kv: tuple[str, Path]) -> tuple[str, dict | None]:
-        key, src = kv
+    def run_photo(key: str, src: Path, prev: dict | None) -> dict:
         src_sha = sha256(src)
+        fresh = up_to_date(prev, src_sha) and not {"video", "live"} & set(prev)
+        if cached is not None and not fresh:
+            sys.exit(f"{key}：快取或已出好的圖不完整，停止重試")
+        if cached is not None or (not opts.force and fresh):
+            # EXIF 修正（exif-overrides.json）不影響圖檔，照樣更新
+            return {**prev, "exif": exif_fields(src, key)}
+        return build_one(key, src, src_sha)
+
+    def run_video(key: str, src: Path, prev: dict | None) -> dict:
+        src_sha = sha256(src)
+        fresh = up_to_date(prev, src_sha, video_version(src_sha)) and motion_up_to_date(prev.get("video"), video_version(src_sha))
+        if cached is not None and not fresh:
+            sys.exit(f"{key}：快取或已出好的影片不完整，停止重試")
+        if cached is not None or (not opts.force and fresh):
+            return {**prev, "exif": video_exif(webvid().probe(src), key)}
+        return build_video(key, src, src_sha)
+
+    def run_live(key: str, image: Path, video: Path, prev: dict | None) -> dict:
+        img_sha, vid_sha = sha256(image), sha256(video)
+        still = up_to_date(prev, img_sha) and "video" not in prev
+        live_prev = (prev or {}).get("live")
+        moving = bool(live_prev) and live_prev.get("sourceSha256") == vid_sha and motion_up_to_date(live_prev, live_version(vid_sha))
+        if cached is not None and not (still and moving):
+            sys.exit(f"{key}：快取或已出好的 Live Photo 不完整，停止重試")
+        reuse = cached is not None or not opts.force
+        info = {k: v for k, v in prev.items() if k != "live"} if reuse and still else build_one(key, image, img_sha)
+        info["exif"] = exif_fields(image, key)
+        live = live_prev if reuse and moving else build_live(key, video, vid_sha)
+        return {**info, "live": live}
+
+    def run(item: tuple[str, Path | None, Path | None]) -> tuple[str, dict | None, str | None]:
+        key, image, video = item
         prev = manifest[section(key)].get(key)
         if cached is not None:
             prev = cached.get(section(key), {}).get(key)
-            if not up_to_date(prev, src_sha):
-                sys.exit(f"{key}：快取或已出好的圖不完整，停止重試")
-        if cached is not None or (not opts.force and up_to_date(prev, src_sha)):
-            # EXIF 修正（exif-overrides.json）不影響圖檔，照樣更新
-            return key, {**prev, "exif": exif_fields(src, key)}
-        return key, build_one(key, src, src_sha)
+        if video is None:
+            return key, run_photo(key, image, prev), None
+        try:
+            info = run_live(key, image, video, prev) if image else run_video(key, video, prev)
+        except webvid().VideoError as exc:
+            return key, None, str(exc)
+        return key, info, None
 
+    failures: list[tuple[str, str]] = []
     workers = max(1, (os.cpu_count() or 4) // 2)  # 每個 magick 自己也開多執行緒
     with ThreadPoolExecutor(max_workers=workers) as pool:
-        for key, info in pool.map(run, items):
+        for key, info, error in pool.map(run, items):
+            if error:
+                failures.append((key, error))
+                print(f"{key}: ✗ 失敗：{error}")
+                continue
             photos = manifest[section(key)]
             old = photos.get(key, {}).get("version")
+            old_motion = (photos.get(key, {}).get("live") or {}).get("files")
             photos[key] = info
             flag = "（已轉 sRGB）" if info["colorConverted"] else ""
             low = "（清晰度不足）" if info["lowRes"] and section(key) == "photos" else ""
             alpha = "（透明）" if info.get("transparent") else ""
             state = "沒變" if old == info["version"] else f"新版本 {info['version']}"
-            print(f"{key}: {info['width']}×{info['height']} {len(info['sizes'])} 檔 {state}{flag}{low}{alpha}")
+            kind = ""
+            if "video" in info:
+                kind = f"（影片 {info['video']['duration']:g} 秒、{len(info['video']['files'])} 檔 MP4{'、有聲音' if info['video']['audio'] else ''}）"
+            elif "live" in info:
+                moved = "沒變" if old_motion == info["live"]["files"] else "新出"
+                kind = f"（Live Photo {info['live']['duration']:g} 秒、{len(info['live']['files'])} 檔 MP4 {moved}）"
+            print(f"{key}: {info['width']}×{info['height']} {len(info['sizes'])} 檔 {state}{flag}{low}{alpha}{kind}")
     save_manifest(manifest)
+    record = os.environ.get("JRFANK_BUILD_FAILURES")
+    if record:
+        Path(record).write_text("".join(f"{k}\n" for k, _ in failures))
+    if failures:
+        print(f"\n{len(failures)} 張失敗（其他照片已照常處理、manifest 已更新）：")
+        for key, error in failures:
+            print(f"  ✗ {key}：{error}")
+        sys.exit(3)
+
+
+def outputs(info: dict) -> list[tuple[str, dict]]:
+    """一張的所有輸出檔：[(標籤, {file, bytes, sha256, ...})]，WebP 和 MP4（影片、Live Photo）"""
+    out = list(info["sizes"].items())
+    for part in ("video", "live"):
+        if part in info:
+            out += [(f"{part} {s}", t) for s, t in info[part]["files"].items()]
+    return out
 
 
 def referenced(manifest: dict) -> set[str]:
-    return {t["file"] for p in entries(manifest).values() for t in p["sizes"].values()}
+    return {t["file"] for p in entries(manifest).values() for _, t in outputs(p)}
 
 
 def stray_files(manifest: dict) -> list[Path]:
     refs = referenced(manifest)
     out = []
-    for p in sorted([*ROOT.glob("*/*.webp"), *ROOT.glob(f"{REVIEWS}*/*.webp")]):
+    globs = [g for ext in ("webp", "mp4") for g in (*ROOT.glob(f"*/*.{ext}"), *ROOT.glob(f"{REVIEWS}*/*.{ext}"))]
+    for p in sorted(globs):
         if p.relative_to(ROOT).as_posix() not in refs:
             out.append(p)
     return out
@@ -326,17 +486,20 @@ def check(_: list[str]) -> None:
     manifest = load_manifest()
     bad = []
     for key, info in entries(manifest).items():
-        for s, t in info["sizes"].items():
+        for s, t in outputs(info):
             f = ROOT / t["file"]
             if not f.exists():
                 bad.append(f"{key} {s}：沒有 {t['file']}")
             elif f.stat().st_size != t["bytes"] or sha256(f) != t["sha256"]:
                 bad.append(f"{key} {s}：{t['file']} 和 manifest 不符")
+            elif t["bytes"] > MAX_OUTPUT_BYTES:
+                bad.append(f"{key} {s}：{t['file']} 有 {t['bytes'] / 1e6:.1f} MB，超過單檔 {MAX_OUTPUT_BYTES // 1_000_000} MB 上限")
     stray = stray_files(manifest)
     count = {s: (len(manifest[s]), sum(len(p["sizes"]) for p in manifest[s].values())) for s in ("photos", "reviews")}
+    mp4 = sum(len(outputs(p)) - len(p["sizes"]) for p in entries(manifest).values())
     print(
-        f"manifest 照片 {count['photos'][0]} 張 {count['photos'][1]} 檔、文章圖 {count['reviews'][0]} 張 {count['reviews'][1]} 檔；"
-        f"不符 {len(bad)}；沒引用的舊檔 {len(stray)}"
+        f"manifest 照片 {count['photos'][0]} 張 {count['photos'][1]} 檔、文章圖 {count['reviews'][0]} 張 {count['reviews'][1]} 檔"
+        f"{f'、MP4 {mp4} 檔' if mp4 else ''}；不符 {len(bad)}；沒引用的舊檔 {len(stray)}"
     )
     for b in bad:
         print("  ✗", b)
@@ -401,9 +564,10 @@ def lens_name(e: dict[str, str]) -> str | None:
     return re.sub(r"(\d+)(?:\.0)?-(\d+)(?:\.0)? ?mm", r"\1–\2mm", lens)
 
 
-def exif_fields(src: Path, key: str) -> dict:
-    """讀得到才填，不猜。exif-overrides.json 可以改或刪（值寫 null）某張的欄位，例如相機時鐘沒設的日期"""
-    e = read_exif(src)
+def exif_fields(src: Path | None, key: str, raw: dict[str, str] | None = None) -> dict:
+    """讀得到才填，不猜。exif-overrides.json 可以改或刪（值寫 null）某張的欄位，例如相機時鐘沒設的日期
+    raw：已經讀好的欄位（影片從 ffprobe 只給相機型號和拍攝日期）"""
+    e = raw if raw is not None else read_exif(src)
     out: dict = {}
     if cam := camera_name(e):
         out["camera"] = cam

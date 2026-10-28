@@ -2,6 +2,7 @@
 # 觸發：Actions 頁面手動（workflow_dispatch），或後台 / API 送 repository_dispatch：
 #   gh api repos/JR-Fank/jrfank-img/dispatches -f event_type=build-photos -F 'client_payload[photos][]=hk/hk-1.jpeg'
 # 參數是 R2 上的原圖鍵（<系列>/<照片 id>.<副檔名>；評測文章圖 reviews/<文章 slug>/<照片 id>.<副檔名>），空白或換行分隔；
+# 副檔名可以是影片（mov、mp4、m4v）：同一個 id 有圖片和影片 = Live Photo，只有影片 = 影片（見 README「影片與 Live Photo」）；
 # all = bucket 裡全部；以 / 結尾的是資料夾（例如 reviews/ = 全部文章圖、reviews/orico-test-mac/ = 一篇）
 name: build photos
 # 後台觸發時帶批次 id（client_payload.batch），寫進 run 的標題，後台用它把觸發和 run 一對一配起來
@@ -55,7 +56,10 @@ jobs:
         run: echo "PHOTO_BUILD_BASE=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
 
       - name: 原圖暫存目錄
-        run: echo "JRFANK_ORIGINALS=$RUNNER_TEMP/originals" >> "$GITHUB_ENV"
+        run: |
+          echo "JRFANK_ORIGINALS=$RUNNER_TEMP/originals" >> "$GITHUB_ENV"
+          # 出片失敗（太長、太大的影片）的照片鍵；publish 和部署確認跳過這些，其他照片照常提交
+          echo "JRFANK_BUILD_FAILURES=$RUNNER_TEMP/build-failures.txt" >> "$GITHUB_ENV"
 
       - name: 安裝 ImageMagick
         run: |
@@ -83,15 +87,36 @@ jobs:
               # 文章圖只能三段 reviews/<文章>/<id>；一般系列兩段 <系列>/<id>，系列不能叫 reviews
               # 副檔名不分大小寫（和 webimg.py 的 suffix.lower() 一樣）：.jpg .JpG .webp .HEIF 都收
               ext="$(printf '%s' "${k##*.}" | tr '[:upper:]' '[:lower:]')"
-              case "$ext" in jpg|jpeg|png|tif|tiff|heic|heif|webp) ;; *) echo "原圖副檔名不支援：$k"; exit 1 ;; esac
+              case "$ext" in jpg|jpeg|png|tif|tiff|heic|heif|webp|mov|mp4|m4v) ;; *) echo "原圖副檔名不支援：$k"; exit 1 ;; esac
               if [[ "$k" == reviews/* ]]; then re='^reviews/[a-z0-9-]+/[a-z0-9-]+\.[A-Za-z]+$'; else re='^[a-z0-9-]+/[a-z0-9-]+\.[A-Za-z]+$'; fi
               if ! [[ "$k" =~ $re ]]; then
                 echo "原圖鍵格式不對：$k"; exit 1
               fi
               aws s3 cp "s3://$BUCKET/$k" "$JRFANK_ORIGINALS/$k" --endpoint-url "$R2_ENDPOINT" --only-show-errors
+              # 同一個 id 的其他原檔（Live Photo 的圖片／影片）一起抓：只換靜態圖時影片也要在，live 欄位才不會掉
+              # 前綴 <id>. 不會配到 <id>0（例如 hk-1. 不配 hk-10.jpeg）；ls 列出的是同一層的檔名
+              aws s3 ls "s3://$BUCKET/${k%.*}." --endpoint-url "$R2_ENDPOINT" | awk '{print $4}' | while read -r name; do
+                other="${k%/*}/$name"
+                ext="$(printf '%s' "${name##*.}" | tr '[:upper:]' '[:lower:]')"
+                case "$ext" in jpg|jpeg|png|tif|tiff|heic|heif|webp|mov|mp4|m4v) ;; *) continue ;; esac
+                if [ "$other" != "$k" ] && [ ! -f "$JRFANK_ORIGINALS/$other" ]; then
+                  echo "同 id 一起下載：$other"
+                  aws s3 cp "s3://$BUCKET/$other" "$JRFANK_ORIGINALS/$other" --endpoint-url "$R2_ENDPOINT" --only-show-errors
+                fi
+              done
             done
           fi
           find "$JRFANK_ORIGINALS" -type f | wc -l
+
+      - name: 安裝 ffmpeg（有影片才裝）
+        run: |
+          # ffmpeg-full：keg-only，有 HDR 轉 SDR 要用的 zscale（核心的 ffmpeg 沒有 zimg）；webvid.py 會優先找它
+          if find "$JRFANK_ORIGINALS" -type f \( -iname '*.mov' -o -iname '*.mp4' -o -iname '*.m4v' \) | grep -q .; then
+            brew install ffmpeg-full
+            "$(brew --prefix ffmpeg-full)/bin/ffmpeg" -hide_banner -filters | grep -E " (zscale|tonemap) "
+          else
+            echo "沒有影片原檔，不裝 ffmpeg"
+          fi
 
       - name: 出圖
         run: |
@@ -101,7 +126,10 @@ jobs:
           flags=()
           if [ "$FORCE" = true ]; then flags+=(--force); fi
           # ${a[@]+"${a[@]}"}：空陣列在 bash 3.2 + set -u 也不報錯
-          python3 tools/webimg.py build ${keys[@]+"${keys[@]}"} ${flags[@]+"${flags[@]}"}
+          # 退出碼 3 = 有照片出片失敗（其他已照常處理）：照常提交其他照片，最後一步再讓 run 失敗
+          status=0
+          python3 tools/webimg.py build ${keys[@]+"${keys[@]}"} ${flags[@]+"${flags[@]}"} || status=$?
+          if [ "$status" = 3 ]; then echo "BUILD_PARTIAL=1" >> "$GITHUB_ENV"; elif [ "$status" != 0 ]; then exit "$status"; fi
           python3 tools/webimg.py check
 
       - name: 提交、推送
@@ -122,3 +150,10 @@ jobs:
           path: ${{ runner.temp }}/deployment-proof.json
           retention-days: 90
           if-no-files-found: error
+
+      - name: 回報出片失敗的照片
+        if: env.BUILD_PARTIAL == '1'
+        run: |
+          echo "以下照片出片失敗，沒有提交（原因見「出圖」步驟）："
+          cat "$JRFANK_BUILD_FAILURES"
+          exit 1
