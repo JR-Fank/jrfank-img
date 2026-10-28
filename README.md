@@ -14,9 +14,10 @@ jrfank.cc 的照片網頁檔。EdgeOne Pages 國際站（獨立專案）連這�
   - `exif`（相機、鏡頭、焦距、光圈、快門、ISO、日期；讀不到的沒有）、`original`（原圖寬高）、`lowRes`（原圖長邊不到 1600；只對新出圖的照片更新，後台改看 `original` 尺寸自己判斷）
   - `source`、`sourceSha256`（原圖檔名與雜湊）
   - `transparent: true`：原圖有透明背景（只有這種才有這個欄位），網頁檔保留透明，網站不在它底下墊占位色
+  - `video`（只有影片的條目）／`live`（Live Photo）：`duration`、`width`、`height`、`audio`、`files`（各檔 `file`、`bytes`、`sha256`）；`live` 另有 `source`、`sourceSha256`（影片原檔）。見下面「影片與 Live Photo」
   - 文章圖放在另一區 **`reviews`**（鍵 `reviews/<文章>/<照片 id>`，欄位一樣）；`photos` 區只有作品照片。後台只讀 `photos`，所以文章圖不會出現在後台的「未分配」。
 - `exif-overrides.json`：EXIF 讀錯時改這裡（值寫 `null` = 刪掉那個欄位），改完 `build`（圖檔不會重做）。
-- `edgeone.json`：全部回 `Access-Control-Allow-Origin: *`（抽卡的 canvas 網點圖要讀像素）；`.webp` 快取一年 `immutable`，其他（manifest 等）5 分鐘。
+- `edgeone.json`：全部回 `Access-Control-Allow-Origin: *`（抽卡的 canvas 網點圖要讀像素）；`.webp`、`.mp4` 快取一年 `immutable`，其他（manifest 等）5 分鐘。
 
 **編輯資料**（系列、章節、說明、精選、隱藏、相框、底片欄位）不在這裡，在網站倉庫的 `content/series/*.json`。網站用 `pnpm sync:photos` 把這裡的 `manifest.json` 原樣複製成 `content/photos.json`（釘住網站用的版本）。
 
@@ -46,6 +47,32 @@ ColorSync 產生的 PNG 只存在單張照片的暫存目錄，最後的 WebP �
 方向尺寸取和出圖相同的 ImageMagick `-auto-orient` 結果，不再只看 EXIF Orientation 數字手動交換寬高。部分 HEIC decoder 已經把像素轉正卻保留 `EXIF:Orientation=6`；直接交換會把 manifest 寫成錯的橫幅比例，和實際 WebP 像素不一致。
 
 這個 HDR 分支已納入 `RECIPE` v3。現有 v2 manifest 的所有條目都會被視為過期，下一次完整 `build` 會為全庫產生新版本檔名；`build --reuse-manifest` 也會拒絕 v2 cache，避免把舊 recipe 的 WebP 當作新 recipe 沿用。這是預期的快取失效，部署切換完成前要保留舊版本檔。
+
+## 影片與 Live Photo
+
+原檔鍵一樣是 `<系列>/<id>.<副檔名>`，影片副檔名 `mov`、`mp4`、`m4v`（不分大小寫）：
+
+- **Live Photo**：同一個 id 同時有圖片原檔和影片原檔（例如 `hk/hk-20.heic` + `hk/hk-20.mov`）。靜態圖照舊出 WebP（版本、檔名和只有圖片時完全一樣），影片是動態部分，manifest 加 `live` 欄位。聲音一律去掉。
+- **影片**：只有影片原檔。第一格畫面（轉正、HDR 轉 SDR）當封面，走同一套 WebP 五檔；manifest 加 `video` 欄位，聲音保留。`exif` 只從影片讀相機型號和拍攝日期（`com.apple.quicktime.creationdate`，沒有才用 UTC 的 `creation_time`），`exif-overrides.json` 照樣可以改。
+
+`tools/webvid.py` 出兩檔 MP4：`<id>-1280.<版本>.mp4`、`<id>-1920.<版本>.mp4`（長邊 1280／1920，原片較小就停在原片尺寸、不放大，寬高取偶數）。
+
+| 項目 | 設定 |
+| --- | --- |
+| 編碼 | H.264 High、yuv420p、CRF 22、preset slow；maxrate 1280 檔 3M、1920 檔 6M（bufsize 兩倍）；`-movflags +faststart`；x264 固定 4 執行緒（重出逐位元組相同） |
+| 色彩 | 輸出一律標 BT.709。`color_transfer` 是 `arib-std-b67`（HLG）或 `smpte2084`（PQ）時用 `zscale`（線性、npl=100）＋`tonemap=hable` 轉成 BT.709 SDR |
+| 方向 | 依旋轉資訊轉正（ffmpeg autorotate），輸出不帶旋轉標記 |
+| 隱私 | `-map_metadata -1 -map_chapters -1`，只取一條畫面（和一條聲音），`+bitexact`：GPS／位置、裝置、軟體、建立時間和 iPhone 的中繼資料軌都不進輸出 |
+| 聲音 | 影片：AAC 128k 立體聲；Live Photo：無 |
+| 限制 | 超過 15 秒拒絕；任一檔超過 20 MB 就用 CRF 26、maxrate 減半重做一次，仍超過就失敗。`check` 對所有輸出檔（WebP、MP4）設 24 MB 上限（EdgeOne 單檔 25 MB） |
+
+**版本**：`webvid.py` 的 `VIDEO_RECIPE` 是另外的影片版本號，只影響影片：只有影片的條目版本 = `sha256(影片 SHA-256 + RECIPE + VIDEO_RECIPE)` 前 10 碼（封面 WebP 和 MP4 共用）；Live Photo 的條目版本仍是靜態圖的，MP4 用 `sha256(影片 SHA-256 + VIDEO_RECIPE + "live")` 前 10 碼。改 `VIDEO_RECIPE` 不會動到任何照片。
+
+**失敗**：太長、太大或讀不了的影片只讓那一張失敗（中文原因印在輸出裡），其他照片照常出圖、manifest 照常更新；`build` 結束時退出碼 3。設了 `JRFANK_BUILD_FAILURES` 就把失敗的鍵寫進那個檔，`publish-photos.py` 和部署確認會跳過它們。Actions 照常提交其他照片，最後一步再讓 run 失敗。
+
+**ffmpeg**：Homebrew 核心的 `ffmpeg` 沒有 zimg（沒有 `zscale`），要裝 keg-only 的 **`ffmpeg-full`**（`brew install ffmpeg-full`，不會覆蓋原本的 ffmpeg）。`webvid.py` 依序找 `JRFANK_FFMPEG_DIR`、`/opt/homebrew/opt/ffmpeg-full/bin`、PATH；沒有 `zscale` 時 HDR 影片會以清楚的錯誤失敗，SDR 影片照常。
+
+`stray_files`／`prune`、`check`、`publish-photos.py` 和部署確認都涵蓋 MP4。本機測試：`python3 tools/test_webvid.py`（用 ffmpeg 現做測試片：SDR、10-bit HLG、直拍、帶 GPS、20 秒、HEIC＋MOV、只有 MOV）。
 
 ## 品質
 
@@ -95,7 +122,7 @@ gh workflow run build-photos.yml -R JR-Fank/jrfank-img -f photos="hk/hk-10.jpeg"
 pnpm sync:photos
 ```
 
-本機直接出圖也可以（要 macOS + `brew install imagemagick`）：
+本機直接出圖也可以（要 macOS + `brew install imagemagick`；有影片原檔再 `brew install ffmpeg-full`）：
 
 ```bash
 python3 tools/webimg.py build                    # 全部（原圖和配方都沒變的跳過）
@@ -111,6 +138,8 @@ python3 tools/webimg.py prune                    # 刪掉 manifest 沒引用的�
 ## GitHub Actions（`build photos`）
 
 `.github/workflows/build-photos.yml`：手動（`workflow_dispatch`，參數 `photos`、`force`）或 `repository_dispatch`（`event_type: build-photos`，`client_payload.photos` 陣列）→ 從 R2 下載原圖 → `webimg.py build` → `check` → 提交、推送 → EdgeOne 自動部署。跑在 macOS（和本機同一套 ImageMagick 與 sRGB 描述檔）。
+
+指定單張時，同一個 id 的其他原檔（Live Photo 的圖片／影片）會一起下載，只換靜態圖也不會弄掉 `live`。下載的原檔裡有影片才 `brew install ffmpeg-full`。
 
 `concurrency: build-photos` 讓 job 依序執行，但排隊事件的 SHA 不會跟著 main 更新。checkout 明確指定最新 `main` 並取完整歷史，避免排隊後仍從舊 manifest 出圖。提交由 `tools/publish-photos.py` 處理：rebase 衝突先 abort；若 rebase 衝突或 push 前 main 又前進，等 3 秒、fetch 並 reset 到最新 `origin/main`，只為本次下載的照片重建條目後再提交推送，最多重試 3 次（共 4 次嘗試）。其他 fetch／權限／檢查錯誤直接失敗。
 

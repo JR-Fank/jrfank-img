@@ -210,6 +210,17 @@ class WebvidBuildTest(unittest.TestCase):
             self.assert_clean_h264(path, audio=False)
         self.assertEqual(set(entry["sizes"]), {"600"})  # 96×64 的靜態圖照舊出 WebP
 
+    def test_swap_still_keeps_live(self) -> None:
+        # 只換 Live Photo 的靜態圖：WebP 出新版本，影片不重出、live 原樣保留
+        old = json.loads((self.root / "manifest.json").read_text())["photos"]["vid/live"]
+        subprocess.run(["magick", "-size", "96x64", "gradient:#802020-#20a0f0", str(self.root / "originals/vid/live.heic")], check=True)
+        with patch.object(webvid, "encode", side_effect=AssertionError("不該重新出片")):
+            out, _ = self.run_build(["vid/live"])
+        new = json.loads((self.root / "manifest.json").read_text())["photos"]["vid/live"]
+        self.assertNotEqual(new["version"], old["version"])
+        self.assertEqual(new["live"], old["live"])
+        self.assertIn("Live Photo 2 秒、1 檔 MP4 沒變", out)
+
     def test_video_only_has_cover_webp(self) -> None:
         entry = self.photos["vid/sdr"]
         self.assertEqual(entry["source"], "sdr.mp4")

@@ -43,6 +43,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import threading
 from concurrent.futures import ThreadPoolExecutor
 from fractions import Fraction
 from pathlib import Path
@@ -73,16 +74,20 @@ REVIEWS = "reviews/"
 KEY_RE = re.compile(r"^(?:reviews/[a-z0-9-]+/[a-z0-9-]+|(?!reviews/)[a-z0-9-]+/[a-z0-9-]+)$")
 
 
+_WEBVID_LOCK = threading.Lock()
+
+
 def webvid():
-    """影片才需要 ffmpeg：用到時才載入 tools/webvid.py"""
-    mod = sys.modules.get("webvid")
-    if mod is None:
-        spec = importlib.util.spec_from_file_location("webvid", Path(__file__).with_name("webvid.py"))
-        assert spec and spec.loader
-        mod = importlib.util.module_from_spec(spec)
-        sys.modules["webvid"] = mod
-        spec.loader.exec_module(mod)
-    return mod
+    """影片才需要 ffmpeg：用到時才載入 tools/webvid.py（build 是多執行緒，載入要上鎖）"""
+    with _WEBVID_LOCK:
+        mod = sys.modules.get("webvid")
+        if mod is None:
+            spec = importlib.util.spec_from_file_location("webvid", Path(__file__).with_name("webvid.py"))
+            assert spec and spec.loader
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            sys.modules["webvid"] = mod
+        return mod
 
 
 def section(key: str) -> str:
@@ -397,13 +402,14 @@ def build(args: list[str]) -> None:
     def run_live(key: str, image: Path, video: Path, prev: dict | None) -> dict:
         img_sha, vid_sha = sha256(image), sha256(video)
         still = up_to_date(prev, img_sha) and "video" not in prev
-        moving = still and prev.get("live", {}).get("sourceSha256") == vid_sha and motion_up_to_date(prev["live"], live_version(vid_sha))
+        live_prev = (prev or {}).get("live")
+        moving = bool(live_prev) and live_prev.get("sourceSha256") == vid_sha and motion_up_to_date(live_prev, live_version(vid_sha))
         if cached is not None and not (still and moving):
             sys.exit(f"{key}：快取或已出好的 Live Photo 不完整，停止重試")
         reuse = cached is not None or not opts.force
         info = {k: v for k, v in prev.items() if k != "live"} if reuse and still else build_one(key, image, img_sha)
         info["exif"] = exif_fields(image, key)
-        live = prev["live"] if reuse and moving else build_live(key, video, vid_sha)
+        live = live_prev if reuse and moving else build_live(key, video, vid_sha)
         return {**info, "live": live}
 
     def run(item: tuple[str, Path | None, Path | None]) -> tuple[str, dict | None, str | None]:
