@@ -85,8 +85,14 @@ def webvid():
             spec = importlib.util.spec_from_file_location("webvid", Path(__file__).with_name("webvid.py"))
             assert spec and spec.loader
             mod = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(mod)
+            # 要在執行模組之前登記：webvid 的 @dataclass（加上 from __future__ import annotations）會去 sys.modules 找自己的模組，
+            # 沒登記就 AttributeError（Actions 的 Python 3.14 第一次真的出影片時發生；測試先 import 過 webvid 所以沒抓到）
             sys.modules["webvid"] = mod
+            try:
+                spec.loader.exec_module(mod)
+            except BaseException:
+                sys.modules.pop("webvid", None)
+                raise
         return mod
 
 
