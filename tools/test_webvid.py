@@ -138,6 +138,13 @@ class WebvidBuildTest(unittest.TestCase):
         self.assertLess(raw.find(b"moov"), raw.find(b"mdat"), "要 +faststart")
         return v[0]
 
+    def test_lazy_load_without_prior_import(self) -> None:
+        # build 只透過 webimg.webvid() 載入（不先 import webvid）：這條路在 Actions 上才會走到
+        code = "import sys; sys.path.insert(0, sys.argv[1]); import webimg; m = webimg.webvid(); assert m.Meta and sys.modules['webvid'] is m; print('ok')"
+        out = subprocess.run([sys.executable, "-c", code, str(Path(webimg.__file__).parent)], capture_output=True, text=True)
+        self.assertEqual(out.returncode, 0, out.stderr[-500:])
+        self.assertEqual(out.stdout.strip(), "ok")
+
     def test_sdr_two_tiers_and_no_upscale(self) -> None:
         info = self.photos["vid/sdr"]["video"]
         self.assertEqual(set(info["files"]), {"1280", "1920"})
