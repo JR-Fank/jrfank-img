@@ -6632,6 +6632,73 @@
     "sourceSha256": "5830c2db2f000ff9a510149cb05c94cd2a17fbf1101d0d18bd737a08fbca105b"
    }
   },
+  "inbox/inbox-3": {
+   "version": "8ca2ea3185",
+   "width": 1920,
+   "height": 1080,
+   "sizes": {
+    "600": {
+     "file": "inbox/inbox-3-600.8ca2ea3185.webp",
+     "width": 600,
+     "height": 338,
+     "bytes": 11958,
+     "sha256": "dec97233e20585c630b4c0e8d730a94fd73054d33613c35ff5f3b3f59251702e"
+    },
+    "1200": {
+     "file": "inbox/inbox-3-1200.8ca2ea3185.webp",
+     "width": 1200,
+     "height": 675,
+     "bytes": 35978,
+     "sha256": "5aef738411317d2e63fca4aa6c16a79cc03b47ed48b9eb34335040af28a1674b"
+    },
+    "1800": {
+     "file": "inbox/inbox-3-1800.8ca2ea3185.webp",
+     "width": 1800,
+     "height": 1013,
+     "bytes": 72382,
+     "sha256": "94c91ed1609081f232ea2f1a3cda519fe880f55af5a8fa56f47ca19411b80c46"
+    },
+    "2400": {
+     "file": "inbox/inbox-3-2400.8ca2ea3185.webp",
+     "width": 1920,
+     "height": 1080,
+     "bytes": 81792,
+     "sha256": "9a94eb2b80d5ef637eb4634574583815e25a7ff0d0b256bb38604d5cab356f18"
+    }
+   },
+   "color": "#7d817e",
+   "blur": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAAAwAgCdASoQAAkAAsBMJbACdHMA5gACyU2TAAD+iLt2zLIFN+UQzeMNUJEiznZ//Nuwf/Cw/X/xx016dOXVS+RmXfpOi8DJbqXyR4G33ikAAA==",
+   "original": {
+    "width": 1920,
+    "height": 1080
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone 15 Pro",
+    "date": "2026-10-28"
+   },
+   "colorConverted": false,
+   "source": "inbox-3.mov",
+   "sourceSha256": "02d90923eeb4c841f2cafe968f057635be37e5cc646793b35a61eeded79510a5",
+   "video": {
+    "duration": 5.0,
+    "width": 1920,
+    "height": 1080,
+    "audio": true,
+    "files": {
+     "1280": {
+      "file": "inbox/inbox-3-1280.8ca2ea3185.mp4",
+      "bytes": 1263202,
+      "sha256": "37fc4ebd5803dd2d68b6fd5a1fd8b32f5b18d8dbe7824d18462fb50227853901"
+     },
+     "1920": {
+      "file": "inbox/inbox-3-1920.8ca2ea3185.mp4",
+      "bytes": 3979335,
+      "sha256": "c404f813c191f6b9eb51725e47f321508da66643ee6d255382215e2fdf95de72"
+     }
+    }
+   }
+  },
   "macau/macau-1": {
    "version": "e466351330",
    "width": 2667,
