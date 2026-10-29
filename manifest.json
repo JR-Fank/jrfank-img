@@ -5143,6 +5143,80 @@
     }
    }
   },
+  "ao-da-li-ya/ao-da-li-ya-97": {
+   "version": "900e6fcb5e",
+   "width": 3840,
+   "height": 2160,
+   "sizes": {
+    "600": {
+     "file": "ao-da-li-ya/ao-da-li-ya-97-600.900e6fcb5e.webp",
+     "width": 600,
+     "height": 338,
+     "bytes": 51432,
+     "sha256": "65e27d688041232a1ba4fadd933034afa50d459cb0306553063ac8dc305e7eb1"
+    },
+    "1200": {
+     "file": "ao-da-li-ya/ao-da-li-ya-97-1200.900e6fcb5e.webp",
+     "width": 1200,
+     "height": 675,
+     "bytes": 165938,
+     "sha256": "ebaaf56ab58fb604d39c41606af353675ab3630fdc2a2ae0331f1b90f3b7317c"
+    },
+    "1800": {
+     "file": "ao-da-li-ya/ao-da-li-ya-97-1800.900e6fcb5e.webp",
+     "width": 1800,
+     "height": 1013,
+     "bytes": 308218,
+     "sha256": "e10728639f679821a4e32f8514a978c60711a162932569aaf91895f4509e3af1"
+    },
+    "2400": {
+     "file": "ao-da-li-ya/ao-da-li-ya-97-2400.900e6fcb5e.webp",
+     "width": 2400,
+     "height": 1350,
+     "bytes": 438314,
+     "sha256": "51fbd2fa2342470fd4e84d81ce822be983538d77a33d55bb860c3193f5a1ec1c"
+    },
+    "4000": {
+     "file": "ao-da-li-ya/ao-da-li-ya-97-4000.900e6fcb5e.webp",
+     "width": 3840,
+     "height": 2160,
+     "bytes": 712640,
+     "sha256": "30060166ffc009398f04610af2925d15bf83945a41bffa975a6265995f95a720"
+    }
+   },
+   "color": "#858586",
+   "blur": "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAACwAQCdASoQAAkAAsBMJZwAAtiXst6MAP7JRX3q7OkfI0S6uarmnPlrcJyf1gjoXcOh5EnEH7gq6Dj7nmowQSsPjOfpeyAM+AQAAA==",
+   "original": {
+    "width": 3840,
+    "height": 2160
+   },
+   "lowRes": false,
+   "exif": {
+    "camera": "iPhone 15 Pro Max",
+    "date": "2024-12-01"
+   },
+   "colorConverted": false,
+   "source": "ao-da-li-ya-97.mov",
+   "sourceSha256": "be5a73b3dba2b88ae64e7667bca3e9598eda986c9a36fd0ac7e086e64614b19e",
+   "video": {
+    "duration": 8.2,
+    "width": 1920,
+    "height": 1080,
+    "audio": true,
+    "files": {
+     "1280": {
+      "file": "ao-da-li-ya/ao-da-li-ya-97-1280.900e6fcb5e.mp4",
+      "bytes": 3391453,
+      "sha256": "58c452667a3a6ca3844db7c4bd9ca9fc438d5331009f6eca8ab3d8eef3a0be84"
+     },
+     "1920": {
+      "file": "ao-da-li-ya/ao-da-li-ya-97-1920.900e6fcb5e.mp4",
+      "bytes": 6634203,
+      "sha256": "bd5bf71e5bb4dca73d7ceba6e7fe59452fa8150d6445cd0ca62c3cb73a578bfb"
+     }
+    }
+   }
+  },
   "gba/gba-1": {
    "version": "6328d29981",
    "width": 4000,
