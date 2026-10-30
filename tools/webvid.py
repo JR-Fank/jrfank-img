@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import os
 import shutil
 import subprocess
@@ -76,8 +77,18 @@ def ffprobe(src: Path) -> dict:
             check=True, capture_output=True, text=True,
         ).stdout
     except subprocess.CalledProcessError as exc:
-        raise VideoError(f"{src.name}：ffprobe 讀不了這個影片（{exc.stderr.strip()[-200:]}）", "unreadable") from None
-    return json.loads(out)
+        detail = (exc.stderr or "").strip()[-200:]
+        suffix = f"（{detail}）" if detail else ""
+        raise VideoError(f"{src.name}：ffprobe 讀不了這個影片{suffix}", "unreadable") from None
+    except UnicodeError:
+        raise VideoError(f"{src.name}：ffprobe 輸出含有無法解析的文字", "unreadable") from None
+    try:
+        data = json.loads(out)
+    except (json.JSONDecodeError, TypeError):
+        raise VideoError(f"{src.name}：ffprobe 輸出不是有效的 JSON", "unreadable") from None
+    if not isinstance(data, dict):
+        raise VideoError(f"{src.name}：ffprobe 輸出的資料結構不合法", "unreadable")
+    return data
 
 
 @dataclass
@@ -98,35 +109,111 @@ class Meta:
 
 def probe(src: Path) -> Meta:
     data = ffprobe(src)
-    videos = [s for s in data.get("streams", []) if s.get("codec_type") == "video" and not s.get("disposition", {}).get("attached_pic")]
+
+    def number(value, message: str) -> float:
+        if isinstance(value, bool):
+            raise VideoError(f"{src.name}：{message}", "unreadable")
+        try:
+            parsed = float(value)
+        except (TypeError, ValueError, OverflowError):
+            raise VideoError(f"{src.name}：{message}", "unreadable") from None
+        if not math.isfinite(parsed):
+            raise VideoError(f"{src.name}：{message}", "unreadable")
+        return parsed
+
+    def text(value, message: str) -> str:
+        if value in (None, ""):
+            return ""
+        if not isinstance(value, str):
+            raise VideoError(f"{src.name}：{message}", "unreadable")
+        return value
+
+    streams = data.get("streams")
+    if not isinstance(streams, list) or any(not isinstance(s, dict) for s in streams):
+        raise VideoError(f"{src.name}：ffprobe 缺少有效的軌道資料", "unreadable")
+    videos = []
+    for stream in streams:
+        disposition = stream.get("disposition", {})
+        if disposition is None:
+            disposition = {}
+        if not isinstance(disposition, dict):
+            raise VideoError(f"{src.name}：ffprobe 的畫面軌資料不合法", "unreadable")
+        attached_pic = disposition.get("attached_pic", 0)
+        if not isinstance(attached_pic, (bool, int)):
+            raise VideoError(f"{src.name}：ffprobe 的畫面軌資料不合法", "unreadable")
+        if stream.get("codec_type") == "video" and not attached_pic:
+            videos.append(stream)
     if not videos:
         raise VideoError(f"{src.name}：找不到畫面軌", "unreadable")
     v = videos[0]
-    try:
-        duration = float(data.get("format", {}).get("duration") or v.get("duration"))
-    except (TypeError, ValueError):
-        raise VideoError(f"{src.name}：讀不到影片長度", "unreadable") from None
+    fmt = data.get("format", {})
+    if fmt is None:
+        fmt = {}
+    if not isinstance(fmt, dict):
+        raise VideoError(f"{src.name}：ffprobe 的影片格式資料不合法", "unreadable")
+    duration = number(fmt.get("duration") or v.get("duration"), "讀不到影片長度")
+    if duration <= 0:
+        raise VideoError(f"{src.name}：影片長度不合法", "unreadable")
     if duration > MAX_SECONDS:
         raise VideoError(f"{src.name}：影片長 {duration:.1f} 秒，超過 {MAX_SECONDS} 秒上限，這一張不出片（請先剪短再上傳）", "too-long", round(duration, 1))
+
+    def rotation_value(value) -> int:
+        parsed = number(value, "ffprobe 的旋轉資訊不合法")
+        if not parsed.is_integer() or int(parsed) % 90:
+            raise VideoError(f"{src.name}：ffprobe 的旋轉資訊不合法", "unreadable")
+        return int(parsed)
+
     rotation = 0
-    for side in v.get("side_data_list", []):
+    side_data = v.get("side_data_list", [])
+    if side_data is None:
+        side_data = []
+    if not isinstance(side_data, list) or any(not isinstance(side, dict) for side in side_data):
+        raise VideoError(f"{src.name}：ffprobe 的旋轉資訊不合法", "unreadable")
+    for side in side_data:
         if "rotation" in side:
-            rotation = int(float(side["rotation"]))
-    if not rotation and v.get("tags", {}).get("rotate"):
-        rotation = int(v["tags"]["rotate"])
-    w, h = int(v["width"]), int(v["height"])
+            rotation = rotation_value(side["rotation"])
+    video_tags = v.get("tags", {})
+    if video_tags is None:
+        video_tags = {}
+    if not isinstance(video_tags, dict):
+        raise VideoError(f"{src.name}：ffprobe 的畫面軌標籤不合法", "unreadable")
+    if not rotation and video_tags.get("rotate") not in (None, ""):
+        rotation = rotation_value(video_tags["rotate"])
+
+    if v.get("width") in (None, "") or v.get("height") in (None, ""):
+        raise VideoError(f"{src.name}：ffprobe 缺少有效的影片尺寸", "unreadable") from None
+    raw_w = number(v.get("width"), "ffprobe 的影片尺寸不合法")
+    raw_h = number(v.get("height"), "ffprobe 的影片尺寸不合法")
+    if not raw_w.is_integer() or not raw_h.is_integer() or raw_w <= 0 or raw_h <= 0:
+        raise VideoError(f"{src.name}：ffprobe 的影片尺寸不合法", "unreadable")
+    w, h = int(raw_w), int(raw_h)
     if rotation % 180:
         w, h = h, w
-    audios = [s for s in data.get("streams", []) if s.get("codec_type") == "audio"]
+    audios = [s for s in streams if s.get("codec_type") == "audio"]
     # iPhone 可能同時有空間音訊軌和 AAC 立體聲軌：先挑常見編碼
-    common = [s for s in audios if s.get("codec_name") in {"aac", "alac", "mp3", "opus"} or s.get("codec_name", "").startswith("pcm_")]
+    codecs = [(s, text(s.get("codec_name"), "ffprobe 的聲音軌編碼不合法")) for s in audios]
+    common = [s for s, codec in codecs if codec in {"aac", "alac", "mp3", "opus"} or codec.startswith("pcm_")]
     audio = (common or audios or [None])[0]
+    try:
+        raw_audio_index = number(audio["index"], "ffprobe 的聲音軌 index 不合法") if audio else None
+    except KeyError:
+        raise VideoError(f"{src.name}：ffprobe 的聲音軌 index 不合法", "unreadable") from None
+    if raw_audio_index is not None and (not raw_audio_index.is_integer() or raw_audio_index < 0):
+        raise VideoError(f"{src.name}：ffprobe 的聲音軌 index 不合法", "unreadable")
+    audio_index = int(raw_audio_index) if raw_audio_index is not None else None
+    format_tags = fmt.get("tags", {})
+    if format_tags is None:
+        format_tags = {}
+    if not isinstance(format_tags, dict):
+        raise VideoError(f"{src.name}：ffprobe 的影片標籤不合法", "unreadable")
     return Meta(
         duration=duration, width=w, height=h,
-        transfer=v.get("color_transfer", ""), matrix=v.get("color_space", ""),
-        full_range=v.get("color_range") == "pc" or v.get("pix_fmt", "").startswith("yuvj"),
-        audio=int(audio["index"]) if audio else None,
-        tags={k.lower(): str(val) for k, val in data.get("format", {}).get("tags", {}).items()},
+        transfer=text(v.get("color_transfer"), "ffprobe 的色彩轉換資料不合法"),
+        matrix=text(v.get("color_space"), "ffprobe 的色彩空間資料不合法"),
+        full_range=text(v.get("color_range"), "ffprobe 的色彩範圍資料不合法") == "pc"
+                   or text(v.get("pix_fmt"), "ffprobe 的像素格式資料不合法").startswith("yuvj"),
+        audio=audio_index,
+        tags={str(k).lower(): str(val) for k, val in format_tags.items()},
     )
 
 
@@ -149,6 +236,8 @@ def exif_tags(meta: Meta) -> dict[str, str]:
 
 def tiers(meta: Meta) -> list[tuple[int, int, int]]:
     """[(檔, 寬, 高)]：比原片小的全做，再加一個停在原片尺寸的；不放大，寬高取偶數"""
+    if meta.width <= 0 or meta.height <= 0:
+        raise VideoError("影片尺寸不合法，這一張不出片", "unreadable")
     long = max(meta.width, meta.height)
     out = []
     for t in TIERS:
