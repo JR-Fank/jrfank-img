@@ -46,7 +46,7 @@ ColorSync 產生的 PNG 只存在單張照片的暫存目錄，最後的 WebP �
 
 方向尺寸取和出圖相同的 ImageMagick `-auto-orient` 結果，不再只看 EXIF Orientation 數字手動交換寬高。部分 HEIC decoder 已經把像素轉正卻保留 `EXIF:Orientation=6`；直接交換會把 manifest 寫成錯的橫幅比例，和實際 WebP 像素不一致。
 
-這個 HDR 分支已納入 `RECIPE` v3。現有 v2 manifest 的所有條目都會被視為過期，下一次完整 `build` 會為全庫產生新版本檔名；`build --reuse-manifest` 也會拒絕 v2 cache，避免把舊 recipe 的 WebP 當作新 recipe 沿用。這是預期的快取失效，部署切換完成前要保留舊版本檔。
+這個 HDR 分支已納入 `RECIPE` v3。既有 v2 條目如果原圖 SHA-256 沒變，而且原檔是 JPEG、PNG、TIFF 或 WebP，`build`（包括 `--reuse-manifest` 的逐條驗證）會把它視為已是最新：這些格式不走新增的 HDR 分支，沿用既有版本和網址。HEIC／HEIF 不沿用 v2，原圖 SHA-256 改變也照常以目前配方重做；`--force` 仍會強制重做。
 
 ## 影片與 Live Photo
 
