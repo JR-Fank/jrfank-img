@@ -193,6 +193,43 @@ class DeploymentTest(unittest.TestCase):
         self.assertEqual(proof["photos"], {"sample/a": "bbbbbbbbbb", "sample/b": "cccccccccc"})
         self.assertGreaterEqual(len(self.server.state["asset_requests"]), 4)
 
+    def run_check_only(self, keys, timeout="5"):
+        argv = ["verify_photo_deployment.py", "--keys", keys, "--timeout", timeout, "--output", str(self.output)]
+        with mock.patch.object(deploy.webimg, "ROOT", self.root), \
+             mock.patch.object(deploy, "ORIGIN", self.origin), \
+             mock.patch.object(sys, "argv", argv), \
+             contextlib.redirect_stdout(io.StringIO()):
+            deploy.main()
+
+    def test_check_only_verifies_current_head_without_build(self):
+        # 只檢查（verify-photos）：沒有 --base 就用目前的 HEAD，不需要本次下載的原圖
+        with mock.patch.object(deploy.webimg, "originals", side_effect=AssertionError("不該讀原圖")):
+            self.run_check_only("sample/b")
+        proof = json.loads(self.output.read_text())
+        head = self.git("rev-parse", "HEAD").decode().strip()
+        self.assertEqual(proof["sourceSha"], head)
+        self.assertEqual(proof["photos"], {"sample/a": "bbbbbbbbbb", "sample/b": "cccccccccc"})
+        self.assertIn("sample/b-600.cccccccccc.webp", self.server.state["asset_requests"])
+        self.assertNotIn("sample/a-600.bbbbbbbbbb.webp", self.server.state["asset_requests"])
+
+    def test_check_only_waits_when_site_not_updated(self):
+        self.server.state["mode"] = "undeployed"
+        with self.assertRaises(TimeoutError):
+            self.run_check_only("sample/a", timeout="0.3")
+        self.assertFalse(self.output.exists())
+
+    def test_check_only_missing_file_never_writes_proof(self):
+        self.server.state["mode"] = "partial"
+        with self.assertRaises(TimeoutError):
+            self.run_check_only("sample/b", timeout="0.3")
+        self.assertFalse(self.output.exists())
+
+    def test_check_only_rejects_bad_or_unknown_keys(self):
+        for keys in ("", "reviews/x/y", "Sample/A", "sample/zz"):
+            with self.subTest(keys=keys), self.assertRaises(ValueError):
+                self.run_check_only(keys)
+        self.assertFalse(self.output.exists())
+
 
 if __name__ == "__main__":
     unittest.main()
