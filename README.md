@@ -55,18 +55,18 @@ ColorSync 產生的 PNG 只存在單張照片的暫存目錄，最後的 WebP �
 - **Live Photo**：同一個 id 同時有圖片原檔和影片原檔（例如 `hk/hk-20.heic` + `hk/hk-20.mov`）。靜態圖照舊出 WebP（版本、檔名和只有圖片時完全一樣），影片是動態部分，manifest 加 `live` 欄位。聲音一律去掉。
 - **影片**：只有影片原檔。第一格畫面（轉正、HDR 轉 SDR）當封面，走同一套 WebP 五檔；manifest 加 `video` 欄位，聲音保留。`exif` 只從影片讀相機型號和拍攝日期（`com.apple.quicktime.creationdate`，沒有才用 UTC 的 `creation_time`），`exif-overrides.json` 照樣可以改。
 
-`tools/webvid.py` 出兩檔 MP4：`<id>-1280.<版本>.mp4`、`<id>-1920.<版本>.mp4`（長邊 1280／1920，原片較小就停在原片尺寸、不放大，寬高取偶數）。
+`tools/webvid.py` 最多出四檔 MP4：`<id>-1280.<版本>.mp4`、`<id>-1920.<版本>.mp4`、`<id>-2560.<版本>.mp4`、`<id>-3840.<版本>.mp4`。1280／1920 沿用既有規則（原片較小時第一檔停在原片尺寸）；2560／3840 只有原片長邊至少達到該檔才做，不放大，寬高取偶數。
 
 | 項目 | 設定 |
 | --- | --- |
-| 編碼 | H.264 High、yuv420p、CRF 22、preset slow；maxrate 1280 檔 3M、1920 檔 6M（bufsize 兩倍）；`-movflags +faststart`；x264 固定 4 執行緒（重出逐位元組相同） |
+| 編碼 | H.264 High、yuv420p、CRF 22、preset slow；maxrate 1280 檔 3M、1920 檔 6M、2560 檔 10M、3840 檔 16M（bufsize 兩倍）；`-movflags +faststart`；x264 固定 4 執行緒（重出逐位元組相同） |
 | 色彩 | 輸出一律標 BT.709。`color_transfer` 是 `arib-std-b67`（HLG）或 `smpte2084`（PQ）時用 `zscale`（線性、npl=100）＋`tonemap=hable` 轉成 BT.709 SDR |
 | 方向 | 依旋轉資訊轉正（ffmpeg autorotate），輸出不帶旋轉標記 |
 | 隱私 | `-map_metadata -1 -map_chapters -1`，只取一條畫面（和一條聲音），`+bitexact`：GPS／位置、裝置、軟體、建立時間和 iPhone 的中繼資料軌都不進輸出 |
 | 聲音 | 影片：AAC 128k 立體聲；Live Photo：無 |
-| 限制 | 超過 15 秒拒絕；任一檔超過 20 MB 就用 CRF 26、maxrate 減半重做一次，仍超過就失敗。`check` 對所有輸出檔（WebP、MP4）設 24 MB 上限（EdgeOne 單檔 25 MB） |
+| 限制 | 超過 15 秒拒絕；2560／3840 超過 20 MB 就用 CRF 26、依片長和 20 MB 預算降低 maxrate 重做一次，仍超過只略過那一檔（其他檔與整張照常完成）。1280／1920 保留既有的半 maxrate 重試配方與版本。`check` 對所有輸出檔（WebP、MP4）設 24 MB 上限（EdgeOne 單檔 25 MB） |
 
-**版本**：`webvid.py` 的 `VIDEO_RECIPE` 是另外的影片版本號，只影響影片：只有影片的條目版本 = `sha256(影片 SHA-256 + RECIPE + VIDEO_RECIPE)` 前 10 碼（封面 WebP 和 MP4 共用）；Live Photo 的條目版本仍是靜態圖的，MP4 用 `sha256(影片 SHA-256 + VIDEO_RECIPE + "live")` 前 10 碼。改 `VIDEO_RECIPE` 不會動到任何照片。
+**版本**：`webvid.py` 的 `VIDEO_RECIPE` 是既有 1280／1920 的影片版本號；只有影片的條目版本 = `sha256(影片 SHA-256 + RECIPE + VIDEO_RECIPE)` 前 10 碼（封面 WebP 和這兩檔 MP4 共用），Live Photo 的 1280／1920 MP4 用 `sha256(影片 SHA-256 + VIDEO_RECIPE + "live")` 前 10 碼。新增的 2560／3840 另用 `HI_TIER_RECIPE` 算版本，所以替已上線條目補高檔時，原有 1280／1920 的檔名與位元組不變。改影片配方不會動到一般照片。
 
 **失敗**：太長、太大或讀不了的影片只讓那一張失敗（中文原因印在輸出裡），其他照片照常出圖、manifest 照常更新；`build` 結束時退出碼 3。設了 `JRFANK_BUILD_FAILURES` 就把失敗的鍵寫進那個檔，`publish-photos.py` 和部署確認會跳過它們。Actions 照常提交其他照片，最後一步再讓 run 失敗。
 

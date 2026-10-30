@@ -96,10 +96,10 @@ class WebvidIsolationTest(unittest.TestCase):
 
             real_build_video = webimg.build_video
 
-            def build_video_with_unexpected(key, src, src_sha):
+            def build_video_with_unexpected(key, src, src_sha, *args, **kwargs):
                 if key == "batch/unexpected":
                     raise ValueError("測試用意外解析錯誤")
-                return real_build_video(key, src, src_sha)
+                return real_build_video(key, src, src_sha, *args, **kwargs)
 
             out = io.StringIO()
             with (
@@ -253,6 +253,64 @@ class WebvidBuildTest(unittest.TestCase):
         self.assertEqual((small["width"], small["height"], small["audio"]), (640, 360, False))
         self.assert_clean_h264(self.mp4s("vid/small")[0], audio=False)
 
+    def test_high_tiers_and_original_too_small(self) -> None:
+        base = dict(duration=2, transfer="", matrix="bt709", full_range=False, audio=None, tags={})
+        full = webvid.Meta(width=3840, height=2160, **base)
+        self.assertEqual(webvid.tiers(full), [
+            (1280, 1280, 720), (1920, 1920, 1080), (2560, 2560, 1440), (3840, 3840, 2160),
+        ])
+        between = webvid.Meta(width=3000, height=1688, **base)
+        self.assertEqual([tier for tier, _w, _h in webvid.tiers(between)], [1280, 1920, 2560])
+        too_small = webvid.Meta(width=2558, height=1438, **base)
+        self.assertEqual([tier for tier, _w, _h in webvid.tiers(too_small)], [1280, 1920])
+
+    def test_supplement_high_tiers_keeps_existing_low_files(self) -> None:
+        src = self.root / "originals/vid/sdr.mp4"
+        meta = webvid.Meta(duration=2, width=3840, height=2160, transfer="", matrix="bt709",
+                            full_range=False, audio=None, tags={})
+        with tempfile.TemporaryDirectory() as root_dir, tempfile.TemporaryDirectory() as out_dir:
+            root = Path(root_dir)
+            low = {}
+            for tier in (1280, 1920):
+                file = f"vid/x-{tier}.lowversion.mp4"
+                path = root / file
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(f"old-{tier}".encode())
+                low[str(tier)] = {"file": file, "bytes": path.stat().st_size, "sha256": webvid.sha256(path)}
+            calls = []
+
+            def fake_encode(_src, _meta, w, _h, maxrate, crf, _audio, dst):
+                calls.append((w, maxrate, crf))
+                dst.parent.mkdir(parents=True, exist_ok=True)
+                dst.write_bytes(f"new-{w}".encode())
+
+            versions = {1280: "lowversion", 1920: "lowversion", 2560: "hiversion", 3840: "hiversion"}
+            with patch.object(webvid, "encode", side_effect=fake_encode):
+                info = webvid.render(src, meta, Path(out_dir), "vid/x", versions, audio=False,
+                                     existing={"files": low, "omitted": [3840], "omittedRecipe": "stale00000"},
+                                     existing_root=root)
+            self.assertEqual(info["files"]["1280"], low["1280"])
+            self.assertEqual(info["files"]["1920"], low["1920"])
+            self.assertEqual(calls, [(2560, 10, 22), (3840, 16, 22)])
+
+    def test_omitted_high_tier_is_bound_to_recipe(self) -> None:
+        meta = webvid.Meta(duration=2, width=3840, height=2160, transfer="", matrix="bt709",
+                            full_range=False, audio=None, tags={})
+        versions = webimg.motion_versions("a" * 64, meta, live=False)
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            files = {}
+            for tier in (1280, 1920):
+                file = f"vid/x-{tier}.{versions[tier]}.mp4"
+                path = root / file
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(b"old")
+                files[str(tier)] = {"file": file, "bytes": 3, "sha256": webvid.sha256(path)}
+            part = {"files": files, "omitted": [2560, 3840], "omittedRecipe": webvid.HI_TIER_RECIPE_ID}
+            with patch.object(webimg, "ROOT", root):
+                self.assertTrue(webimg.motion_up_to_date(part, versions))
+                self.assertFalse(webimg.motion_up_to_date({**part, "omittedRecipe": "stale00000"}, versions))
+
     def test_hlg_is_tone_mapped_to_bt709(self) -> None:
         self.assertEqual(self.photos["vid/hlg"]["colorConverted"], True)
         for path in self.mp4s("vid/hlg"):
@@ -379,20 +437,76 @@ class WebvidBuildTest(unittest.TestCase):
         finally:
             stray.unlink(missing_ok=True)
 
-    def test_oversize_retries_lower_bitrate_then_fails(self) -> None:
-        meta = webvid.probe(self.root / "originals/vid/sdr.mp4")
+    def test_oversize_retries_by_duration_and_skips_only_that_tier(self) -> None:
+        src = self.root / "originals/vid/sdr.mp4"
+        meta = webvid.Meta(duration=15, width=3840, height=2160, transfer="", matrix="bt709",
+                            full_range=False, audio=1, tags={})
         calls = []
-        real = webvid.encode
 
-        def spy(*args):
-            calls.append(args[4:6])  # (maxrate, crf)
-            return real(*args)
+        def fake_encode(_src, _meta, w, _h, maxrate, crf, _audio, dst):
+            calls.append((w, maxrate, crf))
+            # 只有 3840 檔持續超標；其他檔一次成功。
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            dst.write_bytes(b"x")
+            with dst.open("r+b") as handle:
+                handle.truncate(webvid.MAX_BYTES + 1 if w == 3840 else 10)
 
-        with tempfile.TemporaryDirectory() as td, patch.object(webvid, "MAX_BYTES", 1000), patch.object(webvid, "encode", side_effect=spy):
-            with self.assertRaisesRegex(webvid.VideoError, "降低碼率重做後仍有 .* MB，超過") as ctx:
-                webvid.render(self.root / "originals/vid/sdr.mp4", meta, Path(td), "vid/x", "0" * 10, audio=True)
-        self.assertEqual(calls, [(3, 22), (1.5, 26)])
-        self.assertEqual(ctx.exception.code, "too-large")
+        with (
+            tempfile.TemporaryDirectory() as td,
+            patch.object(webvid, "encode", side_effect=fake_encode),
+            redirect_stdout(io.StringIO()) as out,
+        ):
+            info = webvid.render(src, meta, Path(td), "vid/x", "0" * 10, audio=True)
+        self.assertEqual(set(info["files"]), {"1280", "1920", "2560"})
+        self.assertEqual(info["omitted"], [3840])
+        self.assertEqual(info["omittedRecipe"], webvid.HI_TIER_RECIPE_ID)
+        self.assertIn("略過這一檔", out.getvalue())
+        retry = [call for call in calls if call[0] == 3840]
+        self.assertEqual(len(retry), 2)
+        self.assertEqual(retry[0], (3840, 16, 22))
+        expected = webvid.retry_maxrate(meta.duration, True, 16)
+        self.assertEqual(retry[1], (3840, expected, 26))
+
+    def test_legacy_tier_keeps_half_rate_retry(self) -> None:
+        src = self.root / "originals/vid/sdr.mp4"
+        meta = webvid.Meta(duration=15, width=1920, height=1080, transfer="", matrix="bt709",
+                            full_range=False, audio=1, tags={})
+        calls = []
+
+        def fake_encode(_src, _meta, w, _h, maxrate, crf, _audio, dst):
+            calls.append((w, maxrate, crf))
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            dst.write_bytes(b"x")
+            size = 10 if crf == webvid.RETRY_CRF else (webvid.MAX_BYTES + 1 if w == 1920 else 10)
+            with dst.open("r+b") as handle:
+                handle.truncate(size)
+
+        with tempfile.TemporaryDirectory() as td, patch.object(webvid, "encode", side_effect=fake_encode):
+            info = webvid.render(src, meta, Path(td), "vid/x", "0" * 10, audio=True)
+        self.assertEqual(set(info["files"]), {"1280", "1920"})
+        self.assertEqual([call for call in calls if call[0] == 1920], [(1920, 6, 22), (1920, 3, 26)])
+
+    def test_duration_retry_can_fit_under_limit(self) -> None:
+        src = self.root / "originals/vid/sdr.mp4"
+        meta = webvid.Meta(duration=15, width=2560, height=1440, transfer="", matrix="bt709",
+                            full_range=False, audio=1, tags={})
+        calls = []
+
+        def fake_encode(_src, _meta, w, _h, maxrate, crf, _audio, dst):
+            calls.append((w, maxrate, crf))
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            dst.write_bytes(b"x")
+            size = 19_000_000 if crf == webvid.RETRY_CRF else (webvid.MAX_BYTES + 1 if w == 2560 else 10)
+            with dst.open("r+b") as handle:
+                handle.truncate(size)
+
+        with tempfile.TemporaryDirectory() as td, patch.object(webvid, "encode", side_effect=fake_encode):
+            info = webvid.render(src, meta, Path(td), "vid/x", "0" * 10, audio=True)
+        self.assertEqual(set(info["files"]), {"1280", "1920", "2560"})
+        self.assertNotIn("omitted", info)
+        retry = [call for call in calls if call[0] == 2560]
+        self.assertEqual(retry[0], (2560, 10, 22))
+        self.assertEqual(retry[1], (2560, webvid.retry_maxrate(15, True, 10), 26))
 
     def test_deploy_prepare_includes_mp4(self) -> None:
         self.git("add", "-A")
