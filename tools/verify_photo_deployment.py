@@ -262,15 +262,36 @@ def wait_and_write(snapshot, origin, output, timeout=900, interval=15):
         time.sleep(min(remaining, max(0, interval - (time.monotonic() - started))))
 
 
+def check_keys(text):
+    """--keys：只檢查、不出圖時要核對的照片鍵（空白或逗號分隔，至少一個、最多 200 個）"""
+    keys = sorted({k for k in re.split(r"[\s,]+", text or "") if k})
+    if not keys or len(keys) > 200:
+        raise ValueError("要檢查的照片鍵數量不對")
+    for key in keys:
+        if not webimg.KEY_RE.fullmatch(key) or key.startswith(webimg.REVIEWS):
+            raise ValueError(f"照片鍵格式不對：{key}")
+    return keys
+
+
 def main():
     parser = argparse.ArgumentParser(description="確認正式圖片站部署並產生證據")
-    parser.add_argument("--base", required=True, help="checkout 時 main 的 commit SHA")
+    parser.add_argument("--base", help="checkout 時 main 的 commit SHA（出圖後確認）；只檢查時省略 = 目前的 HEAD")
+    parser.add_argument("--keys", help="只檢查、不出圖：要核對檔案的照片鍵（空白或逗號分隔）；省略 = 本次出圖的照片")
+    parser.add_argument("--timeout", type=float, default=900, help="等正式圖片站一致的秒數")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     args.output.unlink(missing_ok=True)
-    keys = webimg.batch_keys()  # 出圖失敗的影片不在本次提交裡，不驗證
-    snapshot = prepare(webimg.ROOT, args.base, keys)
-    wait_and_write(snapshot, ORIGIN, args.output)
+    if args.keys is not None:
+        # 只檢查（verify-photos workflow）：目前 main 的 manifest 和正式圖片站一致、這些照片的 WebP／MP4 都讀得到才寫證據
+        keys = check_keys(args.keys)
+        base = args.base or git(webimg.ROOT, "rev-parse", "HEAD").decode().strip()
+    else:
+        if not args.base:
+            raise ValueError("出圖後確認要給 --base")
+        keys = webimg.batch_keys()  # 出圖失敗的影片不在本次提交裡，不驗證
+        base = args.base
+    snapshot = prepare(webimg.ROOT, base, keys)
+    wait_and_write(snapshot, ORIGIN, args.output, timeout=args.timeout)
 
 
 if __name__ == "__main__":
