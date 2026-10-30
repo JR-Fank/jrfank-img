@@ -67,7 +67,12 @@ LQIP = 16
 # before ImageMagick resizes them.  That source conversion changes output bytes,
 # so it is part of the version recipe even though ordinary JPEG/P3 output stays
 # on the existing ImageMagick path.
-RECIPE = f"v3 sizes={','.join(map(str, SIZES))} lanczos unsharp={UNSHARP} webp q={QUALITY} m6 sharpyuv strip srgb hdr-pq-colorsync"
+# v2 與這個 v3 只在 HEIC/HEIF 的 HDR 輸入正規化不同。這兩個字串是既有版本的精確身分，
+# 不要隨下一次配方更新一起改；新配方要另設 RECIPE，讓 legacy 相容規則自然失效。
+LEGACY_V2_RECIPE = "v2 sizes=600,1200,1800,2400,4000 lanczos unsharp=0x0.6+0.5+0.008 webp q=88 m6 sharpyuv strip srgb"
+V2_COMPATIBLE_RECIPE = "v3 sizes=600,1200,1800,2400,4000 lanczos unsharp=0x0.6+0.5+0.008 webp q=88 m6 sharpyuv strip srgb hdr-pq-colorsync"
+RECIPE = V2_COMPATIBLE_RECIPE
+V2_COMPATIBLE_EXTS = {".jpg", ".jpeg", ".png", ".tif", ".tiff", ".webp"}
 LOW_RES = 1600  # 長邊不到這個數，manifest 的 lowRes 為 true（後台改看原圖尺寸，只對數位照片提醒）
 # 照片鍵：<系列>/<id>（系列不能叫 reviews）；評測文章圖只能是三段 reviews/<文章 slug>/<id>（manifest 的 reviews 區）
 REVIEWS = "reviews/"
@@ -246,8 +251,12 @@ def tiers_for(long_edge: int) -> list[int]:
     return out
 
 
+def recipe_version(src_sha: str, recipe: str) -> str:
+    return hashlib.sha256(f"{src_sha}\n{recipe}".encode()).hexdigest()[:10]
+
+
 def photo_version(src_sha: str) -> str:
-    return hashlib.sha256(f"{src_sha}\n{RECIPE}".encode()).hexdigest()[:10]
+    return recipe_version(src_sha, RECIPE)
 
 
 def video_version(video_sha: str) -> str:
@@ -324,11 +333,20 @@ def build_one(key: str, src: Path, src_sha: str, *, frame: Path | None = None, v
     }
 
 
-def up_to_date(info: dict | None, src_sha: str, version: str | None = None) -> bool:
+def up_to_date(info: dict | None, src: Path, src_sha: str, version: str | None = None) -> bool:
     if not info or info.get("sourceSha256") != src_sha:
         return False
-    version = version or photo_version(src_sha)
-    return info.get("version") == version and all((ROOT / t["file"]).exists() for t in info["sizes"].values())
+    expected = version or photo_version(src_sha)
+    matches_current = info.get("version") == expected
+    matches_legacy_v2 = (
+        version is None
+        and RECIPE == V2_COMPATIBLE_RECIPE
+        and src.suffix.lower() in V2_COMPATIBLE_EXTS
+        and info.get("version") == recipe_version(src_sha, LEGACY_V2_RECIPE)
+    )
+    return (matches_current or matches_legacy_v2) and all(
+        (ROOT / t["file"]).exists() for t in info["sizes"].values()
+    )
 
 
 def motion_up_to_date(part: dict | None, version: str) -> bool:
@@ -388,7 +406,7 @@ def build(args: list[str]) -> None:
 
     def run_photo(key: str, src: Path, prev: dict | None) -> dict:
         src_sha = sha256(src)
-        fresh = up_to_date(prev, src_sha) and not {"video", "live"} & set(prev)
+        fresh = up_to_date(prev, src, src_sha) and not {"video", "live"} & set(prev)
         if cached is not None and not fresh:
             sys.exit(f"{key}：快取或已出好的圖不完整，停止重試")
         if cached is not None or (not opts.force and fresh):
@@ -398,7 +416,7 @@ def build(args: list[str]) -> None:
 
     def run_video(key: str, src: Path, prev: dict | None) -> dict:
         src_sha = sha256(src)
-        fresh = up_to_date(prev, src_sha, video_version(src_sha)) and motion_up_to_date(prev.get("video"), video_version(src_sha))
+        fresh = up_to_date(prev, src, src_sha, video_version(src_sha)) and motion_up_to_date(prev.get("video"), video_version(src_sha))
         if cached is not None and not fresh:
             sys.exit(f"{key}：快取或已出好的影片不完整，停止重試")
         if cached is not None or (not opts.force and fresh):
@@ -407,7 +425,7 @@ def build(args: list[str]) -> None:
 
     def run_live(key: str, image: Path, video: Path, prev: dict | None) -> dict:
         img_sha, vid_sha = sha256(image), sha256(video)
-        still = up_to_date(prev, img_sha) and "video" not in prev
+        still = up_to_date(prev, image, img_sha) and "video" not in prev
         live_prev = (prev or {}).get("live")
         moving = bool(live_prev) and live_prev.get("sourceSha256") == vid_sha and motion_up_to_date(live_prev, live_version(vid_sha))
         if cached is not None and not (still and moving):
