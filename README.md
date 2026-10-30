@@ -64,17 +64,17 @@ ColorSync 產生的 PNG 只存在單張照片的暫存目錄，最後的 WebP �
 | 方向 | 依旋轉資訊轉正（ffmpeg autorotate），輸出不帶旋轉標記 |
 | 隱私 | `-map_metadata -1 -map_chapters -1`，只取一條畫面（和一條聲音），`+bitexact`：GPS／位置、裝置、軟體、建立時間和 iPhone 的中繼資料軌都不進輸出 |
 | 聲音 | 影片：AAC 128k 立體聲；Live Photo：無 |
-| 限制 | 超過 15 秒拒絕；2560／3840 超過 20 MB 就用 CRF 26、依片長和 20 MB 預算降低 maxrate 重做一次，仍超過只略過那一檔（其他檔與整張照常完成）。1280／1920 保留既有的半 maxrate 重試配方與版本。`check` 對所有輸出檔（WebP、MP4）設 24 MB 上限（EdgeOne 單檔 25 MB） |
+| 限制 | 超過 30 秒拒絕；每檔都要在 20 MB 內，依片長計算的 maxrate 若低於最低碼率（1280：2M、1920：3.5M、2560：6M、3840：10M），就不出該檔，其他檔與整張照常完成。實際輸出超過 20 MB 時用 CRF 26 重做：1280 用 2M 且一定要出，其他檔用同一份片長預算，仍超過只略過該檔。`check` 對所有輸出檔（WebP、MP4）設 24 MB 上限（EdgeOne 單檔 25 MB） |
 
-**版本**：`webvid.py` 的 `VIDEO_RECIPE` 是既有 1280／1920 的影片版本號；只有影片的條目版本 = `sha256(影片 SHA-256 + RECIPE + VIDEO_RECIPE)` 前 10 碼（封面 WebP 和這兩檔 MP4 共用），Live Photo 的 1280／1920 MP4 用 `sha256(影片 SHA-256 + VIDEO_RECIPE + "live")` 前 10 碼。新增的 2560／3840 另用 `HI_TIER_RECIPE` 算版本，所以替已上線條目補高檔時，原有 1280／1920 的檔名與位元組不變。改影片配方不會動到一般照片。
+**版本**：`webvid.py` 的 `VIDEO_RECIPE` 是既有 1280／1920 的影片版本號；只有影片的條目版本 = `sha256(影片 SHA-256 + RECIPE + VIDEO_RECIPE)` 前 10 碼（封面 WebP 和這兩檔 MP4 共用），Live Photo 的 1280／1920 MP4 用 `sha256(影片 SHA-256 + VIDEO_RECIPE + "live")` 前 10 碼。新增的 2560／3840 另用 `HI_TIER_RECIPE` 算版本，所以替已上線條目補高檔時，原有 1280／1920 的檔名與位元組不變。最低碼率與略過規則另用 `OMISSION_POLICY` 版本，只讓先前缺的檔重新判斷，不改任何已存在 MP4 的版本。改影片配方不會動到一般照片。
 
 **失敗**：太長、太大或讀不了的影片只讓那一張失敗（中文原因印在輸出裡），其他照片照常出圖、manifest 照常更新；`build` 結束時退出碼 3。設了 `JRFANK_BUILD_FAILURES` 就把失敗的鍵寫進那個檔，`publish-photos.py` 和部署確認會跳過它們。Actions 照常提交其他照片，最後一步再讓 run 失敗。
 
-**失敗報告**：設了 `JRFANK_BUILD_FAILURES_JSON` 就另外寫一份 JSON：`{"schema": 1, "failures": [{"key", "kind", "code", "message", "duration"?}]}`。`key` 是照片鍵（不含副檔名），`kind` 是 `live`／`video`，`code` 是 `too-long`（超過 15 秒，帶 `duration` 秒數）、`too-large`（超過 20 MB）、`hdr`（HDR 轉 SDR 失敗）、`unreadable`（讀不了、沒有畫面軌或長度）、`ffmpeg`（其他編碼失敗）、`tool`（找不到 ffmpeg）。有失敗時 Actions 在「出圖」之後馬上存成 artifact **`photo-build-failures`**（保留 30 天，內含 `build-failures.json`），並把表格寫進 job summary；後台讀這個 artifact，在失敗的那一張上顯示中文原因。
+**失敗報告**：設了 `JRFANK_BUILD_FAILURES_JSON` 就另外寫一份 JSON：`{"schema": 1, "failures": [{"key", "kind", "code", "message", "duration"?}]}`。`key` 是照片鍵（不含副檔名），`kind` 是 `live`／`video`，`code` 是 `too-long`（超過 30 秒，帶 `duration` 秒數）、`too-large`（超過 20 MB）、`hdr`（HDR 轉 SDR 失敗）、`unreadable`（讀不了、沒有畫面軌或長度）、`ffmpeg`（其他編碼失敗）、`tool`（找不到 ffmpeg）。有失敗時 Actions 在「出圖」之後馬上存成 artifact **`photo-build-failures`**（保留 30 天，內含 `build-failures.json`），並把表格寫進 job summary；後台讀這個 artifact，在失敗的那一張上顯示中文原因。
 
 **ffmpeg**：Homebrew 核心的 `ffmpeg` 沒有 zimg（沒有 `zscale`），要裝 keg-only 的 **`ffmpeg-full`**（`brew install ffmpeg-full`，不會覆蓋原本的 ffmpeg）。`webvid.py` 依序找 `JRFANK_FFMPEG_DIR`、`/opt/homebrew/opt/ffmpeg-full/bin`、PATH；沒有 `zscale` 時 HDR 影片會以清楚的錯誤失敗，SDR 影片照常。
 
-`stray_files`／`prune`、`check`、`publish-photos.py` 和部署確認都涵蓋 MP4。本機測試：`python3 tools/test_webvid.py`（用 ffmpeg 現做測試片：SDR、10-bit HLG、直拍、帶 GPS、20 秒、HEIC＋MOV、只有 MOV）。
+`stray_files`／`prune`、`check`、`publish-photos.py` 和部署確認都涵蓋 MP4。本機測試：`python3 tools/test_webvid.py`（用 ffmpeg 現做測試片：SDR、10-bit HLG、直拍、帶 GPS、25 秒 4K、超過 30 秒、HEIC＋MOV、只有 MOV）。
 
 ## 品質
 

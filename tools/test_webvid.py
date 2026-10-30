@@ -37,8 +37,9 @@ def probe(path: Path) -> dict:
     return json.loads(out)
 
 
-def clip(dst: Path, size: str, seconds: float, *, audio: bool = True, hdr: bool = False, extra: tuple = ()) -> None:
-    args = ["-f", "lavfi", "-i", f"testsrc2=s={size}:r=30:d={seconds}"]
+def clip(dst: Path, size: str, seconds: float, *, audio: bool = True, hdr: bool = False,
+         fps: int = 30, extra: tuple = ()) -> None:
+    args = ["-f", "lavfi", "-i", f"testsrc2=s={size}:r={fps}:d={seconds}"]
     if audio:
         args += ["-f", "lavfi", "-i", f"sine=f=440:d={seconds}", "-c:a", "aac", "-shortest"]
     if hdr:
@@ -163,7 +164,8 @@ class WebvidBuildTest(unittest.TestCase):
             "-metadata", "com.apple.quicktime.make=Apple", "-metadata", "com.apple.quicktime.model=iPhone 15 Pro",
             "-metadata", "com.apple.quicktime.creationdate=2026-10-01T18:22:11+0800",
             "-metadata", "com.apple.quicktime.software=18.0", "-movflags", "use_metadata_tags"))
-        clip(src / "long.mov", "320x180", 20)                                # 20 秒：要被拒絕
+        clip(src / "25s.mp4", "3840x2160", 25, fps=1)                        # 25 秒 4K：只出品質足夠的檔
+        clip(src / "long.mov", "320x180", 31, fps=1)                         # 超過 30 秒：要被拒絕
         subprocess.run(["magick", "-size", "96x64", "gradient:#203040-#e0d0b0", str(src / "live.heic")], check=True)
         clip(src / "live.mov", "1280x720", 2)                                # 同 id 的 HEIC + MOV = Live Photo
         subprocess.run(["magick", "-size", "96x64", "gradient:#405060-#a0b0c0", str(src / "photo.png")], check=True)
@@ -293,7 +295,7 @@ class WebvidBuildTest(unittest.TestCase):
             self.assertEqual(info["files"]["1920"], low["1920"])
             self.assertEqual(calls, [(2560, 10, 22), (3840, 16, 22)])
 
-    def test_omitted_high_tier_is_bound_to_recipe(self) -> None:
+    def test_omitted_high_tier_is_bound_to_policy(self) -> None:
         meta = webvid.Meta(duration=2, width=3840, height=2160, transfer="", matrix="bt709",
                             full_range=False, audio=None, tags={})
         versions = webimg.motion_versions("a" * 64, meta, live=False)
@@ -306,10 +308,11 @@ class WebvidBuildTest(unittest.TestCase):
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_bytes(b"old")
                 files[str(tier)] = {"file": file, "bytes": 3, "sha256": webvid.sha256(path)}
-            part = {"files": files, "omitted": [2560, 3840], "omittedRecipe": webvid.HI_TIER_RECIPE_ID}
+            part = {"files": files, "omitted": [2560, 3840], "omittedRecipe": webvid.OMISSION_POLICY_ID}
             with patch.object(webimg, "ROOT", root):
                 self.assertTrue(webimg.motion_up_to_date(part, versions))
                 self.assertFalse(webimg.motion_up_to_date({**part, "omittedRecipe": "stale00000"}, versions))
+                self.assertFalse(webimg.motion_up_to_date({**part, "omitted": [1280, 2560, 3840]}, versions))
 
     def test_hlg_is_tone_mapped_to_bt709(self) -> None:
         self.assertEqual(self.photos["vid/hlg"]["colorConverted"], True)
@@ -358,7 +361,7 @@ class WebvidBuildTest(unittest.TestCase):
 
     def test_long_video_fails_alone(self) -> None:
         self.assertEqual(self.build_exit, 3)
-        self.assertIn("vid/long: ✗ 失敗：long.mov：影片長 20.0 秒，超過 15 秒上限", self.build_output)
+        self.assertIn("vid/long: ✗ 失敗：long.mov：影片長 31.0 秒，超過 30 秒上限", self.build_output)
         self.assertNotIn("vid/long", self.photos)
         self.assertEqual(self.failures.read_text(), "vid/long\n")
         # 後台讀的失敗報告（photo-build-failures artifact）：照片鍵、種類、原因代碼、秒數、原訊息
@@ -366,12 +369,24 @@ class WebvidBuildTest(unittest.TestCase):
         self.assertEqual(report["schema"], 1)
         self.assertEqual(len(report["failures"]), 1)
         f = report["failures"][0]
-        self.assertEqual((f["key"], f["kind"], f["code"], f["duration"]), ("vid/long", "video", "too-long", 20.0))
-        self.assertIn("超過 15 秒上限", f["message"])
+        self.assertEqual((f["key"], f["kind"], f["code"], f["duration"]), ("vid/long", "video", "too-long", 31.0))
+        self.assertIn("超過 30 秒上限", f["message"])
         self.assertFalse(list(self.root.glob("vid/long-*")))
         self.assertIn("vid/photo", self.photos)  # 其他照片照常處理
         self.assertNotIn("vid/long", webimg.batch_keys())
         self.assertIn("vid/photo", webimg.batch_keys())
+
+    def test_25_second_video_omits_tiers_below_minimum_bitrate(self) -> None:
+        info = self.photos["vid/25s"]["video"]
+        self.assertEqual((info["duration"], info["width"], info["height"]), (25.0, 1920, 1080))
+        self.assertEqual(set(info["files"]), {"1280", "1920"})
+        self.assertEqual(info["omitted"], [2560, 3840])
+        self.assertEqual(info["omittedRecipe"], webvid.OMISSION_POLICY_ID)
+        self.assertIn("2560 檔要壓在 20 MB 內", self.build_output)
+        self.assertIn("3840 檔要壓在 20 MB 內", self.build_output)
+        for path in self.mp4s("vid/25s"):
+            self.assertLessEqual(path.stat().st_size, webvid.MAX_BYTES)
+            self.assert_clean_h264(path, audio=True)
 
     def test_live_photo_keeps_still_and_drops_audio(self) -> None:
         entry = self.photos["vid/live"]
@@ -459,7 +474,7 @@ class WebvidBuildTest(unittest.TestCase):
             info = webvid.render(src, meta, Path(td), "vid/x", "0" * 10, audio=True)
         self.assertEqual(set(info["files"]), {"1280", "1920", "2560"})
         self.assertEqual(info["omitted"], [3840])
-        self.assertEqual(info["omittedRecipe"], webvid.HI_TIER_RECIPE_ID)
+        self.assertEqual(info["omittedRecipe"], webvid.OMISSION_POLICY_ID)
         self.assertIn("略過這一檔", out.getvalue())
         retry = [call for call in calls if call[0] == 3840]
         self.assertEqual(len(retry), 2)
@@ -467,9 +482,9 @@ class WebvidBuildTest(unittest.TestCase):
         expected = webvid.retry_maxrate(meta.duration, True, 16)
         self.assertEqual(retry[1], (3840, expected, 26))
 
-    def test_legacy_tier_keeps_half_rate_retry(self) -> None:
+    def test_legacy_tier_retries_with_duration_budget(self) -> None:
         src = self.root / "originals/vid/sdr.mp4"
-        meta = webvid.Meta(duration=15, width=1920, height=1080, transfer="", matrix="bt709",
+        meta = webvid.Meta(duration=30, width=1920, height=1080, transfer="", matrix="bt709",
                             full_range=False, audio=1, tags={})
         calls = []
 
@@ -484,7 +499,57 @@ class WebvidBuildTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td, patch.object(webvid, "encode", side_effect=fake_encode):
             info = webvid.render(src, meta, Path(td), "vid/x", "0" * 10, audio=True)
         self.assertEqual(set(info["files"]), {"1280", "1920"})
-        self.assertEqual([call for call in calls if call[0] == 1920], [(1920, 6, 22), (1920, 3, 26)])
+        expected = webvid.retry_maxrate(meta.duration, True, 6)
+        self.assertLess(expected, 6)
+        self.assertEqual([call for call in calls if call[0] == 1920], [(1920, 6, 22), (1920, expected, 26)])
+
+    def test_duration_budget_skips_tiers_below_quality_floor(self) -> None:
+        src = self.root / "originals/vid/sdr.mp4"
+        meta = webvid.Meta(duration=25, width=3840, height=2160, transfer="", matrix="bt709",
+                            full_range=False, audio=1, tags={})
+        calls = []
+
+        def fake_encode(_src, _meta, w, _h, maxrate, crf, _audio, dst):
+            calls.append((w, maxrate, crf))
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            dst.write_bytes(b"x")
+
+        with tempfile.TemporaryDirectory() as td, patch.object(webvid, "encode", side_effect=fake_encode):
+            info = webvid.render(src, meta, Path(td), "vid/x", "0" * 10, audio=True)
+        self.assertEqual(webvid.MINRATE, {1280: 2, 1920: 3.5, 2560: 6, 3840: 10})
+        self.assertEqual(set(info["files"]), {"1280", "1920"})
+        self.assertEqual(info["omitted"], [2560, 3840])
+        self.assertEqual([call[0] for call in calls], [1280, 1920])
+
+    def test_1280_retries_at_floor_and_is_never_omitted(self) -> None:
+        src = self.root / "originals/vid/sdr.mp4"
+        meta = webvid.Meta(duration=30, width=3840, height=2160, transfer="", matrix="bt709",
+                            full_range=False, audio=1, tags={})
+        calls = []
+
+        def fake_encode(_src, _meta, w, _h, maxrate, crf, _audio, dst):
+            calls.append((w, maxrate, crf))
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            dst.write_bytes(b"x")
+            size = webvid.MAX_BYTES + 1 if w == 1280 and crf == webvid.CRF else 10
+            with dst.open("r+b") as handle:
+                handle.truncate(size)
+
+        with tempfile.TemporaryDirectory() as td, patch.object(webvid, "encode", side_effect=fake_encode):
+            info = webvid.render(src, meta, Path(td), "vid/x", "0" * 10, audio=True)
+        self.assertIn("1280", info["files"])
+        self.assertNotIn(1280, info["omitted"])
+        self.assertEqual([call for call in calls if call[0] == 1280], [(1280, 3, 22), (1280, 2, 26)])
+
+    def test_omission_policy_does_not_change_output_versions(self) -> None:
+        meta = webvid.Meta(duration=25, width=3840, height=2160, transfer="", matrix="bt709",
+                            full_range=False, audio=1, tags={})
+        self.assertEqual(webimg.motion_versions("a" * 64, meta, live=False), {
+            1280: "0f25c1c805", 1920: "0f25c1c805", 2560: "a6ca8e3608", 3840: "a6ca8e3608",
+        })
+        self.assertEqual(webimg.motion_versions("a" * 64, meta, live=True), {
+            1280: "9ac17c4cd3", 1920: "9ac17c4cd3", 2560: "32998b8035", 3840: "32998b8035",
+        })
 
     def test_duration_retry_can_fit_under_limit(self) -> None:
         src = self.root / "originals/vid/sdr.mp4"
