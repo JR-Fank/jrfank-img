@@ -419,20 +419,32 @@ def build(args: list[str]) -> None:
         return {**info, "live": live}
 
     def run(item: tuple[str, Path | None, Path | None]) -> tuple[str, dict | None, dict | None]:
+        """單一工作單位的最外層隔離：任何 Exception 都只能讓這一張失敗。"""
         key, image, video = item
-        prev = manifest[section(key)].get(key)
-        if cached is not None:
-            prev = cached.get(section(key), {}).get(key)
-        if video is None:
-            return key, run_photo(key, image, prev), None
         try:
+            prev = manifest[section(key)].get(key)
+            if cached is not None:
+                prev = cached.get(section(key), {}).get(key)
+            if video is None:
+                return key, run_photo(key, image, prev), None
             info = run_live(key, image, video, prev) if image else run_video(key, video, prev)
-        except webvid().VideoError as exc:
-            failure = {"key": key, "kind": "live" if image else "video", "code": exc.code, "message": str(exc)}
-            if exc.duration is not None:
+            return key, info, None
+        except Exception as exc:
+            is_video_error = video is not None and isinstance(exc, webvid().VideoError)
+            if is_video_error:
+                code, message = exc.code, str(exc)
+            else:
+                source = video or image
+                detail = str(exc).strip()
+                kind = type(exc).__name__
+                suffix = f"：{detail}" if detail else ""
+                message = f"{source.name if source else key}：處理這一張時發生未分類錯誤（{kind}{suffix}）"
+                code = "unreadable" if video is not None else "processing"
+            failure = {"key": key, "kind": "live" if image and video else "video" if video else "photo",
+                       "code": code, "message": message}
+            if is_video_error and exc.duration is not None:
                 failure["duration"] = exc.duration
             return key, None, failure
-        return key, info, None
 
     failures: list[dict] = []
     workers = max(1, (os.cpu_count() or 4) // 2)  # 每個 magick 自己也開多執行緒

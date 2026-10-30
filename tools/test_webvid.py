@@ -12,6 +12,7 @@ import tempfile
 import unittest
 from contextlib import redirect_stdout
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -48,6 +49,99 @@ def clip(dst: Path, size: str, seconds: float, *, audio: bool = True, hdr: bool 
     else:
         args += ["-c:v", "libx264", "-pix_fmt", "yuv420p", "-preset", "ultrafast"]
     ff(*args, *extra, str(dst))
+
+
+class WebvidIsolationTest(unittest.TestCase):
+    def test_bad_probe_data_fails_per_item_and_still_writes_results(self) -> None:
+        """幾種壞 ffprobe 輸出和未分類例外同批出現時，正常照片仍完成，報告與 manifest 仍落盤。"""
+        with tempfile.TemporaryDirectory(prefix="webvid-isolation-test-") as td:
+            root = Path(td) / "repo"
+            originals = root / "originals" / "batch"
+            originals.mkdir(parents=True)
+            bad = {
+                "bad-json": "{",
+                "missing-size": json.dumps({
+                    "streams": [{"codec_type": "video", "height": 720}],
+                    "format": {"duration": "1"},
+                }),
+                "bad-rotation": json.dumps({
+                    "streams": [{"codec_type": "video", "width": 1280, "height": 720,
+                                 "side_data_list": [{"rotation": "sideways"}]}],
+                    "format": {"duration": "1"},
+                }),
+                "bad-size": json.dumps({
+                    "streams": [{"codec_type": "video", "width": 0, "height": 720}],
+                    "format": {"duration": "1"},
+                }),
+            }
+            for name in (*bad, "unexpected"):
+                (originals / f"{name}.mov").write_bytes(name.encode())
+            (originals / "good.png").write_bytes(b"good")
+            manifest_path = root / "manifest.json"
+            manifest_path.write_text(json.dumps({"version": 2, "recipe": webimg.RECIPE, "photos": {}, "reviews": {}}))
+            failures = Path(td) / "failures.txt"
+            failures_json = Path(td) / "failures.json"
+
+            def fake_probe_run(args, **_kwargs):
+                name = Path(args[-1]).stem
+                return SimpleNamespace(stdout=bad[name], stderr="", returncode=0)
+
+            def fake_photo(key, src, src_sha, **_kwargs):
+                return {
+                    "version": webimg.photo_version(src_sha), "width": 1, "height": 1, "sizes": {},
+                    "color": "#000000", "blur": "", "original": {"width": 1, "height": 1},
+                    "lowRes": True, "exif": {}, "colorConverted": False,
+                    "source": src.name, "sourceSha256": src_sha,
+                }
+
+            real_build_video = webimg.build_video
+
+            def build_video_with_unexpected(key, src, src_sha):
+                if key == "batch/unexpected":
+                    raise ValueError("測試用意外解析錯誤")
+                return real_build_video(key, src, src_sha)
+
+            out = io.StringIO()
+            with (
+                patch.object(webimg, "ROOT", root),
+                patch.object(webimg, "ORIGINALS", root / "originals"),
+                patch.object(webimg, "MANIFEST", manifest_path),
+                patch.object(webimg, "OVERRIDES", root / "exif-overrides.json"),
+                patch.object(webimg, "build_one", side_effect=fake_photo),
+                patch.object(webimg, "build_video", side_effect=build_video_with_unexpected),
+                patch.object(webvid, "binary", return_value="ffprobe"),
+                patch.object(webvid.subprocess, "run", side_effect=fake_probe_run),
+                patch.dict(os.environ, {
+                    "JRFANK_BUILD_FAILURES": str(failures),
+                    "JRFANK_BUILD_FAILURES_JSON": str(failures_json),
+                }),
+                redirect_stdout(out),
+            ):
+                with self.assertRaises(SystemExit) as stopped:
+                    webimg.build([])
+
+            self.assertEqual(stopped.exception.code, 3)
+            saved = json.loads(manifest_path.read_text())
+            self.assertIn("batch/good", saved["photos"])
+            for name in (*bad, "unexpected"):
+                self.assertNotIn(f"batch/{name}", saved["photos"])
+
+            report = json.loads(failures_json.read_text())
+            self.assertEqual(report["schema"], 1)
+            self.assertEqual([f["key"] for f in report["failures"]], [
+                "batch/bad-json", "batch/bad-rotation", "batch/bad-size", "batch/missing-size", "batch/unexpected",
+            ])
+            messages = {f["key"]: f["message"] for f in report["failures"]}
+            self.assertIn("ffprobe 輸出不是有效的 JSON", messages["batch/bad-json"])
+            self.assertIn("ffprobe 缺少有效的影片尺寸", messages["batch/missing-size"])
+            self.assertIn("ffprobe 的旋轉資訊不合法", messages["batch/bad-rotation"])
+            self.assertIn("ffprobe 的影片尺寸不合法", messages["batch/bad-size"])
+            self.assertIn("處理這一張時發生未分類錯誤", messages["batch/unexpected"])
+            self.assertEqual(failures.read_text().splitlines(), [
+                "batch/bad-json", "batch/bad-rotation", "batch/bad-size", "batch/missing-size", "batch/unexpected",
+            ])
+            self.assertIn("batch/good: 1×1 0 檔", out.getvalue())
+            self.assertIn("5 張失敗（其他照片已照常處理、manifest 已更新）", out.getvalue())
 
 
 @unittest.skipUnless(FFMPEG and shutil.which("magick"), "需要 ffmpeg（建議 brew install ffmpeg-full）和 ImageMagick")
