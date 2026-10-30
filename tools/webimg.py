@@ -269,6 +269,21 @@ def live_version(video_sha: str) -> str:
     return hashlib.sha256(f"{video_sha}\n{webvid().VIDEO_RECIPE}\nlive".encode()).hexdigest()[:10]
 
 
+def hi_video_version(video_sha: str, live: bool) -> str:
+    """高解析度檔另用版本，補檔不會改寫已上線的 1280／1920。"""
+    kind = "live" if live else RECIPE
+    return hashlib.sha256(f"{video_sha}\n{webvid().HI_TIER_RECIPE}\n{kind}".encode()).hexdigest()[:10]
+
+
+def motion_versions(video_sha: str, meta, live: bool) -> dict[int, str]:
+    legacy = live_version(video_sha) if live else video_version(video_sha)
+    high = hi_video_version(video_sha, live)
+    return {
+        tier: legacy if tier in webvid().LEGACY_TIERS else high
+        for tier, _w, _h in webvid().tiers(meta)
+    }
+
+
 def build_one(key: str, src: Path, src_sha: str, *, frame: Path | None = None, version: str | None = None,
               exif: dict | None = None, converted: bool = False) -> dict:
     """出 WebP 五檔。frame：影片的封面畫面（src 是影片時由 build_video 傳入）"""
@@ -349,9 +364,20 @@ def up_to_date(info: dict | None, src: Path, src_sha: str, version: str | None =
     )
 
 
-def motion_up_to_date(part: dict | None, version: str) -> bool:
-    return bool(part) and all(
-        t["file"].endswith(f".{version}.mp4") and (ROOT / t["file"]).exists() for t in part["files"].values()
+def motion_up_to_date(part: dict | None, versions: dict[int, str]) -> bool:
+    if not part or not isinstance(part.get("files"), dict):
+        return False
+    files = part["files"]
+    omitted = {str(t) for t in part.get("omitted", [])}
+    if omitted and part.get("omittedRecipe") != webvid().HI_TIER_RECIPE_ID:
+        return False
+    expected = {str(t) for t in versions}
+    if set(files) | omitted != expected or set(files) & omitted:
+        return False
+    return all(
+        t.get("file", "").endswith(f".{versions[int(tier)]}.mp4")
+        and (ROOT / t["file"]).exists()
+        for tier, t in files.items()
     )
 
 
@@ -359,35 +385,42 @@ def install(tmp: Path, part: dict) -> None:
     """MP4 先出在暫存目錄，整張成功才放進倉庫（失敗不留半套檔）"""
     for t in part["files"].values():
         dst = ROOT / t["file"]
+        built = tmp / t["file"]
+        if not built.exists():  # 沿用的舊檔已在 ROOT，不重寫
+            continue
         dst.parent.mkdir(parents=True, exist_ok=True)
-        dst.write_bytes((tmp / t["file"]).read_bytes())
+        dst.write_bytes(built.read_bytes())
 
 
 def video_exif(meta, key: str) -> dict:
     return exif_fields(None, key, webvid().exif_tags(meta))
 
 
-def build_video(key: str, src: Path, src_sha: str) -> dict:
-    """只有影片：第一格當封面出 WebP 五檔，影片出兩檔 MP4（保留聲音）"""
+def build_video(key: str, src: Path, src_sha: str, meta, prev: dict | None = None) -> dict:
+    """只有影片：第一格當封面出 WebP，影片補齊各檔（保留聲音）。"""
     wv = webvid()
-    meta = wv.probe(src)  # 太長在這裡就失敗，什麼都不出
     version = video_version(src_sha)
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
-        video = wv.render(src, meta, tmp, key, version, audio=True)
-        wv.cover(src, meta, tmp / "cover.ppm")
-        info = build_one(key, src, src_sha, frame=tmp / "cover.ppm", version=version,
-                         exif=video_exif(meta, key), converted=meta.hdr)
+        video = wv.render(src, meta, tmp, key, motion_versions(src_sha, meta, live=False), audio=True,
+                          existing=(prev or {}).get("video"), existing_root=ROOT)
+        if up_to_date(prev, src, src_sha, version):
+            info = {k: v for k, v in prev.items() if k != "video"}
+            info["exif"] = video_exif(meta, key)
+        else:
+            wv.cover(src, meta, tmp / "cover.ppm")
+            info = build_one(key, src, src_sha, frame=tmp / "cover.ppm", version=version,
+                             exif=video_exif(meta, key), converted=meta.hdr)
         install(tmp, video)
     return {**info, "video": video}
 
 
-def build_live(key: str, src: Path, src_sha: str) -> dict:
-    """Live Photo 的動態部分：兩檔無聲 MP4"""
+def build_live(key: str, src: Path, src_sha: str, meta, prev: dict | None = None) -> dict:
+    """Live Photo 的動態部分：補齊各檔無聲 MP4。"""
     wv = webvid()
-    meta = wv.probe(src)
     with tempfile.TemporaryDirectory() as tmp:
-        live = wv.render(src, meta, Path(tmp), key, live_version(src_sha), audio=False)
+        live = wv.render(src, meta, Path(tmp), key, motion_versions(src_sha, meta, live=True), audio=False,
+                         existing=prev, existing_root=ROOT)
         install(Path(tmp), live)
     return {**live, "source": src.name, "sourceSha256": src_sha}
 
@@ -416,24 +449,32 @@ def build(args: list[str]) -> None:
 
     def run_video(key: str, src: Path, prev: dict | None) -> dict:
         src_sha = sha256(src)
-        fresh = up_to_date(prev, src, src_sha, video_version(src_sha)) and motion_up_to_date(prev.get("video"), video_version(src_sha))
+        meta = webvid().probe(src)
+        versions = motion_versions(src_sha, meta, live=False)
+        fresh = up_to_date(prev, src, src_sha, video_version(src_sha)) and motion_up_to_date((prev or {}).get("video"), versions)
         if cached is not None and not fresh:
             sys.exit(f"{key}：快取或已出好的影片不完整，停止重試")
         if cached is not None or (not opts.force and fresh):
-            return {**prev, "exif": video_exif(webvid().probe(src), key)}
-        return build_video(key, src, src_sha)
+            return {**prev, "exif": video_exif(meta, key)}
+        # 只在同一支原片补档时沿用旧 MP4；换原片或 --force 都完整重出。
+        reusable = prev if not opts.force and (prev or {}).get("sourceSha256") == src_sha else None
+        return build_video(key, src, src_sha, meta, reusable)
 
     def run_live(key: str, image: Path, video: Path, prev: dict | None) -> dict:
         img_sha, vid_sha = sha256(image), sha256(video)
         still = up_to_date(prev, image, img_sha) and "video" not in prev
         live_prev = (prev or {}).get("live")
-        moving = bool(live_prev) and live_prev.get("sourceSha256") == vid_sha and motion_up_to_date(live_prev, live_version(vid_sha))
+        meta = webvid().probe(video)
+        versions = motion_versions(vid_sha, meta, live=True)
+        moving = bool(live_prev) and live_prev.get("sourceSha256") == vid_sha and motion_up_to_date(live_prev, versions)
         if cached is not None and not (still and moving):
             sys.exit(f"{key}：快取或已出好的 Live Photo 不完整，停止重試")
         reuse = cached is not None or not opts.force
         info = {k: v for k, v in prev.items() if k != "live"} if reuse and still else build_one(key, image, img_sha)
         info["exif"] = exif_fields(image, key)
-        live = live_prev if reuse and moving else build_live(key, video, vid_sha)
+        # Live 的影片原档身份在 live.sourceSha256；换片或 --force 不能继承旧档／跳档记录。
+        reusable_motion = live_prev if not opts.force and (live_prev or {}).get("sourceSha256") == vid_sha else None
+        live = live_prev if reuse and moving else build_live(key, video, vid_sha, meta, reusable_motion)
         return {**info, "live": live}
 
     def run(item: tuple[str, Path | None, Path | None]) -> tuple[str, dict | None, dict | None]:

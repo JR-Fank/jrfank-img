@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """影片與 Live Photo 動態部分的 MP4 出片（ffmpeg／ffprobe）。webimg.py 遇到影片原檔才載入這個檔。
 
-  - 長邊 1280 / 1920 兩檔 MP4（原片較小就停在原片尺寸，不放大；寬高取偶數）
-  - H.264 High、yuv420p、CRF 22、preset slow；maxrate 1280 檔 3M、1920 檔 6M（bufsize 兩倍）；+faststart
+  - 長邊 1280 / 1920 / 2560 / 3840 四檔 MP4（原片較小就停在原片尺寸，不放大；寬高取偶數）
+  - H.264 High、yuv420p、CRF 22、preset slow；maxrate 3M / 6M / 10M / 16M（bufsize 兩倍）；+faststart
   - 依旋轉資訊轉正（ffmpeg autorotate），輸出不帶旋轉標記
   - -map_metadata -1 -map_chapters -1，只取一條畫面（和一條聲音）：GPS、裝置等中繼資料和 iPhone 的中繼資料軌都不進輸出
   - HDR（color_transfer 是 arib-std-b67 或 smpte2084）用 zscale + tonemap（hable）轉成 BT.709 SDR
   - 聲音：影片保留（AAC 128k 立體聲），Live Photo 一律去掉
-  - 超過 15 秒拒絕；任一輸出超過 20 MB 就用更低碼率重做一次，仍超過就失敗
+  - 超過 15 秒拒絕；任一輸出超過 20 MB 就依片長降低碼率重做一次，仍超過就略過該檔
 """
 from __future__ import annotations
 
@@ -22,22 +22,33 @@ from functools import cache
 from pathlib import Path
 
 VIDEO_EXTS = {".mov", ".mp4", ".m4v"}
-TIERS = (1280, 1920)
+TIERS = (1280, 1920, 2560, 3840)
+LEGACY_TIERS = (1280, 1920)
 CRF = 22
 PRESET = "slow"
-MAXRATE = {1280: 3, 1920: 6}  # Mbit/s；bufsize 兩倍
-RETRY_CRF = 26  # 超過 20 MB 時重做一次：CRF 26、maxrate 減半
+MAXRATE = {1280: 3, 1920: 6, 2560: 10, 3840: 16}  # Mbit/s；bufsize 兩倍
+RETRY_CRF = 26
+RETRY_SIZE_MARGIN = 0.95  # 容器、音訊和碼率控制誤差預留 5%
 AUDIO_BITRATE = "128k"
 MAX_SECONDS = 15
 MAX_BYTES = 20_000_000
 HDR_TRANSFERS = {"arib-std-b67", "smpte2084"}
 THREADS = 4  # x264 的結果和執行緒數有關，固定下來，本機和 Actions 重出逐位元組相同
 # 改了上面任何一項（或 ffmpeg 指令）就改這個字串：只有影片和 Live Photo 的版本跟著變，照片不受影響。
+# 1280／1920 的既有檔名和位元組要保持不變；這個 v1 字串不可因新增高解析度檔而改。
 VIDEO_RECIPE = (
-    f"video-v1 mp4 sizes={','.join(map(str, TIERS))} h264 high yuv420p crf={CRF} preset={PRESET} "
-    f"maxrate={','.join(f'{t}:{r}M' for t, r in MAXRATE.items())} bufsize=2x faststart threads={THREADS} "
+    f"video-v1 mp4 sizes={','.join(map(str, LEGACY_TIERS))} h264 high yuv420p crf={CRF} preset={PRESET} "
+    f"maxrate={','.join(f'{t}:{MAXRATE[t]}M' for t in LEGACY_TIERS)} bufsize=2x faststart threads={THREADS} "
     f"strip hdr=zscale-hable-bt709 audio=aac{AUDIO_BITRATE} retry=crf{RETRY_CRF}-half cover=first-frame"
 )
+# 新增檔位另用一個版本配方，避免補檔時改寫已上線的 1280／1920 檔。
+HI_TIER_RECIPE = (
+    f"video-hi-v1 mp4 sizes=2560,3840 h264 high yuv420p crf={CRF} preset={PRESET} "
+    f"maxrate=2560:{MAXRATE[2560]}M,3840:{MAXRATE[3840]}M bufsize=2x faststart threads={THREADS} "
+    f"strip hdr=zscale-hable-bt709 audio=aac{AUDIO_BITRATE} "
+    f"retry=crf{RETRY_CRF}-duration-budget-{RETRY_SIZE_MARGIN:g} cover=unchanged"
+)
+HI_TIER_RECIPE_ID = hashlib.sha256(HI_TIER_RECIPE.encode()).hexdigest()[:10]
 
 
 class VideoError(RuntimeError):
@@ -235,17 +246,19 @@ def exif_tags(meta: Meta) -> dict[str, str]:
 
 
 def tiers(meta: Meta) -> list[tuple[int, int, int]]:
-    """[(檔, 寬, 高)]：比原片小的全做，再加一個停在原片尺寸的；不放大，寬高取偶數"""
+    """[(檔, 寬, 高)]：舊檔沿用既有停在原片尺寸規則；新高檔只在原片夠大時才做。"""
     if meta.width <= 0 or meta.height <= 0:
         raise VideoError("影片尺寸不合法，這一張不出片", "unreadable")
     long = max(meta.width, meta.height)
     out = []
     for t in TIERS:
+        if t not in LEGACY_TIERS and long < t:
+            continue
         scale = min(1.0, t / long)
         w = max(2, round(meta.width * scale / 2) * 2)
         h = max(2, round(meta.height * scale / 2) * 2)
         out.append((t, w, h))
-        if t >= long:
+        if t in LEGACY_TIERS and t >= long:
             break
     return out
 
@@ -317,27 +330,64 @@ def sha256(p: Path) -> str:
     return h.hexdigest()
 
 
-def render(src: Path, meta: Meta, out_dir: Path, key: str, version: str, audio: bool) -> dict:
-    """出兩檔 MP4 到 out_dir/<key>-<檔>.<版本>.mp4，回傳 manifest 的 video／live 欄位"""
+def retry_maxrate(duration: float, audio: bool, configured: float) -> float:
+    """按片長把總輸出預算壓在 20 MB 內；音訊與容器開銷先從預算扣除。"""
+    audio_mbps = 0.128 if audio else 0.0
+    budget_mbps = MAX_BYTES * 8 * RETRY_SIZE_MARGIN / duration / 1_000_000
+    return max(0.1, min(configured, budget_mbps - audio_mbps))
+
+
+def render(
+    src: Path,
+    meta: Meta,
+    out_dir: Path,
+    key: str,
+    versions: str | dict[int, str],
+    audio: bool,
+    existing: dict | None = None,
+    existing_root: Path | None = None,
+) -> dict:
+    """出 MP4，回傳 manifest 的 video／live 欄位；可沿用已存在且版本相符的舊檔。"""
     keep_audio = audio and meta.audio is not None
     files = {}
+    omitted = []
     last = (0, 0)
     for tier, w, h in tiers(meta):
+        version = versions[tier] if isinstance(versions, dict) else versions
         file = f"{key}-{tier}.{version}.mp4"
+        if (existing or {}).get("omittedRecipe") == HI_TIER_RECIPE_ID and tier in (existing or {}).get("omitted", []):
+            omitted.append(tier)
+            continue
+        old = (existing or {}).get("files", {}).get(str(tier))
+        old_path = existing_root / old["file"] if existing_root is not None and old else None
+        if old and old.get("file") == file and old_path is not None and old_path.is_file():
+            files[str(tier)] = old
+            last = (w, h)
+            continue
         dst = out_dir / file
         dst.parent.mkdir(parents=True, exist_ok=True)
         encode(src, meta, w, h, MAXRATE[tier], CRF, keep_audio, dst)
         if dst.stat().st_size > MAX_BYTES:
-            encode(src, meta, w, h, MAXRATE[tier] / 2, RETRY_CRF, keep_audio, dst)
+            retry_rate = (MAXRATE[tier] / 2 if tier in LEGACY_TIERS
+                          else retry_maxrate(meta.duration, keep_audio, MAXRATE[tier]))
+            encode(src, meta, w, h, retry_rate, RETRY_CRF, keep_audio, dst)
             if dst.stat().st_size > MAX_BYTES:
                 mb = dst.stat().st_size / 1e6
-                raise VideoError(f"{src.name}：{tier} 檔降低碼率重做後仍有 {mb:.1f} MB，超過 {MAX_BYTES // 1_000_000} MB 上限，這一張不出片", "too-large")
+                print(f"{src.name}：{tier} 檔降低碼率重做後仍有 {mb:.1f} MB，超過 "
+                      f"{MAX_BYTES // 1_000_000} MB 上限，略過這一檔")
+                dst.unlink(missing_ok=True)
+                omitted.append(tier)
+                continue
         files[str(tier)] = {"file": file, "bytes": dst.stat().st_size, "sha256": sha256(dst)}
         last = (w, h)
+    if not files:
+        raise VideoError(f"{src.name}：所有檔位都超過 {MAX_BYTES // 1_000_000} MB 上限，這一張不出片", "too-large")
     return {
         "duration": round(meta.duration, 3),
         "width": last[0],
         "height": last[1],
         "audio": keep_audio,
         "files": files,
+        **({"omitted": omitted} if omitted else {}),
+        **({"omittedRecipe": HI_TIER_RECIPE_ID} if omitted else {}),
     }
