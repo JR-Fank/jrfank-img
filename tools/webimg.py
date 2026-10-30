@@ -369,7 +369,9 @@ def motion_up_to_date(part: dict | None, versions: dict[int, str]) -> bool:
         return False
     files = part["files"]
     omitted = {str(t) for t in part.get("omitted", [])}
-    if omitted and part.get("omittedRecipe") != webvid().HI_TIER_RECIPE_ID:
+    if "1280" in omitted:
+        return False
+    if omitted and part.get("omittedRecipe") != webvid().OMISSION_POLICY_ID:
         return False
     expected = {str(t) for t in versions}
     if set(files) | omitted != expected or set(files) & omitted:
