@@ -93,7 +93,7 @@ class PublishRaceTest(unittest.TestCase):
                     output = log.read()
                 self.assertIn("CONFLICT (content): Merge conflict in manifest.json", output)
 
-            self.assertIn("重試（1/3）", output)
+            self.assertIn("重試（1/5）", output)
             self.assertIn("推送成功（第 2 次嘗試）", output)
             final = json.loads(run(root, "git", f"--git-dir={origin}", "show", "main:manifest.json"))
             area = "reviews" if push_race else "photos"

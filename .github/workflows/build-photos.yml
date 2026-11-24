@@ -22,9 +22,9 @@ on:
   repository_dispatch:
     types: [build-photos]
 
-# 一次只跑一個；排隊的事件 SHA 仍可能過期，所以 checkout 明確取最新 main。
+# 按批次分開排隊（手動觸發共用 manual），避免連續上傳多批時第 3 批把排隊中的第 2 批取消；多批同時完成時由 publish-photos.py 在最新 main 上樂觀重試合併。
 concurrency:
-  group: build-photos
+  group: build-photos-${{ github.event.client_payload.batch || 'manual' }}
   cancel-in-progress: false
 
 permissions:
@@ -50,7 +50,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
-          fetch-depth: 0
+          fetch-depth: 20
 
       - name: 記錄建置起點
         run: echo "PHOTO_BUILD_BASE=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
@@ -72,7 +72,7 @@ jobs:
 
       - name: 下載原圖
         run: |
-          set -euo pipefail
+          set -efuo pipefail
           mkdir -p "$JRFANK_ORIGINALS"
           if [ -z "$PHOTOS" ]; then echo "沒有指定照片"; exit 1; fi
           if [ "$PHOTOS" = all ]; then
@@ -123,7 +123,7 @@ jobs:
 
       - name: 出圖
         run: |
-          set -euo pipefail
+          set -efuo pipefail
           keys=()
           if [ -z "${BUILD_ALL:-}" ]; then for k in $PHOTOS; do keys+=("${k%.*}"); done; fi
           flags=()

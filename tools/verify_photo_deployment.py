@@ -133,7 +133,48 @@ def prepare(root, base, keys):
         if not path.is_file() or path.stat().st_size != size or webimg.sha256(path) != digest:
             raise ValueError(f"{name}：本機檔案與 manifest 不符")
     return {"manifestSha256": hashlib.sha256(raw).hexdigest(), "sourceSha": source_sha,
-            "photos": versions, "targets": targets, "assets": assets}
+            "photos": versions, "targets": targets, "assets": assets,
+            "root": root, "base": base, "keys": list(keys)}
+
+
+def is_shallow(root):
+    return git(root, "rev-parse", "--is-shallow-repository").decode().strip() == "true"
+
+
+def maybe_advance_snapshot(snapshot):
+    """多批同時出圖時，若較晚的一批已推送新 main 並先部署到圖片站，將驗證快照推進至最新 origin/main。"""
+    root = snapshot.get("root")
+    base = snapshot.get("base")
+    keys = snapshot.get("keys")
+    if not root or not base or not keys:
+        return None
+    if subprocess.run(["git", "remote", "get-url", "origin"], cwd=root, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode != 0:
+        return None
+    if subprocess.run(["git", "fetch", "-q", "origin", "+refs/heads/main:refs/remotes/origin/main"], cwd=root).returncode != 0:
+        return None
+    if is_shallow(root) and subprocess.run(["git", "merge-base", "--is-ancestor", snapshot["sourceSha"], "origin/main"], cwd=root).returncode != 0:
+        subprocess.run(["git", "fetch", "-q", "--deepen=50", "origin", "+refs/heads/main:refs/remotes/origin/main"], cwd=root)
+        if is_shallow(root) and subprocess.run(["git", "merge-base", "--is-ancestor", snapshot["sourceSha"], "origin/main"], cwd=root).returncode != 0:
+            subprocess.run(["git", "fetch", "-q", "--unshallow", "origin", "+refs/heads/main:refs/remotes/origin/main"], cwd=root)
+    remote_sha = git(root, "rev-parse", "origin/main").decode().strip()
+    if remote_sha == snapshot["sourceSha"]:
+        return None
+    if subprocess.run(["git", "merge-base", "--is-ancestor", snapshot["sourceSha"], remote_sha], cwd=root).returncode != 0:
+        return None
+    try:
+        remote_manifest = json.loads(git(root, "show", f"{remote_sha}:manifest.json"))
+    except (subprocess.CalledProcessError, ValueError):
+        return None
+    for key, (section, info) in snapshot["targets"].items():
+        entry = remote_manifest.get(section, {}).get(key)
+        if not isinstance(entry, dict) or entry.get("version") != info.get("version"):
+            return None
+    if subprocess.run(["git", "checkout", "-q", "--detach", remote_sha], cwd=root).returncode != 0:
+        return None
+    try:
+        return prepare(root, base, keys)
+    except ValueError:
+        return None
 
 
 def request(origin, path, method, deadline):
@@ -255,6 +296,12 @@ def wait_and_write(snapshot, origin, output, timeout=900, interval=15):
             return proof
         except (NotReady, OSError, http.client.HTTPException) as exc:
             detail = str(exc) if isinstance(exc, NotReady) else type(exc).__name__
+            if isinstance(exc, NotReady) and "不一致" in detail:
+                advanced = maybe_advance_snapshot(snapshot)
+                if advanced is not None:
+                    snapshot = advanced
+                    print(f"偵測到新批次已推送 main（{snapshot['sourceSha'][:10]}），同步更新驗證快照後重試", flush=True)
+                    continue
             print(f"圖片部署尚未就緒：{detail}", flush=True)
         remaining = deadline - time.monotonic()
         if remaining <= 0:
