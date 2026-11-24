@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""jrfank.cc 照片網頁檔產生器（只用標準庫 + ImageMagick 7 的 magick 指令；macOS 的 HDR HEIC 另用系統 ColorSync/sips，並用系統的 sRGB 描述檔）。
+"""jrfank.cc 照片網頁檔產生器（只用標準庫 + ImageMagick 7 的 magick 指令；macOS 的 HDR HEIC 另用系統 ColorSync/sips，並用系統的 Display P3／sRGB 描述檔）。
 
 原圖不進這個倉庫：本機在 ~/Code/jrfank-site-assets/photo-originals/<系列>/<照片 id>.<副檔名>（R2 私有 bucket 的快取），
 GitHub Actions 從 R2 下載到暫存目錄（用環境變數 JRFANK_ORIGINALS 指過去）。
@@ -8,7 +8,7 @@ GitHub Actions 從 R2 下載到暫存目錄（用環境變數 JRFANK_ORIGINALS �
 
   - 長邊 600 / 1200 / 1800 / 2400 / 4000 五檔 WebP（quality 88、sharp YUV、method 6）
   - Lanczos 縮小後輕微銳化（-unsharp 0x0.6+0.5+0.008）；原圖不夠大就停在原圖尺寸，不放大，多出來的檔不做
-  - 有內嵌色彩描述檔（Display P3 等）就轉成 sRGB；沒有的當作 sRGB；去掉全部 metadata（EXIF、GPS、XMP、ICC）
+  - 廣色域原圖（Display P3、Adobe RGB、HDR HEIC 等）保留 Display P3 色域並內嵌精簡的系統 Display P3 ICC（536 B）；sRGB 或無描述檔原圖維持 sRGB；去掉全部其他 metadata（EXIF、GPS、XMP）
   - 按 EXIF 方向轉正
   - 透明背景（PNG 等，有 alpha 而且不是全不透明）保留透明，manifest 記 transparent: true（網站不在它底下墊占位）；
     有 alpha 但全不透明的拿掉 alpha。沒有 alpha 的原圖指令和以前完全一樣（所以配方字串沒變）
@@ -53,6 +53,7 @@ ORIGINALS = Path(os.environ.get("JRFANK_ORIGINALS", Path.home() / "Code/jrfank-s
 MANIFEST = ROOT / "manifest.json"
 OVERRIDES = ROOT / "exif-overrides.json"
 SRGB = "/System/Library/ColorSync/Profiles/sRGB Profile.icc"
+DISPLAY_P3 = "/System/Library/ColorSync/Profiles/Display P3.icc"
 EXTS = {".jpg", ".jpeg", ".png", ".tif", ".tiff", ".heic", ".heif", ".webp"}
 VIDEO_EXTS = {".mov", ".mp4", ".m4v"}  # 和 webvid.VIDEO_EXTS 一樣（這裡不載入 webvid）
 MAX_OUTPUT_BYTES = 24_000_000  # check 的單檔上限（EdgeOne 單檔上限 25 MB）
@@ -71,7 +72,9 @@ LQIP = 16
 # 不要隨下一次配方更新一起改；新配方要另設 RECIPE，讓 legacy 相容規則自然失效。
 LEGACY_V2_RECIPE = "v2 sizes=600,1200,1800,2400,4000 lanczos unsharp=0x0.6+0.5+0.008 webp q=88 m6 sharpyuv strip srgb"
 V2_COMPATIBLE_RECIPE = "v3 sizes=600,1200,1800,2400,4000 lanczos unsharp=0x0.6+0.5+0.008 webp q=88 m6 sharpyuv strip srgb hdr-pq-colorsync"
-RECIPE = V2_COMPATIBLE_RECIPE
+V3_SRGB_RECIPE = V2_COMPATIBLE_RECIPE
+DISPLAY_P3_RECIPE = "v4 sizes=600,1200,1800,2400,4000 lanczos unsharp=0x0.6+0.5+0.008 webp q=88 m6 sharpyuv strip display-p3 hdr-pq-colorsync"
+RECIPE = DISPLAY_P3_RECIPE
 V2_COMPATIBLE_EXTS = {".jpg", ".jpeg", ".png", ".tif", ".tiff", ".webp"}
 LOW_RES = 1600  # 長邊不到這個數，manifest 的 lowRes 為 true（後台改看原圖尺寸，只對數位照片提醒）
 # 照片鍵：<系列>/<id>（系列不能叫 reviews）；評測文章圖只能是三段 reviews/<文章 slug>/<id>（manifest 的 reviews 區）
@@ -137,25 +140,36 @@ def is_hdr_heic(src: Path) -> bool:
 
 def sips_to_srgb(src: Path, dst: Path) -> None:
     """ColorSync-match an HDR HEIC to the local sRGB profile as a PNG."""
+    sips_match_profile(src, dst, SRGB, "sRGB")
+
+
+def sips_to_display_p3(src: Path, dst: Path) -> None:
+    """ColorSync-match an HDR HEIC to Display P3 (falling back to sRGB if missing) as a PNG."""
+    profile = DISPLAY_P3 if Path(DISPLAY_P3).is_file() else SRGB
+    label = "Display P3" if profile == DISPLAY_P3 else "sRGB"
+    sips_match_profile(src, dst, profile, label)
+
+
+def sips_match_profile(src: Path, dst: Path, profile: str, label: str) -> None:
     try:
         subprocess.run(
-            ["sips", "-m", SRGB, "-s", "format", "png", str(src), "--out", str(dst)],
+            ["sips", "-m", profile, "-s", "format", "png", str(src), "--out", str(dst)],
             check=True,
             capture_output=True,
             text=True,
         )
     except FileNotFoundError as exc:
-        raise RuntimeError(f"HDR HEIC 需要 macOS sips 才能轉成 sRGB：{src}") from exc
+        raise RuntimeError(f"HDR HEIC 需要 macOS sips 才能轉成 {label}：{src}") from exc
     except subprocess.CalledProcessError as exc:
-        raise RuntimeError(f"HDR HEIC 轉 sRGB 失敗：{src}") from exc
+        raise RuntimeError(f"HDR HEIC 轉 {label} 失敗：{src}") from exc
 
 
 def prepare_input(src: Path, tmp: Path) -> tuple[Path, bool]:
     """Return the source used by ImageMagick and whether ColorSync converted it."""
     if not is_hdr_heic(src):
         return src, False
-    dst = tmp / "input-srgb.png"
-    sips_to_srgb(src, dst)
+    dst = tmp / "input-p3.png"
+    sips_to_display_p3(src, dst)
     return dst, True
 
 
@@ -260,8 +274,8 @@ def photo_version(src_sha: str) -> str:
 
 
 def video_version(video_sha: str) -> str:
-    """只有影片的條目：封面 WebP 和 MP4 共用，照片配方或影片配方改了都會變"""
-    return hashlib.sha256(f"{video_sha}\n{RECIPE}\n{webvid().VIDEO_RECIPE}".encode()).hexdigest()[:10]
+    """只有影片的條目：封面 PPM 已由 webvid 正規化為 BT.709/sRGB，釘住 V3_SRGB_RECIPE 免得照片改 P3 時重出既有 MP4"""
+    return hashlib.sha256(f"{video_sha}\n{V3_SRGB_RECIPE}\n{webvid().VIDEO_RECIPE}".encode()).hexdigest()[:10]
 
 
 def live_version(video_sha: str) -> str:
@@ -271,7 +285,7 @@ def live_version(video_sha: str) -> str:
 
 def hi_video_version(video_sha: str, live: bool) -> str:
     """高解析度檔另用版本，補檔不會改寫已上線的 1280／1920。"""
-    kind = "live" if live else RECIPE
+    kind = "live" if live else V3_SRGB_RECIPE
     return hashlib.sha256(f"{video_sha}\n{webvid().HI_TIER_RECIPE}\n{kind}".encode()).hexdigest()[:10]
 
 
@@ -290,7 +304,8 @@ def build_one(key: str, src: Path, src_sha: str, *, frame: Path | None = None, v
     version = version or photo_version(src_sha)
     pic = frame or src
     w0, h0 = oriented_dimensions(pic)
-    icc = bool(magick("identify", "-format", "%[profile:icc]", f"{pic}[0]").strip())
+    icc_name = magick("identify", "-format", "%[profile:icc]", f"{pic}[0]").strip()
+    icc = bool(icc_name)
     # 透明：有 alpha 而且不是全不透明（PNG 截圖、去背產品圖）。有 alpha 但全不透明的，alpha 拿掉
     alpha = magick("identify", "-format", "%A", f"{pic}[0]").strip() not in ("Undefined", "")
     transparent = alpha and magick("identify", "-format", "%[opaque]", f"{pic}[0]").strip() != "True"
@@ -298,27 +313,32 @@ def build_one(key: str, src: Path, src_sha: str, *, frame: Path | None = None, v
     tiers = tiers_for(max(w0, h0))
     with tempfile.TemporaryDirectory() as tmp:
         input_src, hdr = prepare_input(pic, Path(tmp))
+        wide_gamut = hdr or (icc and "srgb" not in icc_name.casefold())
+        use_p3 = frame is None and wide_gamut and Path(DISPLAY_P3).is_file()
+        target_profile = DISPLAY_P3 if use_p3 else SRGB
         args = [f"{input_src}[0]", "-auto-orient"]
         if alpha and not transparent:
             args += ["-alpha", "off"]
-        if icc:
-            args += ["-profile", SRGB]
+        if icc or hdr:
+            args += ["-profile", target_profile]
         args += ["-colorspace", "sRGB", "-write", "mpr:o", "+delete"]
         # 透明的只銳化顏色，不銳化 alpha（邊緣不出光暈）；沒有 alpha 的指令和以前一樣
         sharpen = ["-channel", "RGB", "-unsharp", UNSHARP, "+channel"] if transparent else ["-unsharp", UNSHARP]
+        tier_profile = ["-strip", "-profile", DISPLAY_P3] if use_p3 else ["-strip"]
         for s in tiers:
             args += [
-                "(", "mpr:o", "-filter", "Lanczos", "-resize", f"{s}x{s}>", *sharpen, "-strip",
+                "(", "mpr:o", "-filter", "Lanczos", "-resize", f"{s}x{s}>", *sharpen, *tier_profile,
                 "-quality", str(QUALITY), "-define", "webp:method=6", "-define", "webp:use-sharp-yuv=true",
                 "-write", f"{tmp}/{s}.webp", "+delete", ")",
             ]
-        # 占位：平均色、16px 預覽（從最小一檔縮，已是 sRGB；透明的先鋪白底）
+        # 占位：平均色、16px 預覽（P3 先轉回 sRGB 以免 CSS hex 偏色並省下 LQIP 的 536 B ICC；透明的先鋪白底）
         args += ["null:"]
         magick(*args)
         small = f"{tmp}/{tiers[0]}.webp"
+        to_srgb = ["-profile", SRGB] if use_p3 else []
         flat = ["-background", "white", "-flatten"] if transparent else []
-        color = magick(small, *flat, "-scale", "1x1!", "-format", "#%[hex:p{0,0}]", "info:").strip().lower()[:7]
-        magick(small, *flat, "-resize", f"{LQIP}x{LQIP}>", "-strip", "-quality", "50", "-define", "webp:method=6", f"{tmp}/lqip.webp")
+        color = magick(small, *to_srgb, *flat, "-scale", "1x1!", "-format", "#%[hex:p{0,0}]", "info:").strip().lower()[:7]
+        magick(small, *to_srgb, *flat, "-resize", f"{LQIP}x{LQIP}>", "-strip", "-quality", "50", "-define", "webp:method=6", f"{tmp}/lqip.webp")
         blur = "data:image/webp;base64," + base64.b64encode(Path(f"{tmp}/lqip.webp").read_bytes()).decode()
 
         sizes = {}
@@ -341,6 +361,7 @@ def build_one(key: str, src: Path, src_sha: str, *, frame: Path | None = None, v
         "original": {"width": w0, "height": h0},
         "lowRes": max(w0, h0) < LOW_RES,
         **({"transparent": True} if transparent else {}),
+        **({"colorSpace": "display-p3"} if use_p3 else {}),
         "exif": exif if exif is not None else exif_fields(src, key),
         "colorConverted": icc or hdr or converted,
         "source": src.name,
@@ -353,13 +374,14 @@ def up_to_date(info: dict | None, src: Path, src_sha: str, version: str | None =
         return False
     expected = version or photo_version(src_sha)
     matches_current = info.get("version") == expected
+    # 既有已上線的 v3（sRGB）與相容的 v2 作品在未加 --force 時維持有效，不強迫一次性重出 0.9 GB 舊檔；新上傳與 --force 一律套用 v4 Display P3。
+    matches_legacy_v3 = version is None and info.get("version") == recipe_version(src_sha, V3_SRGB_RECIPE)
     matches_legacy_v2 = (
         version is None
-        and RECIPE == V2_COMPATIBLE_RECIPE
         and src.suffix.lower() in V2_COMPATIBLE_EXTS
         and info.get("version") == recipe_version(src_sha, LEGACY_V2_RECIPE)
     )
-    return (matches_current or matches_legacy_v2) and all(
+    return (matches_current or matches_legacy_v3 or matches_legacy_v2) and all(
         (ROOT / t["file"]).exists() for t in info["sizes"].values()
     )
 
@@ -519,7 +541,7 @@ def build(args: list[str]) -> None:
             old = photos.get(key, {}).get("version")
             old_motion = (photos.get(key, {}).get("live") or {}).get("files")
             photos[key] = info
-            flag = "（已轉 sRGB）" if info["colorConverted"] else ""
+            flag = "（Display P3）" if info.get("colorSpace") == "display-p3" else ("（已轉 sRGB）" if info["colorConverted"] else "")
             low = "（清晰度不足）" if info["lowRes"] and section(key) == "photos" else ""
             alpha = "（透明）" if info.get("transparent") else ""
             state = "沒變" if old == info["version"] else f"新版本 {info['version']}"
