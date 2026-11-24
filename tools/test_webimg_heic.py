@@ -53,15 +53,15 @@ class WebimgHEICTest(unittest.TestCase):
                     Path(args[-1]).write_bytes(b"lqip fixture")
                 return ""
 
-            def fake_sips_to_srgb(src_path: Path, dst: Path) -> None:
-                dst.write_bytes(b"temporary srgb png")
+            def fake_sips_to_p3(src_path: Path, dst: Path) -> None:
+                dst.write_bytes(b"temporary p3 png")
 
             with (
                 patch.object(webimg, "ROOT", root),
                 patch.object(webimg, "OVERRIDES", root / "exif-overrides.json"),
                 patch.object(webimg, "sips_property", return_value="Rec. ITU-R BT.2100 PQ"),
                 patch.object(webimg, "magick", side_effect=fake_magick),
-                patch.object(webimg, "sips_to_srgb", side_effect=fake_sips_to_srgb) as convert,
+                patch.object(webimg, "sips_to_display_p3", side_effect=fake_sips_to_p3) as convert,
             ):
                 info = webimg.build_one("fixture/hdr", src, "a" * 64)
 
@@ -69,11 +69,11 @@ class WebimgHEICTest(unittest.TestCase):
             convert.assert_called_once()
             self.assertEqual(convert.call_args.args[0], src)
             converted = convert.call_args.args[1]
-            self.assertTrue(str(converted).endswith("input-srgb.png"))
+            self.assertTrue(str(converted).endswith("input-p3.png"))
             self.assertEqual(profile_results, ["sRGB"])
             render_calls = [args for args in calls if "mpr:o" in args]
             self.assertTrue(render_calls)
-            self.assertTrue(any(any("input-srgb.png[0]" in arg for arg in args) for args in render_calls))
+            self.assertTrue(any(any("input-p3.png[0]" in arg for arg in args) for args in render_calls))
 
     def test_display_p3_does_not_use_sips_conversion(self) -> None:
         src = Path("p3.heic")
@@ -81,7 +81,7 @@ class WebimgHEICTest(unittest.TestCase):
             tmp = Path(td)
             with (
                 patch.object(webimg, "sips_property", return_value="Display P3"),
-                patch.object(webimg, "sips_to_srgb") as convert,
+                patch.object(webimg, "sips_to_display_p3") as convert,
             ):
                 input_src, converted = webimg.prepare_input(src, tmp)
 
@@ -94,7 +94,7 @@ class WebimgHEICTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             with (
                 patch.object(webimg, "sips_property") as prop,
-                patch.object(webimg, "sips_to_srgb") as convert,
+                patch.object(webimg, "sips_to_display_p3") as convert,
             ):
                 input_src, converted = webimg.prepare_input(src, Path(td))
 
@@ -174,6 +174,47 @@ class WebimgHEICTest(unittest.TestCase):
             for tier in info["sizes"].values():
                 self.assertLessEqual(tier["width"], 8)
                 self.assertLessEqual(tier["height"], 12)
+
+    @unittest.skipUnless(shutil.which("magick") and Path(webimg.DISPLAY_P3).is_file(), "requires macOS ImageMagick and Display P3.icc")
+    def test_wide_gamut_photo_embeds_display_p3_and_strips_exif(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td) / "repo"
+            originals = root / "originals" / "fixture"
+            source = originals / "wide.jpg"
+            source.parent.mkdir(parents=True)
+            subprocess.run(
+                [
+                    "magick",
+                    "-size",
+                    "32x24",
+                    "xc:rgb(255,0,0)",
+                    "-profile",
+                    webimg.DISPLAY_P3,
+                    "-set",
+                    "EXIF:Artist",
+                    "PrivateAuthor",
+                    str(source),
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            with (
+                patch.object(webimg, "ROOT", root),
+                patch.object(webimg, "ORIGINALS", root / "originals"),
+                patch.object(webimg, "MANIFEST", root / "manifest.json"),
+                patch.object(webimg, "OVERRIDES", root / "exif-overrides.json"),
+            ):
+                webimg.build(["fixture/wide"])
+                webimg.check([])
+            manifest = json.loads((root / "manifest.json").read_text())
+            info = manifest["photos"]["fixture/wide"]
+            self.assertTrue(info["colorConverted"])
+            webp = root / info["sizes"]["600"]["file"]
+            icc = webimg.magick("identify", "-format", "%[profile:icc]", str(webp)).strip()
+            exif = webimg.magick("identify", "-format", "%[EXIF:*]", str(webp)).strip()
+            self.assertEqual(icc, "Display P3")
+            self.assertEqual(exif, "")
 
 
 if __name__ == "__main__":

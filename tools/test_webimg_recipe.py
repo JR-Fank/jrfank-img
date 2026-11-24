@@ -67,5 +67,29 @@ class WebimgRecipeTest(unittest.TestCase):
                 self.assertFalse(webimg.up_to_date(info, src, new_sha))
 
 
+    def test_v3_srgb_is_up_to_date_for_all_photo_formats_unless_forced(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            for extension in ("jpg", "heic", "png", "webp"):
+                with self.subTest(extension=extension):
+                    src = root / f"originals/fixture/photo.{extension}"
+                    src.parent.mkdir(parents=True, exist_ok=True)
+                    src.write_bytes(f"v3 {extension} source".encode())
+                    src_sha = webimg.sha256(src)
+                    output = root / f"fixture/photo-600.v3-{extension}.webp"
+                    output.parent.mkdir(parents=True, exist_ok=True)
+                    output.write_bytes(b"existing v3 srgb output")
+                    info = {
+                        "version": webimg.recipe_version(src_sha, webimg.V3_SRGB_RECIPE),
+                        "sourceSha256": src_sha,
+                        "sizes": {"600": {"file": output.relative_to(root).as_posix()}},
+                    }
+                    with patch.object(webimg, "ROOT", root):
+                        self.assertTrue(webimg.up_to_date(info, src, src_sha))
+                        self.assertFalse(
+                            webimg.up_to_date(info, src, src_sha, webimg.photo_version(src_sha))
+                        )
+
+
 if __name__ == "__main__":
     unittest.main()

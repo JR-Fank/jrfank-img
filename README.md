@@ -7,7 +7,7 @@ jrfank.cc 的照片網頁檔。EdgeOne Pages 國際站（獨立專案）連這�
 - `<系列>/<照片 id>-<檔>.<版本>.webp`：長邊 600 / 1200 / 1800 / 2400 / 4000 五檔。原圖不夠大就停在原圖尺寸（不放大），更大的檔不做。
 - `reviews/<文章 slug>/<照片 id>-<檔>.<版本>.webp`：評測文章的圖片（照片 id ＝`<文章 slug>-<序號>`，序號 0 是封面），配方完全一樣。只接受三段路徑；一般系列是兩段 `<系列>/<id>`，**系列不能叫 `reviews`**（`webimg.py` 和 Actions 都會擋）。截圖、小圖同樣不放大（例如 700 px 寬的圖只有 600 和 700 兩檔）。
   - **版本** = `sha256(原圖 SHA-256 + 出圖配方)` 前 10 碼。換原圖或改配方，網址就變，所以 `.webp` 可以設一年的 `immutable` 快取。同一張原圖、同一個配方重出，網址不變。
-- 一律 sRGB（有內嵌描述檔的，例如 Display P3，轉成 sRGB），去掉全部 metadata（EXIF、GPS、XMP、ICC）。HEIC 若標成 Rec. ITU-R BT.2100 PQ/HLG，`webimg.py` 會先用 macOS ColorSync 轉成 sRGB 再交給 ImageMagick；一般 HEIC 和 Display P3 繼續走 ImageMagick 的既有路徑。
+- 廣色域原圖（Display P3、Adobe RGB 等內嵌廣色域 ICC，或標成 Rec. ITU-R BT.2100 PQ/HLG 的 HDR HEIC）輸出為 **Display P3**（內嵌精簡的系統 `Display P3.icc`，536 B）；sRGB 或無描述檔的原圖維持 sRGB（不嵌 ICC）；去掉全部其他 metadata（EXIF、GPS、XMP）。HEIC 若標成 Rec. ITU-R BT.2100 PQ/HLG，`webimg.py` 會先用 macOS ColorSync 轉成 Display P3 再交給 ImageMagick；一般 HEIC 和 Display P3 繼續走 ImageMagick 的既有路徑。
 - `manifest.json`：照片**技術資料的唯一來源**（`webimg.py` 產生，不要手改）。每張：
   - `sizes`：各檔的檔名、實際寬高、位元組數、SHA-256
   - `color`（整張平均色）、`blur`（長邊 16px 的 WebP data URI，網站放大模糊當占位）
@@ -31,9 +31,9 @@ jrfank.cc 的照片網頁檔。EdgeOne Pages 國際站（獨立專案）連這�
 | --- | --- |
 | 縮放 | ImageMagick 7 `-filter Lanczos -resize NxN>`（`>` = 不放大） |
 | 銳化 | 縮小後 `-unsharp 0x0.6+0.5+0.008`（輕微，200% 下看沒有光暈） |
-| 色彩 | 有 ICC 的 `-profile "/System/Library/ColorSync/Profiles/sRGB Profile.icc"`，再 `-colorspace sRGB`；HEIC 的 Rec. 2100 PQ/HLG 先用 macOS ColorSync `sips -m "/System/Library/ColorSync/Profiles/sRGB Profile.icc" -s format png` 轉成暫存 sRGB PNG；沒有 profile 的一般輸入當作 sRGB |
+| 色彩 | 廣色域原圖（非 sRGB ICC 或 HDR HEIC）以 `-profile "/System/Library/ColorSync/Profiles/Display P3.icc"` 轉成 Display P3 並在 `-strip` 後嵌回 `Display P3.icc`（manifest 記 `colorSpace: "display-p3"`）；sRGB ICC 原圖 `-profile "/System/Library/ColorSync/Profiles/sRGB Profile.icc"` 後 `-strip`；HEIC 的 Rec. 2100 PQ/HLG 先用 macOS ColorSync `sips -m "/System/Library/ColorSync/Profiles/Display P3.icc" -s format png` 轉成暫存 Display P3 PNG；沒有 profile 的一般輸入當作 sRGB |
 | 編碼 | WebP `quality 88`、`method 6`、`use-sharp-yuv`（紅色霓虹、的士紅邊緣的色度比較乾淨） |
-| 占位 | 最小一檔 `-scale 1x1!` 取平均色；`-resize 16x16>` quality 50 做預覽 |
+| 占位 | 最小一檔（若是 P3 先轉 sRGB）`-scale 1x1!` 取平均色；`-resize 16x16>` quality 50 做預覽 |
 | 透明 | 有 alpha 而且不是全不透明：保留透明（WebP alpha 無損），只銳化顏色（`-channel RGB`），占位先鋪白底再算；有 alpha 但全不透明：`-alpha off`。沒有 alpha 的原圖指令和加這條之前完全一樣（hk-1、hk-7 強制重出逐位元組相同），所以 `RECIPE` 沒改 |
 
 改了任何一項，要改 `tools/webimg.py` 的 `RECIPE` 字串，全部照片的版本跟著變。
