@@ -1,6 +1,6 @@
 {
  "version": 2,
- "recipe": "v3 sizes=600,1200,1800,2400,4000 lanczos unsharp=0x0.6+0.5+0.008 webp q=88 m6 sharpyuv strip srgb hdr-pq-colorsync",
+ "recipe": "v4 sizes=600,1200,1800,2400,4000 lanczos unsharp=0x0.6+0.5+0.008 webp q=88 m6 sharpyuv strip display-p3 hdr-pq-colorsync",
  "photos": {
   "ao-da-li-ya/ao-da-li-ya-1": {
    "version": "f668801cfd",
@@ -7042,39 +7042,40 @@
    "sourceSha256": "d48555c5bdf7c70a9dd0debf27701facfb32a75f7dc170cb2c77c084b9d1516a"
   },
   "gba/gba-14": {
-   "version": "92ef8047a4",
+   "version": "ed3503a9ac",
    "width": 1170,
    "height": 1756,
    "sizes": {
     "600": {
-     "file": "gba/gba-14-600.92ef8047a4.webp",
+     "file": "gba/gba-14-600.ed3503a9ac.webp",
      "width": 400,
      "height": 600,
-     "bytes": 39762,
-     "sha256": "05e53818f1ce63ab0354ab699cb2b7b566d333807e2751ca9f55e0054068d107"
+     "bytes": 39302,
+     "sha256": "f8ceaee39dda26e5d666e729129b74351d42b748fe057964fb431556eb260cdc"
     },
     "1200": {
-     "file": "gba/gba-14-1200.92ef8047a4.webp",
+     "file": "gba/gba-14-1200.ed3503a9ac.webp",
      "width": 800,
      "height": 1200,
-     "bytes": 108116,
-     "sha256": "ce24b50a95a8e880383f3408cd4289c054c9bbab1da8b939d30b8a0d5984ac59"
+     "bytes": 105864,
+     "sha256": "a1483bec8ac292ba96d1d3e4d9f6359a605db7c7511ef2cb09fb7f28533389c9"
     },
     "1800": {
-     "file": "gba/gba-14-1800.92ef8047a4.webp",
+     "file": "gba/gba-14-1800.ed3503a9ac.webp",
      "width": 1170,
      "height": 1756,
-     "bytes": 187194,
-     "sha256": "652c078c4fcaef5f456b3cfa09fb622c4b321e1acee547a91d2aed03ce9b8e1b"
+     "bytes": 183434,
+     "sha256": "bb6afd3af5bd115cc6dfb189e9ee5455e760c0fa5d281b9a00da409f87e2c6d9"
     }
    },
    "color": "#786956",
-   "blur": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAAAQAgCdASoLABAAAsBMJbACdAD0pafBG7+AAP7t16c31WEjtyU6rnDRiU81ueAQf2DbxnGktjGJ/SI8Xbn5OPJlUR9zQ6Lj6EhcVm1pVc+eydwws1mUlCfVwdvGtyTwAAA=",
+   "blur": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAAAQAgCdASoLABAAAsBMJagCdAD0pieeQjMAAP7t16c31VO9jF62ygcBtxljpNOn+w2v7lKzU9i9WWXggIR7e2VRH3NDouPoapFAoZhi9cQbk73Ho0dv8fOMYInZeDd66gcO/AAA",
    "original": {
     "width": 1170,
     "height": 1756
    },
-   "lowRes": true,
+   "lowRes": false,
+   "colorSpace": "display-p3",
    "exif": {
     "date": "2023-09-21"
    },
@@ -7814,53 +7815,54 @@
    "sourceSha256": "9d44a3ba30590624d0b537b12c64d3506189455e1352304e98ccfdc65000bd3b"
   },
   "hk/hk-3": {
-   "version": "05b98b7d1b",
+   "version": "0a9404f30f",
    "width": 4000,
    "height": 2667,
    "sizes": {
     "600": {
-     "file": "hk/hk-3-600.05b98b7d1b.webp",
+     "file": "hk/hk-3-600.0a9404f30f.webp",
      "width": 600,
      "height": 400,
-     "bytes": 101664,
-     "sha256": "77530ace7754bebc64cfe527a44b6b98bdf0ca982273bc0eaf511a8f4ab4576e"
+     "bytes": 100962,
+     "sha256": "29d472fb6fe0c794ca263c018d9bf61b5cc7f80e47088fe08b209372260bdbf4"
     },
     "1200": {
-     "file": "hk/hk-3-1200.05b98b7d1b.webp",
+     "file": "hk/hk-3-1200.0a9404f30f.webp",
      "width": 1200,
      "height": 800,
-     "bytes": 373350,
-     "sha256": "deac0442d10b2aa1f2edee362d2a75cadac6d53647d80ff25fbb8c9e16093a0a"
+     "bytes": 367556,
+     "sha256": "d7ca3099f1e79619c55901537793c30624d23bc0af18d196199d48b2b6da66f5"
     },
     "1800": {
-     "file": "hk/hk-3-1800.05b98b7d1b.webp",
+     "file": "hk/hk-3-1800.0a9404f30f.webp",
      "width": 1800,
      "height": 1200,
-     "bytes": 760454,
-     "sha256": "873263016d564946a0d0bf96586f7235b89aa95bdafded538bc24afe2cc63f39"
+     "bytes": 750198,
+     "sha256": "1c095a5e6d18dbe5fca4e58b68d7e8d2c6cb953d9a5a687a40b640a79512d00b"
     },
     "2400": {
-     "file": "hk/hk-3-2400.05b98b7d1b.webp",
+     "file": "hk/hk-3-2400.0a9404f30f.webp",
      "width": 2400,
      "height": 1600,
-     "bytes": 1254966,
-     "sha256": "39a45ca94b4c833fc43592bdfc6c3b4330154946dbfc0190162e3aca0d18e82b"
+     "bytes": 1219608,
+     "sha256": "1d7ec5875c520e8e73c641275f2a8ab5a8ada8b7f4a292bb768a331c27e28a7c"
     },
     "4000": {
-     "file": "hk/hk-3-4000.05b98b7d1b.webp",
+     "file": "hk/hk-3-4000.0a9404f30f.webp",
      "width": 4000,
      "height": 2667,
-     "bytes": 2951194,
-     "sha256": "baebfa7fe57318d0257e8cbd71263054cd411e987941b55a2e2b1ffe41a5d766"
+     "bytes": 2857360,
+     "sha256": "8e17c8fc11af3efa14ff7df3baacabf0533cc721ef9b9140fa2fce4122b0dbf9"
     }
    },
-   "color": "#362c2c",
-   "blur": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAAAQAgCdASoQAAsAAsBMJZQC7AEf/vnJ78wAAP72y9oDxSoNCCA69kyWpjEDVgirEJ++cPgo+wxmOkGzVz2VU70+NQbVqoAeTX7dgAAA",
+   "color": "#322827",
+   "blur": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAAAQAgCdASoQAAsAAsBMJZQCdAEf/zCpvh0AAP73tCjleAu04s7E3L7ldUrcuHgirRKTuftAAkL5Me91UjBwuNsYLY+aSI9kE1FIju3lAAA=",
    "original": {
     "width": 6232,
     "height": 4155
    },
    "lowRes": false,
+   "colorSpace": "display-p3",
    "exif": {
     "camera": "Fujifilm X-T3",
     "lens": "XC 50–230mm",
@@ -9662,53 +9664,54 @@
    "sourceSha256": "6952e4f99768079adb04721f61de8c747524cef0eecedaa814744db4e9674871"
   },
   "objects/objects-2": {
-   "version": "5e25cb1500",
+   "version": "bb1220dd0b",
    "width": 4000,
    "height": 2248,
    "sizes": {
     "600": {
-     "file": "objects/objects-2-600.5e25cb1500.webp",
+     "file": "objects/objects-2-600.bb1220dd0b.webp",
      "width": 600,
      "height": 337,
-     "bytes": 26710,
-     "sha256": "96b73b75ccd13f77d7ad841c0147bebceba0cf6dddaa1ca0f19c224305c5f303"
+     "bytes": 26188,
+     "sha256": "528fae99f74a0d2d1f662056ec3c0e6446d105a571bcedca4336fd6b879e976e"
     },
     "1200": {
-     "file": "objects/objects-2-1200.5e25cb1500.webp",
+     "file": "objects/objects-2-1200.bb1220dd0b.webp",
      "width": 1200,
      "height": 674,
-     "bytes": 67002,
-     "sha256": "10cc66bf992072fa39c57d41d15c0634ae150ff0b30eed463e754052cde12e73"
+     "bytes": 62822,
+     "sha256": "e8a7863128e7062afb15022825a6f6674f2de0ca150667ee3e1a7867b7ee5945"
     },
     "1800": {
-     "file": "objects/objects-2-1800.5e25cb1500.webp",
+     "file": "objects/objects-2-1800.bb1220dd0b.webp",
      "width": 1800,
      "height": 1011,
-     "bytes": 130944,
-     "sha256": "7b87c74a2e3e3e943a8e4efefc5cfc1398ebc40176a88fe7929ff009f59c852d"
+     "bytes": 126622,
+     "sha256": "2bd9d263f9d5b3001c77602f0efe50be1b2ddacf98ceaf6b5ed37366ae3f089b"
     },
     "2400": {
-     "file": "objects/objects-2-2400.5e25cb1500.webp",
+     "file": "objects/objects-2-2400.bb1220dd0b.webp",
      "width": 2400,
      "height": 1349,
-     "bytes": 215618,
-     "sha256": "ef7fa5a8a4e1b455e3114044375fa6c7d495073dfa1e5468bf4119bdf23c3424"
+     "bytes": 207716,
+     "sha256": "2cf15507aa49055022907e567cb1586358e8be5c427337accee9ad1d4ce53667"
     },
     "4000": {
-     "file": "objects/objects-2-4000.5e25cb1500.webp",
+     "file": "objects/objects-2-4000.bb1220dd0b.webp",
      "width": 4000,
      "height": 2248,
-     "bytes": 478886,
-     "sha256": "0507d91f216b5a765e553d98e7689f0cf6bc9199866c52580f8d019f8ab380e0"
+     "bytes": 466508,
+     "sha256": "2edfa496fd67c1962f5f3e2cda12a287b2911bd9915c9d2d7cb9e9d9b16a86cd"
     }
    },
    "color": "#3f3648",
-   "blur": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAAAQAgCdASoQAAkAAsBMJZACdAEXp0A7FCLAAP74lBvf/2s3jXZOi8gTqfSQ66vGMzdTH8wvoe3J+ROa0ag9Yqhaou1PjE99l0kUKgOLJAA=",
+   "blur": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAAAQAgCdASoQAAkAAsBMJZACdAEXp0A7FJkAAP74lBvf/2s3jXZOi8gTqfSQ66vGMzdTH8wvoe3J+ROa0ag+BHTSvyKus6+ZLRkvCJlQqAAAAA==",
    "original": {
     "width": 4912,
     "height": 2760
    },
    "lowRes": false,
+   "colorSpace": "display-p3",
    "exif": {
     "camera": "Sony NEX-5T",
     "lens": "E PZ 16–50mm F3.5-5.6 OSS",
@@ -9723,53 +9726,54 @@
    "sourceSha256": "acf1d36964ccb7ac0313e0707e8a6b2b78ea2f04593c365ee0f562779248e9cc"
   },
   "objects/objects-3": {
-   "version": "3d945bf334",
+   "version": "d8a011ce80",
    "width": 4000,
    "height": 2251,
    "sizes": {
     "600": {
-     "file": "objects/objects-3-600.3d945bf334.webp",
+     "file": "objects/objects-3-600.d8a011ce80.webp",
      "width": 600,
      "height": 338,
-     "bytes": 22528,
-     "sha256": "fc7e4f0e92d7ade2e8e8004fd9dd77aba71cfa81d20ec3bbd13e2662cbec6ac0"
+     "bytes": 22252,
+     "sha256": "e4795854ba2ade1b90277fc0cc11f975fc8b1028e2a8651b0ec320620dc549c4"
     },
     "1200": {
-     "file": "objects/objects-3-1200.3d945bf334.webp",
+     "file": "objects/objects-3-1200.d8a011ce80.webp",
      "width": 1200,
      "height": 675,
-     "bytes": 53994,
-     "sha256": "109cbd638ac932dcfe34baabc5bcb451084258957e459070ae39041ece0eb6c9"
+     "bytes": 51822,
+     "sha256": "8d256055a5bc25355c7d95ea96c309d73acb988c0d6b96df101ee35276b908c4"
     },
     "1800": {
-     "file": "objects/objects-3-1800.3d945bf334.webp",
+     "file": "objects/objects-3-1800.d8a011ce80.webp",
      "width": 1800,
      "height": 1013,
-     "bytes": 107078,
-     "sha256": "ec94ea8eea021aa733b84bca374bd5b4a6a779082d468690c89eb5360b1a71bd"
+     "bytes": 102556,
+     "sha256": "6ff4463f323a81ec05c7a64a1be8aaefda207b54df12b5bfa1d5ee11dce0a08f"
     },
     "2400": {
-     "file": "objects/objects-3-2400.3d945bf334.webp",
+     "file": "objects/objects-3-2400.d8a011ce80.webp",
      "width": 2400,
      "height": 1350,
-     "bytes": 214186,
-     "sha256": "4f0a01e3f75c73921db755076cba19f05a2c96a85a067d744a34f15cb3a5a96d"
+     "bytes": 207248,
+     "sha256": "cf297a4ae523f74ce18661408e538f684c5eb3a5038843743ad27d25797a4d10"
     },
     "4000": {
-     "file": "objects/objects-3-4000.3d945bf334.webp",
+     "file": "objects/objects-3-4000.d8a011ce80.webp",
      "width": 4000,
      "height": 2251,
-     "bytes": 755484,
-     "sha256": "318e16822643d073e609912e3855922961c8bc87cba7dacec2c571acc0bcb528"
+     "bytes": 739740,
+     "sha256": "54773a91b587992a85307cd031e525b4acc8f46c0eb32718e5e9a0fa754edb7b"
     }
    },
    "color": "#4e5339",
-   "blur": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAAAQAgCdASoQAAkAAsBMJaACdAEXxhAAt7pAAP74YQXhdGcIrCrDI0KqeJ0yd7W3Hb9a/WJkaaI4EEAGeBtO4B+SweqDQMbTHyjUYnh+9TBH6aci12aHCTdw1UoAAA==",
+   "blur": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAAAQAgCdASoQAAkAAsBMJaACdAEXxhAgvcaQAP74YQXhdGcIrCrDI0KqeJ0yd7W3Hb9a/WJkaaI4ED+72YHqAmM1Ib8T2Xeyx0MrqR0LKp8sYOMdeJ18ueZRuhRwAA==",
    "original": {
     "width": 6000,
     "height": 3376
    },
    "lowRes": false,
+   "colorSpace": "display-p3",
    "exif": {
     "camera": "Sony α6300",
     "lens": "30mm F1.4 DC DN",
@@ -9906,53 +9910,54 @@
    "sourceSha256": "b419f33a6f315ee2370f7ebdf7dc2674cdd38771af05bc05777b4bfbe8c8b81b"
   },
   "objects/objects-6": {
-   "version": "4dfc8e235e",
+   "version": "112116434a",
    "width": 3024,
    "height": 2268,
    "sizes": {
     "600": {
-     "file": "objects/objects-6-600.4dfc8e235e.webp",
+     "file": "objects/objects-6-600.112116434a.webp",
      "width": 600,
      "height": 450,
-     "bytes": 45618,
-     "sha256": "e871b25c778a94aaf2343e90b1e7ba1a07c7c1564af5d154933e93b46a1c8924"
+     "bytes": 44032,
+     "sha256": "ff527af40c08256e3cbb3e18e4df378ff95765d13ca8bf45a4bf52f9546a4df0"
     },
     "1200": {
-     "file": "objects/objects-6-1200.4dfc8e235e.webp",
+     "file": "objects/objects-6-1200.112116434a.webp",
      "width": 1200,
      "height": 900,
-     "bytes": 117002,
-     "sha256": "7f38a23901761f19a6f8446c07faab784c6ff0be861fbb70933328bda6fe79b6"
+     "bytes": 111792,
+     "sha256": "13e88c25ff86f27161971ad73c9f5f0a772e87c8017f8cade8b5ccef7ab4e070"
     },
     "1800": {
-     "file": "objects/objects-6-1800.4dfc8e235e.webp",
+     "file": "objects/objects-6-1800.112116434a.webp",
      "width": 1800,
      "height": 1350,
-     "bytes": 214656,
-     "sha256": "fca46c177950d4e8a13ba2f5018834d8019a86e8d404c29d53adebda910a9771"
+     "bytes": 201758,
+     "sha256": "b828489cee9ab5660732e2b6172aaafc1bac14fefd04716b4914c4f291f00b09"
     },
     "2400": {
-     "file": "objects/objects-6-2400.4dfc8e235e.webp",
+     "file": "objects/objects-6-2400.112116434a.webp",
      "width": 2400,
      "height": 1800,
-     "bytes": 292896,
-     "sha256": "12dfa7ecbf2db42458045408d1b60c349b1ceecc9bd33e09df72bfe50b39f8fe"
+     "bytes": 293038,
+     "sha256": "63ba472d21f886327e858358cbe87d43f9ac9900fe257461c13a8ef856bc083f"
     },
     "4000": {
-     "file": "objects/objects-6-4000.4dfc8e235e.webp",
+     "file": "objects/objects-6-4000.112116434a.webp",
      "width": 3024,
      "height": 2268,
-     "bytes": 428416,
-     "sha256": "ced62e41f444e6e19ac0ab7405a1ebf9955043100ff08db41666a31307372bc3"
+     "bytes": 401774,
+     "sha256": "96fdadbb6a63b9ea028019672cd6aed7a4bf6e470d2cae5f506132e26fa79b08"
     }
    },
    "color": "#8e6b4d",
-   "blur": "data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAABQAgCdASoQAAwAAsBMJbACdAYwdv7yG6mERgAA/kE3Js1quzk4fKx2PwHoiZPsrn7b/t5h5bXAqLT7uDKmZ8MWsUYu1xYVS7yeLOkRD6RKGaGqQea7DQYvFTaqsucMsqZi/WVEYajpoqC+422Av/712SBBgAAA",
+   "blur": "data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAAAQAgCdASoQAAwAAsBMJbACdAEPhfNGg4EOAP5BN1d9+J++FFjKLuZGNC3KvbmMJmYlZoH1vhnEgG2UBOyGPHAwn7FML8WyNB8yoD1KJElDcKfg3z/oLmg/dd/+bL34jiiffnOXj+kcxW7kj/Wyzv7IVkmCwAAA",
    "original": {
     "width": 3024,
     "height": 2268
    },
    "lowRes": false,
+   "colorSpace": "display-p3",
    "exif": {
     "camera": "iPhone 12",
     "lens": "Back dual wide camera 4.2mm f/1.6",
@@ -9967,32 +9972,33 @@
    "sourceSha256": "aef6a0da2e63f2f60506744f504e41c168b95bf07ad963a01f8191f595c7a91a"
   },
   "objects/objects-7": {
-   "version": "a5d2d40157",
+   "version": "962227c772",
    "width": 1170,
    "height": 836,
    "sizes": {
     "600": {
-     "file": "objects/objects-7-600.a5d2d40157.webp",
+     "file": "objects/objects-7-600.962227c772.webp",
      "width": 600,
      "height": 429,
-     "bytes": 56148,
-     "sha256": "71f49ef05c57ed66bb5503599b2272f120e7e397cbcb6748862802c4d8a5fcc4"
+     "bytes": 55180,
+     "sha256": "cfd13b4fd8c6f740625f5b900219118359c33ecfd1a6f52b5dca9c063584dcb4"
     },
     "1200": {
-     "file": "objects/objects-7-1200.a5d2d40157.webp",
+     "file": "objects/objects-7-1200.962227c772.webp",
      "width": 1170,
      "height": 836,
-     "bytes": 136832,
-     "sha256": "48c95048c7d4bd9f328e82ed260cbcea7e1341a10b6ae7f8a4574f7c0fa754c9"
+     "bytes": 130900,
+     "sha256": "3993f9cf9e45897d66f5fac26de2aef99925c7fd281207b2fad7d978c0560a64"
     }
    },
-   "color": "#8f5f43",
-   "blur": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAABwAgCdASoQAAsAAsBMJbACdAYvhdXadnERlvkAAPw6pClGirDeHv2FjIldJDfMqa53HyTZO97IFQR8br5TnAEOerb5Z5P75tkJPHA6UO0dtNtQjBdvGuVeprpzZFWxCrbO11przisQxG67jswH/mho+pcKvO/b70u0yX9cwdgAAA==",
+   "color": "#8e5f43",
+   "blur": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAABwAgCdASoQAAsAAsBMJbACdAYstdXadnO30SuAAPw6pClGG2J9fHxwyhq+ExbwkBoRHVqxON7ICNBcKjB+zS4PgMMXAaHpLKMo3ut9IQAOY3dbLlLd6KczsQL0Df1H8Na/ZOp/i8tDZ0/n3uj62yie/Q7lzv2+9LtMl/XMHYAAAA==",
    "original": {
     "width": 1170,
     "height": 836
    },
    "lowRes": true,
+   "colorSpace": "display-p3",
    "exif": {
     "date": "2023-09-21"
    },
@@ -10238,53 +10244,54 @@
    "sourceSha256": "c963462db2e23b34763dfa89e990a85c26dfe9a5a8994d990ee086042034b1b7"
   },
   "portrait/portrait-3": {
-   "version": "87c0ab5623",
+   "version": "1438bc9e2c",
    "width": 4000,
    "height": 2247,
    "sizes": {
     "600": {
-     "file": "portrait/portrait-3-600.87c0ab5623.webp",
+     "file": "portrait/portrait-3-600.1438bc9e2c.webp",
      "width": 600,
      "height": 337,
-     "bytes": 26458,
-     "sha256": "96786c0b6d3f340b5f5f848d73c5d9101be55c91c5b1ab614432f2ec57278d9c"
+     "bytes": 27066,
+     "sha256": "74e0f8b25a4a0bcae5afb390c6fa0eef235b86c96550412ee7ffd3c190caa995"
     },
     "1200": {
-     "file": "portrait/portrait-3-1200.87c0ab5623.webp",
+     "file": "portrait/portrait-3-1200.1438bc9e2c.webp",
      "width": 1200,
      "height": 674,
-     "bytes": 85412,
-     "sha256": "c791c19e73aa26fbe57fc9e3972e7715a73c89f658910cb107f910cff6743bad"
+     "bytes": 88466,
+     "sha256": "0d32bfe8bd7cbad0fefad0ef4b9270236136f92a2b0676d25639329e966f69b3"
     },
     "1800": {
-     "file": "portrait/portrait-3-1800.87c0ab5623.webp",
+     "file": "portrait/portrait-3-1800.1438bc9e2c.webp",
      "width": 1800,
      "height": 1011,
-     "bytes": 189988,
-     "sha256": "51b1d593a64961a29fd6638d1d241020adfedbdad34cb1ef278bf4c855385756"
+     "bytes": 186746,
+     "sha256": "de390051807ab95600d88c29304e68aea4d009d6dc3b223a9a67c72514877971"
     },
     "2400": {
-     "file": "portrait/portrait-3-2400.87c0ab5623.webp",
+     "file": "portrait/portrait-3-2400.1438bc9e2c.webp",
      "width": 2400,
      "height": 1348,
-     "bytes": 319180,
-     "sha256": "8d154f16ef8b658b5c73ac9015d1ed984b84dd85daf0f039d3d43da6c3b1c486"
+     "bytes": 315176,
+     "sha256": "683584b1b214171d7265cbeb550fd3df77a3df3f04febbb443465131c5afe099"
     },
     "4000": {
-     "file": "portrait/portrait-3-4000.87c0ab5623.webp",
+     "file": "portrait/portrait-3-4000.1438bc9e2c.webp",
      "width": 4000,
      "height": 2247,
-     "bytes": 728940,
-     "sha256": "eee3721418d03fc3797f34515d8fc4bd3530c966b4fe311be7e49431c5aa89e3"
+     "bytes": 726968,
+     "sha256": "382d9da270c5188fd63ddf4f6ce2d5e4b3a0318101b1ddbb0d0254ab177c7bc0"
     }
    },
-   "color": "#686c6e",
-   "blur": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAABQAgCdASoQAAkAAsBMJZQCdH8AFx/2WMzPd4AA/veyLZjb+2LF2TJE7pj1L9rLqTDVol7rPpEhG/+3YNPHQvbAN6ia1jDBQOdhH4RFkpAAAA==",
+   "color": "#666a6d",
+   "blur": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAABQAgCdASoQAAkAAsBMJZQCdH8AFx+6cScY9AAA/viBL8qqjCUD4Fo62rB2do+uTlY7p67ctTqKkkKisvl6z0xJL2R8e/zjlQVfHldODSS0AAAA",
    "original": {
     "width": 4612,
     "height": 2591
    },
    "lowRes": false,
+   "colorSpace": "display-p3",
    "exif": {
     "camera": "Sony NEX-5T",
     "lens": "E PZ 16–50mm F3.5-5.6 OSS",
@@ -10360,53 +10367,54 @@
    "sourceSha256": "0b733f94d32920dcfeb785b52a5223522ab077303d945e2790e597f6dea79164"
   },
   "portrait/portrait-5": {
-   "version": "fdad7268ed",
+   "version": "f529de48a4",
    "width": 2251,
    "height": 4000,
    "sizes": {
     "600": {
-     "file": "portrait/portrait-5-600.fdad7268ed.webp",
+     "file": "portrait/portrait-5-600.f529de48a4.webp",
      "width": 338,
      "height": 600,
-     "bytes": 44066,
-     "sha256": "24878eef3f7e09908419832dada51057644a093ba07b2bfac7cd302fb01c5595"
+     "bytes": 43002,
+     "sha256": "3fe26f2f6f11aa13d0facf7081090d90f688299252dfa17e415e45e9041915f5"
     },
     "1200": {
-     "file": "portrait/portrait-5-1200.fdad7268ed.webp",
+     "file": "portrait/portrait-5-1200.f529de48a4.webp",
      "width": 675,
      "height": 1200,
-     "bytes": 108832,
-     "sha256": "a6e83f7bb56e597950caf0a833fae150033d800b89672253d169c4ccb0924a8c"
+     "bytes": 106940,
+     "sha256": "b13fe6d895b9281259fb35275690ae233f1402c89db7aab5c885ae8441aa6457"
     },
     "1800": {
-     "file": "portrait/portrait-5-1800.fdad7268ed.webp",
+     "file": "portrait/portrait-5-1800.f529de48a4.webp",
      "width": 1013,
      "height": 1800,
-     "bytes": 188840,
-     "sha256": "fe45d32c67140c1fe253736776b8901a94b59eaf612033e11f62efa6a35ca99e"
+     "bytes": 184696,
+     "sha256": "d0fa98434c7436992f973b08e2285b9cd149c34f4a7d348d35d667d74f9f467b"
     },
     "2400": {
-     "file": "portrait/portrait-5-2400.fdad7268ed.webp",
+     "file": "portrait/portrait-5-2400.f529de48a4.webp",
      "width": 1350,
      "height": 2400,
-     "bytes": 284920,
-     "sha256": "32645c129120cd1754ad731827572a7199aa23055d30d48586aada57730c47da"
+     "bytes": 281428,
+     "sha256": "fb38d6e20263ee4221587b5859fe404c98e0f4028dc8cdcf86ad2b14897dbfef"
     },
     "4000": {
-     "file": "portrait/portrait-5-4000.fdad7268ed.webp",
+     "file": "portrait/portrait-5-4000.f529de48a4.webp",
      "width": 2251,
      "height": 4000,
-     "bytes": 638274,
-     "sha256": "0360d442b0a29ba00b2f2ee3478e336f8e413bff22769fdcbc158c52a26e4953"
+     "bytes": 631314,
+     "sha256": "63ad47e58253b40ddc451d31978505ef859d782e99345dbf4da55d418282563c"
     }
    },
-   "color": "#5b4825",
-   "blur": "data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAADwAQCdASoJABAAAsBMJbACdAELMTOpigAA/vLngwaxA2Bqwr5h/wHe2BcAE8/A8MNAvTiYcqJ8HcXievoZCpiawwVrmT1C2LevWlprIcfxMRKdSgQAAA==",
+   "color": "#584622",
+   "blur": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAAAwAgCdASoJABAAAsBMJbACdAELMTPHaTWQAAD+8ueDBrEDaQKMNrmCwD4IqkYLIc8w/d6qrmb6OvqRKhND/AB8GIgDFXMgJ0HAO/Du5q8Dz4BxCapl+gQAAAA=",
    "original": {
     "width": 3376,
     "height": 6000
    },
    "lowRes": false,
+   "colorSpace": "display-p3",
    "exif": {
     "camera": "Sony α7",
     "lens": "FE 50mm F1.8",
@@ -10664,44 +10672,44 @@
    "sourceSha256": "512416053308fde3a0f62970f9514a15a1aacc75401581e878b832a700e7a1ee"
   },
   "shantou/shantou-4": {
-   "version": "69ef20e44b",
+   "version": "4dbcc4352e",
    "width": 4000,
    "height": 2250,
    "sizes": {
     "600": {
-     "file": "shantou/shantou-4-600.69ef20e44b.webp",
+     "file": "shantou/shantou-4-600.4dbcc4352e.webp",
      "width": 600,
      "height": 338,
-     "bytes": 42524,
-     "sha256": "7008a72cdca6255ea4085bd1e3e455308613e514ed6117eb4f4d506fcfad7888"
+     "bytes": 41260,
+     "sha256": "24172bb0c233336e5d95fffb343f9866aa0b8686e4a974a7f4d4a687f1459e37"
     },
     "1200": {
-     "file": "shantou/shantou-4-1200.69ef20e44b.webp",
+     "file": "shantou/shantou-4-1200.4dbcc4352e.webp",
      "width": 1200,
      "height": 675,
-     "bytes": 156682,
-     "sha256": "7f60a5a7f89a52e21bbd44e2fbafa9ce328f2806af6726881e55a98fcd006e14"
+     "bytes": 152888,
+     "sha256": "ca4bc82d5cb778376aa3ecb2f9a90b0705e2a063f76dc70d512bf6db0d66deac"
     },
     "1800": {
-     "file": "shantou/shantou-4-1800.69ef20e44b.webp",
+     "file": "shantou/shantou-4-1800.4dbcc4352e.webp",
      "width": 1800,
      "height": 1013,
-     "bytes": 336012,
-     "sha256": "323b96c31e4ccf09dae4098f6156a0a9c8d1b69870cd4160f49333c1abd3061e"
+     "bytes": 332896,
+     "sha256": "1b5c61487155767de4dc9fd10b12ae4b38f16082a48775f3396ae22be760416d"
     },
     "2400": {
-     "file": "shantou/shantou-4-2400.69ef20e44b.webp",
+     "file": "shantou/shantou-4-2400.4dbcc4352e.webp",
      "width": 2400,
      "height": 1350,
-     "bytes": 540708,
-     "sha256": "d079e9e01b3fd234f96fa6e379e82f035b08af75c32f0bf6e93cdf6b3dfeeb0c"
+     "bytes": 531102,
+     "sha256": "d2cb60e66bbee73b3da16371b720ca12590c0108befa3db49203e1a00f2b52a3"
     },
     "4000": {
-     "file": "shantou/shantou-4-4000.69ef20e44b.webp",
+     "file": "shantou/shantou-4-4000.4dbcc4352e.webp",
      "width": 4000,
      "height": 2250,
-     "bytes": 1146428,
-     "sha256": "5749ddc29fc0a0573e422534d8b65c4983114f51900095d3cbd73af96e6c090a"
+     "bytes": 1121640,
+     "sha256": "7c29555461241da38f058063e032d3bacf91e37d25f6c437158158ae2e1eae4b"
     }
    },
    "color": "#4d7ea5",
@@ -10711,6 +10719,7 @@
     "height": 2268
    },
    "lowRes": false,
+   "colorSpace": "display-p3",
    "exif": {
     "camera": "iPhone 12",
     "lens": "Back dual wide camera 1.55mm f/2.4",
@@ -12084,46 +12093,47 @@
    "sourceSha256": "04cddecdd840f3fc04916ed28e70656bfc2fc0cfba2d2c9cd3a44772f1040482"
   },
   "stage/stage-1": {
-   "version": "3d8c7242d4",
+   "version": "6f9206c01c",
    "width": 2386,
    "height": 1591,
    "sizes": {
     "600": {
-     "file": "stage/stage-1-600.3d8c7242d4.webp",
+     "file": "stage/stage-1-600.6f9206c01c.webp",
      "width": 600,
      "height": 400,
-     "bytes": 77716,
-     "sha256": "64b16b73ddbe7d47dda9e6217b432aab597e457b31bb2677b12907f8d775a2f2"
+     "bytes": 76042,
+     "sha256": "c5b75d5e10c0aea5b3047956fd1fa4b290425d91430fbeb24c30c0ea1b5fe267"
     },
     "1200": {
-     "file": "stage/stage-1-1200.3d8c7242d4.webp",
+     "file": "stage/stage-1-1200.6f9206c01c.webp",
      "width": 1200,
      "height": 800,
-     "bytes": 317672,
-     "sha256": "de0087afe15f642f76cc170f868b6a1cf9b98f6867b60d8884f05dd6d54176cc"
+     "bytes": 301760,
+     "sha256": "0f9bf38946044bf79994812908181b900829fc7e16d9413b9752f38807cc48d4"
     },
     "1800": {
-     "file": "stage/stage-1-1800.3d8c7242d4.webp",
+     "file": "stage/stage-1-1800.6f9206c01c.webp",
      "width": 1800,
      "height": 1200,
-     "bytes": 727388,
-     "sha256": "16cef8ca02dd346f1419c21f064714b203064af14063ea89e2284bbdb3c6d333"
+     "bytes": 701292,
+     "sha256": "ff18d1356abc2d3aa10f6dcd107ecaec3a5583242d51dec2abdcf3c6437ee5e0"
     },
     "2400": {
-     "file": "stage/stage-1-2400.3d8c7242d4.webp",
+     "file": "stage/stage-1-2400.6f9206c01c.webp",
      "width": 2386,
      "height": 1591,
-     "bytes": 1186052,
-     "sha256": "652c97180b462af6753bec4a3fe8407969f85c0306345d4396e6455166c9a559"
+     "bytes": 1154780,
+     "sha256": "b6183fd3f0a89c042beddb8b42be03e403efedfd98a84a99d868ed4b08796939"
     }
    },
    "color": "#7d2a45",
-   "blur": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAADQAQCdASoQAAsAAsBMJbACdACoyftCQAD+7xZG3BqMwAwfenj49zLc8+Jw27TOtXD2oU2og68XOYVzJ2ywFOecUQfmEomwRCOw9slBqeP6ZPxoAWH+QWU0//UgAA==",
+   "blur": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAADQAQCdASoQAAsAAsBMJbACdACoyftkqAD+7xZG3BqMwAwfenj49zLc8+JwsptZSLt7NH5/7HIFqVFKAmyB5qQa+cQeNxIk7z7ZKDU8f0yfjQAsP8gspp/+pAA=",
    "original": {
     "width": 2386,
     "height": 1591
    },
-   "lowRes": true,
+   "lowRes": false,
+   "colorSpace": "display-p3",
    "exif": {
     "camera": "Fujifilm X-T3",
     "lens": "XC 50–230mm",
@@ -12382,37 +12392,37 @@
    "sourceSha256": "f414a906965607ae3215d97fef3f0b34a69f8545370caadb88e81f260959e5cc"
   },
   "stage/stage-2": {
-   "version": "8c4d594d06",
+   "version": "3c592236a2",
    "width": 2130,
    "height": 1420,
    "sizes": {
     "600": {
-     "file": "stage/stage-2-600.8c4d594d06.webp",
+     "file": "stage/stage-2-600.3c592236a2.webp",
      "width": 600,
      "height": 400,
-     "bytes": 31522,
-     "sha256": "8f04fd75f70ba2717c9d2e1610ffbf603905942979d68b5292267b4fb100044c"
+     "bytes": 31284,
+     "sha256": "576b88eb444500d90c360a1cd2657433a7048c0e4d5ce1ef9a7642aebf5e2d7b"
     },
     "1200": {
-     "file": "stage/stage-2-1200.8c4d594d06.webp",
+     "file": "stage/stage-2-1200.3c592236a2.webp",
      "width": 1200,
      "height": 800,
-     "bytes": 199086,
-     "sha256": "47c917c7fc30adcaa5bc2902f04687b844cf579b363cd90779dcd1e66759a455"
+     "bytes": 198322,
+     "sha256": "eb66ae86aac600985b4fb9deaab2e4bf011156cf22c17e8932d0896a459b51c7"
     },
     "1800": {
-     "file": "stage/stage-2-1800.8c4d594d06.webp",
+     "file": "stage/stage-2-1800.3c592236a2.webp",
      "width": 1800,
      "height": 1200,
-     "bytes": 399500,
-     "sha256": "45dfff8da4a2ad9b86a57fb665186447d62c9ef8b07862c9e85b46250c609a0f"
+     "bytes": 394852,
+     "sha256": "c9d7e949fab956e0e526ee789a0b6478adfec358fbe62e949603fdc0c503b309"
     },
     "2400": {
-     "file": "stage/stage-2-2400.8c4d594d06.webp",
+     "file": "stage/stage-2-2400.3c592236a2.webp",
      "width": 2130,
      "height": 1420,
-     "bytes": 529358,
-     "sha256": "9c8081613faf2baaafc566c70ce325c30884949581680df9bd754fff773bf170"
+     "bytes": 528384,
+     "sha256": "cdbfe4472e65f852270958fe8ca75b31c7be4f72e97c24c641b079f265e1fb23"
     }
    },
    "color": "#242926",
@@ -12421,7 +12431,8 @@
     "width": 2130,
     "height": 1420
    },
-   "lowRes": true,
+   "lowRes": false,
+   "colorSpace": "display-p3",
    "exif": {
     "camera": "Fujifilm X-T3",
     "lens": "XC 50–230mm",
