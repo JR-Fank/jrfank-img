@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Actions 專用：提交本次下載的照片；競爭時在最新 main 上重建條目，最多重試三次。"""
+"""Actions 專用：提交本次下載的照片；競爭時在最新 main 上重建條目，最多重試五次。"""
 
 import json
 import os
@@ -19,6 +19,20 @@ def git(*args: str, check: bool = True) -> subprocess.CompletedProcess:
 
 def revision(ref: str) -> str:
     return subprocess.check_output(["git", "rev-parse", ref], cwd=webimg.ROOT, text=True).strip()
+
+
+def is_shallow() -> bool:
+    return subprocess.check_output(["git", "rev-parse", "--is-shallow-repository"], cwd=webimg.ROOT, text=True).strip() == "true"
+
+
+def fetch_latest_main() -> str:
+    git("fetch", "-q", "origin", "+refs/heads/main:refs/remotes/origin/main")
+    base = os.environ.get("PHOTO_BUILD_BASE", "").strip()
+    if base and is_shallow() and git("merge-base", "--is-ancestor", base, "origin/main", check=False).returncode != 0:
+        git("fetch", "-q", "--deepen=50", "origin", "+refs/heads/main:refs/remotes/origin/main")
+        if is_shallow() and git("merge-base", "--is-ancestor", base, "origin/main", check=False).returncode != 0:
+            git("fetch", "-q", "--unshallow", "origin", "+refs/heads/main:refs/remotes/origin/main")
+    return revision("origin/main")
 
 
 def publish() -> None:
@@ -43,7 +57,7 @@ def publish() -> None:
             dst.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(webimg.ROOT / file, dst)
 
-        for attempt in range(4):  # 首次 + 最多三次重試
+        for attempt in range(6):  # 首次 + 最多五次重試（多批同時完成時依序接上最新 main）
             git("add", "--", "manifest.json", *files)
             diff = git("diff", "--cached", "--quiet", check=False)
             if diff.returncode == 0:
@@ -52,8 +66,7 @@ def publish() -> None:
             if diff.returncode != 1:
                 diff.check_returncode()
             git("commit", "-q", "-m", message)
-            git("fetch", "-q", "origin", "+refs/heads/main:refs/remotes/origin/main")
-            latest = revision("origin/main")
+            latest = fetch_latest_main()
             rebase = git("rebase", "origin/main", check=False)
             if rebase.returncode:
                 # 不是衝突（例如設定或權限錯誤）時 abort 也會失敗，直接停止。
@@ -64,15 +77,15 @@ def publish() -> None:
                 if push.returncode == 0:
                     print(f"推送成功（第 {attempt + 1} 次嘗試）", flush=True)
                     return
-                git("fetch", "-q", "origin", "+refs/heads/main:refs/remotes/origin/main")
-                if revision("origin/main") == latest:
+                if fetch_latest_main() == latest:
                     # 遠端沒有前進，並非競爭；權限／網路錯誤直接回報。
                     push.check_returncode()
-            if attempt == 3:
-                sys.exit("三次重試仍未能推送，停止")
-            print(f"main 已更新，3 秒後重建本次條目並重試（{attempt + 1}/3）", flush=True)
-            time.sleep(3)
-            git("fetch", "-q", "origin", "+refs/heads/main:refs/remotes/origin/main")
+            if attempt == 5:
+                sys.exit("五次重試仍未能推送，停止")
+            wait_s = 2 + attempt * 2
+            print(f"main 已更新，{wait_s} 秒後重建本次條目並重試（{attempt + 1}/5）", flush=True)
+            time.sleep(wait_s)
+            fetch_latest_main()
             git("reset", "--hard", "origin/main")
             for file in files:
                 dst = webimg.ROOT / file

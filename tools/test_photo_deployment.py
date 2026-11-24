@@ -230,6 +230,43 @@ class DeploymentTest(unittest.TestCase):
                 self.run_check_only(keys)
         self.assertFalse(self.output.exists())
 
+    def test_concurrent_batch_advances_to_newer_origin_main(self):
+        with tempfile.TemporaryDirectory(prefix="photo-deploy-origin-") as extra:
+            extra_root = Path(extra)
+            bare = extra_root / "origin.git"
+            subprocess.run(["git", "clone", "-q", "--bare", str(self.root), str(bare)], check=True)
+            self.git("remote", "add", "origin", str(bare))
+
+            other = extra_root / "batch2"
+            subprocess.run(["git", "clone", "-q", str(bare), str(other)], check=True)
+            subprocess.run(["git", "config", "user.name", "Batch2"], cwd=other, check=True)
+            subprocess.run(["git", "config", "user.email", "b2@example.invalid"], cwd=other, check=True)
+            c_name = "sample/c-600.dddddddddd.webp"
+            c_body = b"webp fixture three"
+            c_path = other / c_name
+            c_path.parent.mkdir(parents=True, exist_ok=True)
+            c_path.write_bytes(c_body)
+            newer = json.loads((other / "manifest.json").read_text())
+            newer["photos"]["sample/c"] = {
+                "version": "dddddddddd",
+                "sizes": {"600": {"file": c_name, "width": 600, "height": 400, "bytes": len(c_body), "sha256": hashlib.sha256(c_body).hexdigest()}},
+            }
+            (other / "manifest.json").write_text(json.dumps(newer))
+            subprocess.run(["git", "add", "."], cwd=other, check=True)
+            subprocess.run(["git", "commit", "-qm", "batch 2"], cwd=other, check=True)
+            m2_sha = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=other).decode().strip()
+            subprocess.run(["git", "push", "-q", "origin", "main"], cwd=other, check=True)
+
+            # 正式站已直接部署到較晚的 M2：較早的 M1 驗證自動推進到 M2 並完成確認，不卡滿 15 分鐘逾時
+            self.server.state["current"] = newer
+            self.server.state["files"] = {**self.server.state["files"], c_name: c_body}
+            self.server.state["remote_files"] = self.server.state["files"]
+            proof = self.wait()
+            self.assertEqual(proof["sourceSha"], m2_sha)
+            self.assertEqual(proof["photos"]["sample/a"], "bbbbbbbbbb")
+            self.assertEqual(proof["photos"]["sample/c"], "dddddddddd")
+            self.assertIn(c_name, self.server.state["asset_requests"])
+
 
 if __name__ == "__main__":
     unittest.main()
