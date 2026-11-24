@@ -14,6 +14,7 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import mmap
 import os
 import shutil
 import subprocess
@@ -301,11 +302,138 @@ def run_ffmpeg(args: list[str], what: str, code: str = "ffmpeg") -> None:
         raise VideoError(f"{what}：ffmpeg 失敗（{exc.stderr.strip()[-300:]}）", code) from None
 
 
-def cover(src: Path, meta: Meta, dst: Path) -> None:
-    """第一格畫面（轉正、HDR 轉 SDR）存成 16-bit PPM（沒有任何中繼資料），交給 webimg 的 WebP 流程"""
-    run_ffmpeg(["-i", str(src), "-map", "0:v:0", "-frames:v", "1", "-vf", color_chain(meta, rgb=True),
+COVER_MEAN_LUMA_FLOOR = 0.05  # 平均亮度 < 5% 且 P95 < 12% 視為黑幕淡入首格，往後找非黑畫面
+COVER_P95_LUMA_FLOOR = 0.12
+COVER_SETTLED_MEAN_LUMA = 0.18  # 探測格平均亮度 ≥ 18% 或 P95 ≥ 35% 視為淡入已完成，不必再往後找
+COVER_SETTLED_P95_LUMA = 0.35
+
+
+def ppm_luma_stats(path: Path) -> tuple[float, float] | None:
+    """讀 binary PPM（P6，8/16-bit）的抽樣 Rec.709 亮度：(平均亮度, P95 亮度)，範圍 0..1；無法解析回傳 None。"""
+    try:
+        with path.open("rb") as fh:
+            size = os.fstat(fh.fileno()).st_size
+            if size <= 0:
+                return None
+            with mmap.mmap(fh.fileno(), 0, access=mmap.ACCESS_READ) as buf:
+                n = len(buf)
+                pos = 0
+                tokens: list[bytes] = []
+                while len(tokens) < 4 and pos < n:
+                    while pos < n and buf[pos] in b" \t\r\n":
+                        pos += 1
+                    if pos < n and buf[pos] == ord("#"):
+                        while pos < n and buf[pos] != ord("\n"):
+                            pos += 1
+                        continue
+                    start = pos
+                    while pos < n and buf[pos] not in b" \t\r\n#":
+                        pos += 1
+                    if pos > start:
+                        tokens.append(buf[start:pos])
+                if len(tokens) < 4 or tokens[0] != b"P6":
+                    return None
+                # maxval 與像素資料之間可能緊貼 # 註解，最後固定以單一空白位元組分隔
+                while pos < n and buf[pos] == ord("#"):
+                    while pos < n and buf[pos] != ord("\n"):
+                        pos += 1
+                if pos >= n or buf[pos] not in b" \t\r\n":
+                    return None
+                pos += 1
+                try:
+                    width, height, maxval = int(tokens[1]), int(tokens[2]), int(tokens[3])
+                except ValueError:
+                    return None
+                if width <= 0 or height <= 0 or maxval <= 0:
+                    return None
+                bps = 2 if maxval > 255 else 1
+                stride = 3 * bps
+                total = min(width * height, (n - pos) // stride)
+                if total <= 0:
+                    return None
+                step = max(1, total // 4096)
+                samples: list[float] = []
+                inv = 1.0 / maxval
+                for idx in range(0, total, step):
+                    off = pos + idx * stride
+                    if bps == 2:
+                        r = (buf[off] << 8) | buf[off + 1]
+                        g = (buf[off + 2] << 8) | buf[off + 3]
+                        b = (buf[off + 4] << 8) | buf[off + 5]
+                    else:
+                        r, g, b = buf[off], buf[off + 1], buf[off + 2]
+                    samples.append((0.2126 * r + 0.7152 * g + 0.0722 * b) * inv)
+                samples.sort()
+                mean = sum(samples) / len(samples)
+                p95 = samples[min(len(samples) - 1, int(len(samples) * 0.95))]
+                return (mean, p95)
+    except (OSError, ValueError):
+        return None
+
+
+def is_near_black_luma(mean: float, p95: float) -> bool:
+    return mean < COVER_MEAN_LUMA_FLOOR and p95 < COVER_P95_LUMA_FLOOR
+
+
+def cover_probe_times(duration: float) -> list[float]:
+    """首格近黑時往後探測的秒數清單（不超過片尾前 0.1 秒，最多 3 個點）。"""
+    if duration <= 0.2:
+        return []
+    limit = max(0.1, duration - 0.1)
+    out: list[float] = []
+    for raw in (0.5, 1.2, 2.5, round(duration * 0.35, 3), round(duration * 0.6, 3)):
+        if 0.08 <= raw <= limit and all(abs(raw - prev) >= 0.15 for prev in out):
+            out.append(raw)
+            if len(out) >= 3:
+                break
+    return out
+
+
+def extract_cover_frame(src: Path, meta: Meta, dst: Path, ss: float | None = None) -> None:
+    seek = ["-ss", f"{ss:.3f}"] if ss is not None else []
+    run_ffmpeg([*seek, "-i", str(src), "-map", "0:v:0", "-frames:v", "1", "-vf", color_chain(meta, rgb=True),
                 "-map_metadata", "-1", "-c:v", "ppm", "-f", "image2", str(dst)], f"{src.name} 取封面",
                "hdr" if meta.hdr else "ffmpeg")
+
+
+def cover(src: Path, meta: Meta, dst: Path) -> None:
+    """取代表畫面（轉正、HDR 轉 SDR）存成 16-bit PPM，交給 webimg 的 WebP 流程。
+
+    預設取第 0 格（既有非黑片逐位元組不變）；若第 0 格為黑幕淡入（平均與 P95 亮度皆極低），
+    自動往後探測前幾秒挑選第一個非黑畫面，整支都暗則保留較亮的一格。"""
+    extract_cover_frame(src, meta, dst)
+    stats0 = ppm_luma_stats(dst)
+    if stats0 is None:
+        return
+    m0, p0 = stats0
+    if not is_near_black_luma(m0, p0):
+        return
+    probes = cover_probe_times(meta.duration)
+    if not probes:
+        return
+    best_score = m0 + 0.5 * p0
+    probe_dst = dst.with_name(f"{dst.stem}.probe{dst.suffix}")
+    try:
+        for t in probes:
+            probe_dst.unlink(missing_ok=True)
+            try:
+                extract_cover_frame(src, meta, probe_dst, ss=t)
+            except VideoError:
+                continue
+            if not probe_dst.is_file() or probe_dst.stat().st_size == 0:
+                continue
+            stats = ppm_luma_stats(probe_dst)
+            if stats is None:
+                continue
+            mt, pt = stats
+            score = mt + 0.5 * pt
+            if score > best_score:
+                best_score = score
+                probe_dst.replace(dst)
+            if mt >= COVER_SETTLED_MEAN_LUMA or pt >= COVER_SETTLED_P95_LUMA:
+                return
+    finally:
+        probe_dst.unlink(missing_ok=True)
 
 
 def encode(src: Path, meta: Meta, w: int, h: int, maxrate: float, crf: int, audio: bool, dst: Path) -> None:

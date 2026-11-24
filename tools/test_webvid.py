@@ -586,6 +586,82 @@ class WebvidBuildTest(unittest.TestCase):
         with self.assertRaisesRegex(deploy.NotReady, "vid/live"):
             deploy.check_manifest(snapshot, remote, deploy.photo_versions(remote))
 
+    def test_cover_skips_black_fade_in_and_preserves_night_highlights(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            tmp = Path(td)
+            # 1) 開頭 0.8 秒全黑淡入、後面亮起來的影片 → 自動跳過第 0 格黑畫面
+            fade_vid = tmp / "fade.mp4"
+            ff(
+                "-f", "lavfi", "-i", "color=c=#e8b040:s=320x180:r=30:d=2",
+                "-vf", "fade=t=in:st=0.4:d=0.6",
+                "-c:v", "libx264", "-pix_fmt", "yuv420p", "-preset", "ultrafast",
+                str(fade_vid),
+            )
+            fade_meta = webvid.probe(fade_vid)
+            fade_ppm = tmp / "fade.ppm"
+            webvid.cover(fade_vid, fade_meta, fade_ppm)
+            mean_fade, p95_fade = webvid.ppm_luma_stats(fade_ppm)
+            self.assertGreater(mean_fade, 0.35, "黑幕淡入應選到後面已亮起的畫面")
+            self.assertGreater(p95_fade, 0.35)
+
+            # 2) 夜景局部高光（全黑背景＋中間一小塊亮霓虹，佔比 ~6% → 平均暗但 P95 高）→ 第 0 格不誤判成黑幕，只跑一次 ffmpeg
+            night_vid = tmp / "night.mp4"
+            ff(
+                "-f", "lavfi", "-i", "color=c=black:s=320x180:r=30:d=2",
+                "-vf", "drawbox=x=120:y=65:w=80:h=50:color=white:t=fill",
+                "-c:v", "libx264", "-pix_fmt", "yuv420p", "-preset", "ultrafast",
+                str(night_vid),
+            )
+            night_meta = webvid.probe(night_vid)
+            night_ppm = tmp / "night.ppm"
+            real_extract = webvid.extract_cover_frame
+            calls: list[float | None] = []
+
+            def spy_extract(src, meta, dst, ss=None):
+                calls.append(ss)
+                return real_extract(src, meta, dst, ss=ss)
+
+            with patch.object(webvid, "extract_cover_frame", side_effect=spy_extract):
+                webvid.cover(night_vid, night_meta, night_ppm)
+            self.assertEqual(calls, [None], "有局部高光的夜景第 0 格不該往後重抓")
+
+            # 3) 整支全黑短片 → 安全回退不報錯、不殘留 .probe 暫存檔
+            dark_vid = tmp / "dark.mp4"
+            ff(
+                "-f", "lavfi", "-i", "color=c=black:s=160x90:r=15:d=0.8",
+                "-c:v", "libx264", "-pix_fmt", "yuv420p", "-preset", "ultrafast",
+                str(dark_vid),
+            )
+            dark_meta = webvid.probe(dark_vid)
+            dark_ppm = tmp / "dark.ppm"
+            webvid.cover(dark_vid, dark_meta, dark_ppm)
+            self.assertTrue(dark_ppm.is_file() and dark_ppm.stat().st_size > 0)
+            self.assertFalse((tmp / "dark.probe.ppm").exists())
+
+            # 4) 截斷／壞標頭的探針檔回傳 None，絕不會覆蓋原本正常的第 0 格；緊貼 # 註解的合法 PPM 可正常解析
+            trunc_ppm = tmp / "trunc.ppm"
+            trunc_ppm.write_bytes(b"P6\n16 16\n65535\n")
+            self.assertIsNone(webvid.ppm_luma_stats(trunc_ppm))
+            comment_ppm = tmp / "comment.ppm"
+            comment_ppm.write_bytes(b"P6\n2 1\n255#inline-comment\n" + bytes([255, 255, 255, 255, 255, 255]))
+            cm = webvid.ppm_luma_stats(comment_ppm)
+            self.assertIsNotNone(cm)
+            self.assertAlmostEqual(cm[0], 1.0, places=6)
+            self.assertAlmostEqual(cm[1], 1.0, places=6)
+
+            valid_dark_bytes = dark_ppm.read_bytes()
+
+            def corrupt_probe_extract(src, meta, dst, ss=None):
+                if ss is None:
+                    dst.write_bytes(valid_dark_bytes)
+                else:
+                    dst.write_bytes(b"P6\n16 16\n65535\n")  # 標頭存在但像素截斷
+
+            kept_ppm = tmp / "kept.ppm"
+            with patch.object(webvid, "extract_cover_frame", side_effect=corrupt_probe_extract):
+                webvid.cover(dark_vid, dark_meta, kept_ppm)
+            self.assertEqual(kept_ppm.read_bytes(), valid_dark_bytes, "壞掉的探針格不能蓋掉完好的第 0 格")
+
 
 if __name__ == "__main__":
     unittest.main()
