@@ -1,0 +1,51 @@
+# 只檢查、不出圖：從 GitHub 外網讀正式圖片站 pic.jrfank.cc，核對目前 main 的 manifest 和指定照片的 WebP／MP4，
+# 都一致、都讀得到才存 photo-deployment-proof（和 build photos 的部署確認同一種檔）。
+# 用途：manifest 被刪除作業之類不出圖的提交改過後，沒有新的部署確認，後台（admin.jrfank.cc）在等不到時自動觸發這個。
+#   gh api repos/JR-Fank/jrfank-img/dispatches -f event_type=verify-photos -F 'client_payload[photos][]=shunde/shunde-53'
+# 參數是照片鍵（<系列>/<照片 id>，不含副檔名），空白或換行分隔。不讀 R2、不提交任何東西。
+name: verify photos
+run-name: ${{ github.event.client_payload.batch && format('verify photos · {0}', github.event.client_payload.batch) || 'verify photos' }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      photos:
+        description: "要核對檔案的照片鍵（<系列>/<照片 id>），空白分隔"
+        required: true
+  repository_dispatch:
+    types: [verify-photos]
+
+# 和 build photos 分開：同一個 concurrency group 裡新的排隊會取消還在排隊的出圖
+concurrency:
+  group: verify-photos
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      PHOTOS: ${{ github.event.inputs.photos || join(github.event.client_payload.photos, ' ') }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 確認圖片站部署
+        run: python3 tools/verify_photo_deployment.py --keys "$PHOTOS" --timeout 300 --output "$RUNNER_TEMP/deployment-proof.json"
+
+      - name: 保存部署確認
+        uses: actions/upload-artifact@v4
+        with:
+          name: photo-deployment-proof
+          path: ${{ runner.temp }}/deployment-proof.json
+          retention-days: 90
+          if-no-files-found: error
